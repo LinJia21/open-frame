@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { HomeCardView } from "@/lib/home/feed";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
+import { HeaderLockup, StageLockup } from "@/components/layout/brand-lockup";
 import { LanguageSwitch } from "@/components/layout/language-switch";
 import { PageDock } from "@/components/layout/page-dock";
 import { NEWS_SOURCES, sourceTitle } from "@/lib/sources/catalog";
@@ -127,7 +128,7 @@ export function NewsHome({
   return (
     <div className="spectrax-stage">
       <aside className="spectrax-aside">
-        <p className="wordmark text-[3.25rem]">SpectraX</p>
+        <StageLockup />
         <ViewTransition name="spectrax-aside" share="paper-fade" enter="paper-fade" exit="paper-fade" update="none" default="none">
           <div>
             <p className="mt-3 text-[15px] leading-7 text-muted-foreground">See Beyond the Headlines</p>
@@ -144,10 +145,10 @@ export function NewsHome({
         <div className="news-home-scroll">
           <div className="mx-auto w-full max-w-[40rem] px-4 pb-6 pt-5">
             <div className="flex items-center justify-between gap-3">
-              <Link href="/" className="wordmark shrink-0 text-[1.85rem] text-foreground">
-                SpectraX
-              </Link>
-              <LanguageSwitch language={language} />
+              <HeaderLockup />
+              <div className="shrink-0">
+                <LanguageSwitch language={language} />
+              </div>
             </div>
             <form
               role="search"

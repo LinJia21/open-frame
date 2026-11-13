@@ -1,5 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#1b2430"/>
-  <rect x="7" y="7" width="18" height="18" fill="none" stroke="#f7f3eb" stroke-width="2"/>
-  <rect x="12" y="12" width="8" height="8" fill="#c46a3a"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="1024" height="1024">
+  <rect width="128" height="128" rx="28.63" ry="28.63" fill="#002030"/>
+  <g transform="translate(8,8) scale(0.875)">
+    <path d="M 104.50,76.00 L 104.50,82.50 A 22.00 22.00 0 0 1 82.50,104.50 L 45.50,104.50 A 22.00 22.00 0 0 1 23.50,82.50 L 23.50,45.50 A 22.00 22.00 0 0 1 45.50,23.50 L 82.50,23.50 A 22.00 22.00 0 0 1 104.50,45.50 L 104.50,52.00" stroke="#5E4CE6" stroke-width="11.0" stroke-linecap="butt" stroke-linejoin="round" fill="none"/>
+    <path d="M 40.00,40.00 H 54.00 V 46.00 H 46.00 V 54.00 H 40.00 Z M 88.00,40.00 H 74.00 V 46.00 H 82.00 V 54.00 H 88.00 Z M 40.00,88.00 H 54.00 V 82.00 H 46.00 V 74.00 H 40.00 Z M 88.00,88.00 H 74.00 V 82.00 H 82.00 V 74.00 H 88.00 Z" fill="#5E4CE6"/>
+  </g>
 </svg>
