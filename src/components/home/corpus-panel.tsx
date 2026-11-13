@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import type { Language } from "@/lib/i18n/languages";
+import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { corpusCopy } from "@/lib/i18n/corpus-copy";
 import { providerErrorText } from "@/lib/i18n/provider-copy";
 import type { PublicProviderStatus } from "@/lib/analysis/provider-status";
@@ -50,7 +50,7 @@ export function CorpusPanel({
   selectedIds,
   onSelectedIds,
 }: {
-  language: Language;
+  language: UiLanguage;
   provider: PublicProviderStatus;
   selectedIds: string[];
   onSelectedIds: (ids: string[]) => void;

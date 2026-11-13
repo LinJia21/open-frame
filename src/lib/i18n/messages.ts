@@ -1,5 +1,7 @@
 import type { Language } from "@/lib/i18n/languages";
+import type { UiLanguage } from "@/lib/i18n/ui-language";
 import type { VerificationStatus } from "@/lib/openframe/openframe";
+import { zhHant } from "@/lib/i18n/zh-hant-messages";
 
 export interface Messages {
   skip: string;
@@ -664,11 +666,16 @@ const fr: Messages = {
 
 export const messages: Record<Language, Messages> = { en, zh, es, fr };
 
+export function messagesForUi(language: UiLanguage): Messages {
+  if (language === "zh-Hant") return zhHant;
+  return messages[language];
+}
+
 export function messageForApiError(
   code: string | undefined,
-  language: Language,
+  language: UiLanguage,
 ): string {
-  const home = messages[language].home;
+  const home = messagesForUi(language).home;
   switch (code) {
     case "query_required":
       return home.validationEmpty;

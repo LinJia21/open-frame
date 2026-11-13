@@ -1,4 +1,4 @@
-import type { Language } from "@/lib/i18n/languages";
+import type { UiLanguage } from "@/lib/i18n/ui-language";
 import type { PublicProviderStatus } from "@/lib/analysis/provider-status";
 
 const COPY = {
@@ -40,6 +40,25 @@ const COPY = {
     network: "页面没有连上自己的服务器。",
     failed: "这次运行失败了。",
   },
+  "zh-Hant": {
+    demo: "當前是演示模式。分析使用準備好的簡報，不會呼叫 Cursor。",
+    cursorReady: "已選擇 Cursor 模式。它只分析你選中的已保存資料，不會搜尋即時網路。伺服器上有密鑰，並不表示真實呼叫已經成功。",
+    cursorNoKey: "已選擇 Cursor 模式，但伺服器沒有密鑰。分析會明確返回未配置。下面的演示簡報仍可打開。",
+    cursorNoNetwork: "伺服器有密鑰，但對外呼叫被關掉。分析不會假裝成功。",
+    retired: "舊的 grok 設定已停用，不會呼叫 xAI。",
+    invalid: "分析提供方設定無法識別。",
+    starting: "正在建立 Cursor 運行…",
+    processing: "Cursor 運行尚未結束。這一頁不是真實接通測試。",
+    retry: "重試這次運行",
+    retryHint: "重試可能再次計費。如果已經有 agent，會沿用同一個，而不是再開一個。",
+    cancel: "取消運行",
+    open: "打開簡報",
+    back: "返回首頁",
+    model: "固定模型",
+    notVerified: "liveCallVerified 為 false。模擬測試不是真實接通。",
+    network: "頁面沒有連上自己的伺服器。",
+    failed: "這次運行失敗了。",
+  },
   es: {
     demo: "Modo de demostración. Analizar usa informes preparados y no llama a Cursor.",
     cursorReady: "El modo Cursor está configurado. Analiza solo los materiales guardados que eliges y no busca en internet. Una clave no es una llamada real terminada.",
@@ -80,11 +99,11 @@ const COPY = {
   },
 } as const;
 
-export function providerCopy(language: Language) {
+export function providerCopy(language: UiLanguage) {
   return COPY[language];
 }
 
-export function providerStatusText(provider: PublicProviderStatus, language: Language): string {
+export function providerStatusText(provider: PublicProviderStatus, language: UiLanguage): string {
   const copy = COPY[language];
   if (provider.provider === "demo") return copy.demo;
   if (provider.provider === "retired") return copy.retired;
@@ -94,7 +113,7 @@ export function providerStatusText(provider: PublicProviderStatus, language: Lan
   return copy.cursorReady;
 }
 
-const ERRORS: Record<Language, Record<string, string>> = {
+const ERRORS: Record<UiLanguage, Record<string, string>> = {
   en: {
     config_not_ready: "Cursor is not configured. Set CURSOR_API_KEY on the server. Demonstration data was not substituted.",
     network_disabled: "Outbound Cursor calls are disabled. Nothing was sent.",
@@ -168,6 +187,43 @@ const ERRORS: Record<Language, Record<string, string>> = {
     upstream_run: "Cursor 以错误结束了这次运行。没有保存结果。",
     upstream_unavailable: "没有连上 Cursor。没有自动再次创建。",
     store_failed: "简报没能写到本地。",
+  },
+  "zh-Hant": {
+    config_not_ready: "Cursor 尚未配置。請在伺服器設定 CURSOR_API_KEY。系統不會改用演示數據冒充。",
+    network_disabled: "對外的 Cursor 呼叫已關閉，沒有發送請求。",
+    auth_failed: "Cursor 拒絕了伺服器憑證。沒有保存分析。",
+    rate_limited: "請求過快。系統沒有自動再發起一次可能計費的運行。",
+    too_many_runs: "已經有兩個 Cursor 運行在進行。請等其中一個結束。",
+    expired: "運行超過本地時限，已取消。",
+    cancelled: "運行已取消。",
+    validation_failed: "模型輸出不符合簡報結構，沒有保存。",
+    invalid_json: "模型輸出不是單獨的 JSON 物件，沒有保存。",
+    incomplete_output: "模型輸出不完整，沒有保存。",
+    unsafe_url: "輸出裡的連結不是本次所選資料中的安全公開 https 地址。",
+    claimed_retrieval: "輸出聲稱進行了即時抓取，或使用了導入以外的檢索方式，已拒絕。",
+    claimed_verification: "輸出使用了這次已保存資料流程不允許的核驗說法。",
+    invented_source: "輸出引用了本次未選中的來源，已拒絕。",
+    incomplete_sources: "輸出沒有正好引用你選中的已保存資料。",
+    external_verification: "輸出聲稱進行了即時網頁搜尋或外部事實核驗，已拒絕。",
+    no_sources: "請先選擇至少一條帶摘要或正文的已保存資料，再運行 Cursor。",
+    unknown_source: "有一條選中資料不在已保存資料庫裡。",
+    insufficient_material: "只有標題不夠。請保存你實際拿到的摘要或正文。",
+    idempotency_conflict: "這個重試鍵已經用於另一組已保存資料。",
+    saved_analysis_needs_cursor: "分析已保存資料需要 Cursor 提供方。系統沒有改用演示數據。",
+    invalid_source_ids: "選中的資料編號無效。",
+    sensitive_material: "導入內容裡包含伺服器密鑰，沒有保存。",
+    reserved_demo_host: "示例域名不能當作已保存新聞導入。",
+    invalid_url: "導入中的某個 URL 不是公開的 https 地址。",
+    inconsistent_text: "完整程度和實際提供的文本不一致。",
+    library_full: "本地資料庫已達到保存上限。",
+    sensitive_echo: "輸出回顯了密鑰，已丟棄。",
+    confirmation_required: "在你確認可能再次計費之前，不會重試。",
+    retry_exhausted: "這次任務的重試次數已用完。",
+    retired_provider: "grok 提供方已停用，不會呼叫 xAI。請改用 demo 或 cursor。",
+    model_pin_violation: "伺服器上的模型不是 grok-4.5、effort medium、fast false。沒有發送請求。",
+    upstream_run: "Cursor 以錯誤結束了這次運行。沒有保存結果。",
+    upstream_unavailable: "沒有連上 Cursor。沒有自動再次建立。",
+    store_failed: "簡報沒能寫到本地。",
   },
   es: {
     config_not_ready: "Cursor no está configurado. Defina CURSOR_API_KEY en el servidor. No se sustituye por datos de demostración.",
@@ -245,7 +301,7 @@ const ERRORS: Record<Language, Record<string, string>> = {
   },
 };
 
-export function providerErrorText(code: string | undefined, language: Language): string | null {
+export function providerErrorText(code: string | undefined, language: UiLanguage): string | null {
   if (!code) return null;
   return ERRORS[language][code] ?? null;
 }

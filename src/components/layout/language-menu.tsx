@@ -3,17 +3,25 @@
 import { useRouter } from "next/navigation";
 import { LANGUAGE_OPTIONS, isLanguage, type Language } from "@/lib/i18n/languages";
 import { messages } from "@/lib/i18n/messages";
+import { parseUiLanguage, toAnalysisLanguage, type UiLanguage } from "@/lib/i18n/ui-language";
 
-export function rememberLanguage(language: Language) {
+export function rememberLanguage(language: UiLanguage) {
   document.cookie = `openframe_lang=${language}; Path=/; Max-Age=31536000; SameSite=Lax`;
 }
 
-export function languageFromDocument(fallback: Language): Language {
-  const raw = document.cookie
+function cookieValue(): string | undefined {
+  return document.cookie
     .split("; ")
     .find((row) => row.startsWith("openframe_lang="))
     ?.slice("openframe_lang=".length);
-  return isLanguage(raw) ? raw : fallback;
+}
+
+export function uiLanguageFromDocument(fallback: UiLanguage = "zh"): UiLanguage {
+  return parseUiLanguage(cookieValue(), fallback);
+}
+
+export function languageFromDocument(fallback: Language): Language {
+  return toAnalysisLanguage(parseUiLanguage(cookieValue(), fallback));
 }
 
 export function LanguageMenu({ language }: { language: Language }) {
