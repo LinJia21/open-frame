@@ -6,8 +6,8 @@ import type { Language } from "@/lib/i18n/languages";
 
 /**
  * App tab bar: 首页, 资料库, 订阅, 我的.
- * Subscribe and Me are named entries. Those sections are not open:
- * no plans, no charges, and no account.
+ * Subscribe lists the fixed news sources and stores choices locally.
+ * Me is a named entry only: no plans, no charges, and no account.
  */
 export function PageDock({
   placement,

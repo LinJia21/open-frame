@@ -3,6 +3,7 @@
 import { useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { NEWS_SOURCES } from "@/lib/sources/catalog";
+import { useSourceIds } from "@/lib/sources/use-source-ids";
 import type { NewsDiscoveryResult, SourceStatus } from "@/lib/sources/types";
 
 const SOURCE_GROUPS = [
@@ -55,17 +56,22 @@ function NewsTime({ value }: { value: string | null }) {
 }
 
 export function NewsDiscovery() {
+  const { ids: subscribedIds } = useSourceIds();
   const [query, setQuery] = useState("");
-  const [selectedIds, setSelectedIds] = useState<string[]>(() => NEWS_SOURCES.map((source) => source.id));
+  const [draftIds, setDraftIds] = useState<string[] | null>(null);
   const [pending, setPending] = useState(false);
   const [result, setResult] = useState<NewsDiscoveryResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const requestInFlight = useRef(false);
+  const selectedIds = draftIds ?? subscribedIds;
   const googleCount = NEWS_SOURCES.filter((source) => selectedIds.includes(source.id) && source.access === "google_rss").length;
   const failedCount = result?.reports.filter((report) => report.status !== "ok" && report.status !== "empty").length ?? 0;
 
   function toggleSource(id: string) {
-    setSelectedIds((ids) => ids.includes(id) ? ids.filter((item) => item !== id) : [...ids, id]);
+    setDraftIds((ids) => {
+      const current = ids ?? subscribedIds;
+      return current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+    });
   }
 
   async function search(event: FormEvent<HTMLFormElement>) {
@@ -170,9 +176,9 @@ export function NewsDiscovery() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <Button type="button" variant="outline" className="h-11" onClick={() => setSelectedIds(NEWS_SOURCES.map((source) => source.id))}>全选 {NEWS_SOURCES.length} 源</Button>
-              <Button type="button" variant="outline" className="h-11" onClick={() => setSelectedIds(NEWS_SOURCES.filter((source) => source.access === "official_rss").map((source) => source.id))}>仅官方 RSS</Button>
-              <Button type="button" variant="ghost" className="h-11" onClick={() => setSelectedIds([])}>清空选择</Button>
+              <Button type="button" variant="outline" className="h-11" onClick={() => setDraftIds(NEWS_SOURCES.map((source) => source.id))}>全选 {NEWS_SOURCES.length} 源</Button>
+              <Button type="button" variant="outline" className="h-11" onClick={() => setDraftIds(NEWS_SOURCES.filter((source) => source.access === "official_rss").map((source) => source.id))}>仅官方 RSS</Button>
+              <Button type="button" variant="ghost" className="h-11" onClick={() => setDraftIds([])}>清空选择</Button>
             </div>
 
             <details className="rounded-xl border border-border bg-background">
@@ -217,7 +223,7 @@ export function NewsDiscovery() {
                 {pending ? "检索中…" : "检索新闻"}
               </Button>
               <p id="news-selection-status" role="status" aria-live="polite" className="text-sm text-muted-foreground">
-                {selectedIds.length === 0 ? "请至少选择一个来源，才能检索。" : `已选 ${selectedIds.length} 个来源 · 仅手动检索`}
+                {selectedIds.length === 0 ? "请至少选择一个来源，才能检索。" : `已选 ${selectedIds.length} 个来源 · 默认来自订阅页 · 仅手动检索`}
               </p>
             </div>
           </fieldset>

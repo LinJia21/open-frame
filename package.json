@@ -13,7 +13,7 @@
     "validate:demo": "tsx scripts/validate-demo.ts",
     "estimate:tokens": "tsx scripts/estimate-tokens.ts",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test src/lib/guards/integrity.test.ts src/lib/adapters/trace.test.ts src/lib/adapters/schema-version.test.ts src/lib/analysis/qa-regression.test.ts src/lib/analysis/request-id.test.ts src/lib/adapters/field-map.test.ts src/lib/analysis/cursor-output.test.ts src/lib/analysis/cursor-service.test.ts src/lib/analysis/analyses-http.test.ts src/lib/corpus/corpus-flow.test.ts src/lib/home/feed.test.ts src/lib/sources/discovery.test.ts"
+    "test": "tsx --test src/lib/guards/integrity.test.ts src/lib/adapters/trace.test.ts src/lib/adapters/schema-version.test.ts src/lib/analysis/qa-regression.test.ts src/lib/analysis/request-id.test.ts src/lib/adapters/field-map.test.ts src/lib/analysis/cursor-output.test.ts src/lib/analysis/cursor-service.test.ts src/lib/analysis/analyses-http.test.ts src/lib/corpus/corpus-flow.test.ts src/lib/home/feed.test.ts src/lib/sources/discovery.test.ts src/lib/sources/subscriptions.test.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
