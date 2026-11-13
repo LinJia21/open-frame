@@ -29,7 +29,7 @@ async function LibraryData() {
   await connection();
   const jar = await cookies();
   const cookie = jar.get("openframe_lang")?.value;
-  const language: Language = isLanguage(cookie) ? cookie : "zh";
+  const language: Language = isLanguage(cookie) ? cookie : "en";
   let recentError = false;
   let recent: ReturnType<typeof toSummary>[] = [];
   try {

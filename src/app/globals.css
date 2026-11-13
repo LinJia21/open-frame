@@ -7,9 +7,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-source), "Noto Sans CJK SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-source: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  --font-newsreader: Georgia, "Songti SC", "Times New Roman", serif;
+  --font-sans: var(--font-source);
   --font-mono: var(--font-geist-mono);
-  --font-serif: var(--font-newsreader), "Noto Serif CJK SC", "Songti SC", serif;
+  --font-serif: var(--font-newsreader);
   --font-heading: var(--font-serif);
   --color-of-ink: var(--of-ink);
   --color-of-ink-foreground: var(--of-ink-foreground);
@@ -89,6 +91,7 @@
   --of-live-foreground: var(--color-sky-950);
   --of-neutral: var(--color-slate-100);
   --of-neutral-foreground: var(--color-slate-900);
+  --of-page: color-mix(in srgb, var(--of-cream) 68%, var(--background));
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -139,21 +142,6 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-@font-face {
-  font-family: "Noto Sans SC";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/noto-sans-sc-sc-400.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Noto Sans SC";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("/fonts/noto-sans-sc-sc-500.woff2") format("woff2");
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -184,12 +172,30 @@
 .web-shell {
   display: none;
 }
+.header-topic {
+  display: none;
+}
 @media (min-width: 1100px) {
   .app-shell {
     display: none;
   }
   .web-shell {
     display: block;
+  }
+  .header-bar:has(.header-topic) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 1.25rem;
+  }
+  .header-topic {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .header-bar:has(.header-topic) .header-tagline {
+    display: none;
   }
 }
 
@@ -204,20 +210,33 @@
   width: 100%;
   background: var(--background);
   color: var(--foreground);
-  font-family: "Noto Sans SC", var(--font-source), "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
+  font-family: var(--font-source);
   font-size: 16px;
   line-height: 1.65;
 }
 .news-home h1,
 .news-home h2,
 .news-home h3 {
-  font-family: "Noto Sans SC", var(--font-source), "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
+  font-family: var(--font-source);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
+.app-ink-bar {
+  background: var(--of-ink);
+  color: var(--of-ink-foreground);
+}
+.app-ink-bar .search-pill {
+  border-color: transparent;
+  background: #fff;
+  color: var(--foreground);
+}
+.app-cream-note {
+  background: var(--of-cream);
+  color: var(--of-cream-foreground);
+}
 .news-home .wordmark,
 .spectrax-aside .wordmark {
-  font-family: var(--font-newsreader), "WenQuanYi Micro Hei", "Droid Sans Fallback", serif;
+  font-family: var(--font-newsreader);
   font-style: italic;
   font-weight: 500;
   letter-spacing: -0.03em;
@@ -244,7 +263,7 @@
 .news-dock,
 .viewport-dock {
   z-index: 30;
-  background: var(--background);
+  background: var(--of-page);
   border-top: 1px solid var(--border);
   box-shadow: 0 -8px 24px color-mix(in oklch, var(--foreground) 6%, transparent);
   padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
@@ -254,6 +273,13 @@
   right: 0;
   bottom: 0;
   left: 0;
+  background: var(--background);
+  box-shadow: none;
+}
+.news-dock .dock-pill[aria-current="page"] {
+  border-color: var(--of-accent);
+  background: var(--of-accent);
+  color: var(--of-accent-foreground);
 }
 .viewport-dock {
   display: none;
@@ -366,6 +392,11 @@
   outline: 2px solid var(--foreground);
   outline-offset: 3px;
 }
+.app-ink-bar .search-pill:focus-within,
+.news-home .app-ink-bar :focus-visible {
+  outline: 2px solid var(--of-ink-foreground);
+  outline-offset: 3px;
+}
 .search-pill input::placeholder {
   color: var(--muted-foreground);
 }
@@ -383,7 +414,7 @@
   border: 1px solid var(--border);
   border-radius: 1.45rem;
   background: var(--card);
-  box-shadow: 0 12px 30px color-mix(in oklch, var(--foreground) 6%, transparent);
+  box-shadow: none;
   padding: 1.15rem 1.15rem 1rem;
 }
 .topic-card h2 {
@@ -473,7 +504,7 @@
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: 2rem;
-    background: var(--background);
+    background: var(--of-page);
     box-shadow: 0 28px 70px color-mix(in oklch, var(--foreground) 10%, transparent);
   }
   .news-home-scroll {
@@ -484,6 +515,28 @@
   .news-dock {
     position: absolute;
     border-radius: 0 0 2rem 2rem;
+  }
+  .app-frame {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 1rem 2rem;
+    background: var(--background);
+  }
+  .app-frame .spectrax-stage {
+    display: flex;
+    justify-content: center;
+    width: min(27.5rem, 100%);
+    min-height: 0;
+    gap: 0;
+    padding: 0;
+    background: transparent;
+  }
+  .app-frame .spectrax-aside {
+    display: none;
+  }
+  .app-frame .news-home {
+    width: 100%;
+    background: var(--background);
   }
 }
 
