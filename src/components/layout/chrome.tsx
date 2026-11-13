@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PublicProviderStatus } from "@/lib/analysis/provider-status";
 import type { Language } from "@/lib/i18n/languages";
+import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { AppEntry } from "@/components/layout/app-entry";
 import { HeaderTopic } from "@/components/layout/header-topic";
 import { LanguageMenu } from "@/components/layout/language-menu";
@@ -14,14 +15,24 @@ export function FrameMark() {
   );
 }
 
-const headerLabels: Record<Language, { nav: string; library: string; settings: string }> = {
+const headerLabels: Record<UiLanguage, { nav: string; library: string; settings: string }> = {
   en: { nav: "Pages", library: "Library", settings: "Settings" },
   zh: { nav: "页面", library: "资料库", settings: "设置" },
+  "zh-Hant": { nav: "頁面", library: "資料庫", settings: "設定" },
   es: { nav: "Páginas", library: "Biblioteca", settings: "Ajustes" },
   fr: { nav: "Pages", library: "Bibliothèque", settings: "Réglages" },
 };
 
-export function SiteHeader({ language, provider }: { language: Language; provider: PublicProviderStatus }) {
+export function SiteHeader({
+  language,
+  uiLanguage,
+  provider,
+}: {
+  language: Language;
+  uiLanguage?: UiLanguage;
+  provider: PublicProviderStatus;
+}) {
+  const labels = headerLabels[uiLanguage ?? language];
   return (
     <header className="site-header no-print sticky top-0 z-40 border-b border-white/10 bg-of-ink text-of-ink-foreground">
       <div className="header-bar mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:flex-nowrap sm:px-6">
@@ -33,12 +44,12 @@ export function SiteHeader({ language, provider }: { language: Language; provide
           </span>
         </Link>
         <HeaderTopic language={language} provider={provider} />
-        <nav aria-label={headerLabels[language].nav} className="header-nav flex shrink-0 items-center gap-3 text-xs tracking-[0.14em] whitespace-nowrap text-white/70 sm:gap-4">
+        <nav aria-label={labels.nav} className="header-nav flex shrink-0 items-center gap-3 text-xs tracking-[0.14em] whitespace-nowrap text-white/70 sm:gap-4">
           <Link href="/library" className="hover:text-white">
-            {headerLabels[language].library}
+            {labels.library}
           </Link>
           <Link href="/settings" className="hover:text-white">
-            {headerLabels[language].settings}
+            {labels.settings}
           </Link>
           <LanguageMenu language={language} />
           <AppEntry />
