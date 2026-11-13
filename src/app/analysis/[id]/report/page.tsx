@@ -4,6 +4,8 @@ import { briefingToMarkdown } from "@/lib/adapters/markdown";
 import { readUiLanguage } from "@/components/layout/paper-frame";
 import { BriefingIntro, ReportBody } from "@/components/briefing/views";
 
+export const instant = false;
+
 export const metadata = { title: "Research Report" };
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {

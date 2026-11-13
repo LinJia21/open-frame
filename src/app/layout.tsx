@@ -28,7 +28,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <a href="#content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-card focus:px-3 focus:py-2">
           Skip to content
         </a>
-        <SiteHeader language={toAnalysisLanguage(language)} provider={provider} />
+        <SiteHeader language={toAnalysisLanguage(language)} uiLanguage={language} provider={provider} />
         <PrototypeBanner provider={provider} />
         <main id="content" className="flex-1">{children}</main>
         <SiteFooter provider={provider} />

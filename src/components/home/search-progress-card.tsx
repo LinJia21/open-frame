@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { CardFold } from "@/components/ui/card-fold";
 import { NEWS_SOURCES, sourceTitle } from "@/lib/sources/catalog";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { DEMO_STEP_COUNT, DEMO_STEP_MS, demoProgressPhase, type DemoProgressSnapshot } from "@/lib/home/demo-progress";
@@ -24,6 +25,8 @@ interface ProgressCopy {
   completed: string;
   completedNote: string;
   openSample: string;
+  showSources: string;
+  hideSources: string;
   liveSummary: (step: number) => string;
 }
 
@@ -47,6 +50,8 @@ const COPY: Record<Script, ProgressCopy> = {
     completed: "演示完成",
     completedNote: "真实分析完成后，这里会变成可打开的事件卡片。",
     openSample: "查看示例报告",
+    showSources: "展开已找到的来源",
+    hideSources: "收起来源",
     liveSummary: (step) => `第 ${step} 步，共 ${DEMO_STEP_COUNT} 步`,
   },
   "zh-Hant": {
@@ -68,6 +73,8 @@ const COPY: Record<Script, ProgressCopy> = {
     completed: "演示完成",
     completedNote: "真實分析完成後，這裡會變成可打開的事件卡片。",
     openSample: "查看示例報告",
+    showSources: "展開已找到的來源",
+    hideSources: "收起來源",
     liveSummary: (step) => `第 ${step} 步，共 ${DEMO_STEP_COUNT} 步`,
   },
   en: {
@@ -89,6 +96,8 @@ const COPY: Record<Script, ProgressCopy> = {
     completed: "Demo complete",
     completedNote: "When a real analysis finishes, this becomes a card you can open.",
     openSample: "Open the sample report",
+    showSources: "Show sources found",
+    hideSources: "Hide sources",
     liveSummary: (step) => `Step ${step} of ${DEMO_STEP_COUNT}`,
   },
 };
@@ -116,10 +125,9 @@ export function SearchProgressCard({ progress, language }: { progress: DemoProgr
   return (
     <article className="topic-card">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-xs tracking-[0.16em] text-of-accent">AI BRIEF</p>
-        <span className="lav-badge">{done ? copy.completed : copy.badge}</span>
+        <h2 className="min-w-0 flex-1 text-[1.35rem] font-bold leading-[1.35] text-foreground">{done ? copy.completed : copy.title(progress.query)}</h2>
+        <span className="lav-badge">{copy.badge}</span>
       </div>
-      <h2 className="mt-2 text-[1.35rem] font-bold leading-[1.35] text-foreground">{done ? copy.completed : copy.title(progress.query)}</h2>
       {done ? null : <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">{copy.estimate}</p>}
 
       <div className="mt-3 rounded-xl border border-of-cream-border bg-of-cream/30 p-2.5">
@@ -127,14 +135,16 @@ export function SearchProgressCard({ progress, language }: { progress: DemoProgr
           {sources.length > 0 ? copy.foundSources(sources.length) : copy.noSourcesYet}
         </p>
         {sources.length > 0 ? (
-          <ul className="mt-2 flex flex-wrap gap-1.5">
-            {sources.map((source) => (
-              <li key={source.id} className="flex items-center gap-1.5 rounded-full border border-of-cream-border bg-white px-1.5 py-1">
-                <Image src={source.logo} alt="" width={20} height={20} className="size-5 object-contain" />
-                <span className="max-w-[9rem] truncate text-xs text-foreground">{sourceTitle(source, language)}</span>
-              </li>
-            ))}
-          </ul>
+          <CardFold label={copy.showSources} openLabel={copy.hideSources}>
+            <ul className="flex flex-wrap gap-1.5">
+              {sources.map((source) => (
+                <li key={source.id} className="flex min-h-11 items-center gap-1.5 rounded-full border border-of-cream-border bg-white px-2 py-1">
+                  <Image src={source.logo} alt="" width={20} height={20} className="size-5 object-contain" />
+                  <span className="max-w-[9rem] truncate text-xs text-foreground">{sourceTitle(source, language)}</span>
+                </li>
+              ))}
+            </ul>
+          </CardFold>
         ) : null}
       </div>
 
@@ -145,11 +155,11 @@ export function SearchProgressCard({ progress, language }: { progress: DemoProgr
             <li key={item.title} className="flex gap-3">
               <span
                 aria-hidden="true"
-                className={`mt-0.5 grid size-6 shrink-0 place-items-center rounded-full border text-xs ${
+                className={`mt-0.5 grid size-7 shrink-0 place-items-center rounded-full border text-xs ${
                   state === "done"
-                    ? "border-of-accent bg-of-accent text-of-accent-foreground"
+                    ? "border-[#e4d48a] bg-[#f3e6a4] text-[#1c1915]"
                     : state === "active"
-                      ? "border-of-accent text-of-accent animate-pulse"
+                      ? "border-[#e4d48a] bg-[#fbf7f1] text-[#1c1915]"
                       : "border-border text-transparent"
                 }`}
               >
@@ -168,8 +178,8 @@ export function SearchProgressCard({ progress, language }: { progress: DemoProgr
                   {item.body}
                 </p>
                 {state === "active" ? (
-                  <span className="mt-1.5 block h-1 overflow-hidden rounded-full bg-of-cream-border">
-                    <span className="block h-full rounded-full bg-of-accent" style={{ width: `${Math.round(withinStep * 100)}%` }} />
+                  <span className="mt-1.5 block h-1 overflow-hidden rounded-full bg-[#eadfce]">
+                    <span className="block h-full rounded-full bg-[#e4d48a]" style={{ width: `${Math.round(withinStep * 100)}%` }} />
                   </span>
                 ) : null}
               </div>
@@ -180,7 +190,7 @@ export function SearchProgressCard({ progress, language }: { progress: DemoProgr
 
       <p className="mt-4 text-[13px] leading-[1.6] text-muted-foreground">{done ? copy.completedNote : copy.demoNote}</p>
       {done ? (
-        <Link href={PREPARED_REPORT_HREF.sample} className="evidence-pill mt-3">
+        <Link href={PREPARED_REPORT_HREF.sample} className="paper-action mt-3 w-full">
           {copy.openSample}
         </Link>
       ) : null}

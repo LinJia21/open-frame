@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 
 export function ExportBar({
   markdown,
@@ -28,16 +27,16 @@ export function ExportBar({
   }
 
   return (
-    <div className="no-print flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-      <Button type="button" variant="outline" onClick={() => download(markdown, `${filename}.md`, "text/markdown")}>
+    <div className="no-print flex flex-col gap-2">
+      <button type="button" className="paper-action-quiet w-full" onClick={() => download(markdown, `${filename}.md`, "text/markdown")}>
         {labels.md}
-      </Button>
-      <Button type="button" variant="outline" onClick={() => download(json, `${filename}.json`, "application/json")}>
+      </button>
+      <button type="button" className="paper-action-quiet w-full" onClick={() => download(json, `${filename}.json`, "application/json")}>
         {labels.json}
-      </Button>
-      <Button type="button" variant="outline" onClick={() => window.print()}>
+      </button>
+      <button type="button" className="paper-action w-full" onClick={() => window.print()}>
         {labels.print}
-      </Button>
+      </button>
       <span className="sr-only" aria-live="polite">{notice}</span>
     </div>
   );
