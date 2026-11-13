@@ -25,7 +25,7 @@ export function briefingToMarkdown(view: BriefingView): string {
     "",
     `> ${view.sourceLabel} (data_mode ${view.sourceMode}). ${view.analysisLabel}.`,
     view.generation === "LIVE_AI"
-      ? "> This export is generated analysis. OpenFrame did not retrieve or verify the sources. It is not a checked web search."
+      ? "> This export is generated analysis. SpectraX did not retrieve or verify the sources. It is not a checked web search."
       : "> This export is from a pre-generated briefing. It is not a model call.",
     view.generation === "LIVE_AI" && view.modelName ? `> Model pin recorded by the server: ${view.modelName}.` : "",
     "",

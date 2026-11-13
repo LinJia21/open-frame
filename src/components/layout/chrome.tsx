@@ -21,7 +21,7 @@ export function SiteHeader({ language, provider }: { language: Language; provide
         <Link href="/" className="header-brand flex shrink-0 items-center gap-3">
           <FrameMark />
           <span>
-            <span className="font-serif text-xl leading-none">OpenFrame</span>
+            <span className="font-serif text-xl leading-none">SpectraX</span>
             <span className="header-tagline mt-1 hidden text-xs tracking-wide text-white/70 sm:block">See Beyond the Headlines.</span>
           </span>
         </Link>
@@ -123,7 +123,7 @@ export function AnalysisNav({
 
 export function SiteFooter({ provider }: { provider: PublicProviderStatus }) {
   const body = provider.provider === "demo"
-    ? "OpenFrame AI is a research prototype. It does not call a model. Analyses are pre-generated. The fictional set uses reserved domains; the primary sample uses the fixture’s source links."
+    ? "SpectraX AI is a research prototype. It does not call a model. Analyses are pre-generated. The fictional set uses reserved domains; the primary sample uses the fixture’s source links."
     : `${provider.note} Live calls are not marked verified on this screen.`;
   return (
     <footer className="no-print border-t border-border px-4 py-6 text-center text-xs text-muted-foreground sm:px-6">

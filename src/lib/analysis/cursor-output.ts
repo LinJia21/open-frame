@@ -8,7 +8,7 @@ import type { LibrarySnapshot, SavedMaterial } from "@/lib/corpus/types";
 import { canonicalUrl, isBlockedHost } from "@/lib/corpus/url";
 
 export const GENERATED_NOTICE =
-  "Generated at request time. OpenFrame did not retrieve articles and did not verify facts. Reserved example links are illustrations, not citations.";
+  "Generated at request time. SpectraX did not retrieve articles and did not verify facts. Reserved example links are illustrations, not citations.";
 
 const BUNDLE_PROMPT_ID = "openframe.cursor_bundle";
 const SAVED_PROMPT_ID = "openframe.cursor_saved_materials";
