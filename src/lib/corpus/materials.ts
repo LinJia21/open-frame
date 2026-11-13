@@ -125,7 +125,7 @@ export function articlesFromMaterials(materials: SavedMaterial[]): NewsArticle[]
         retrieval_method: "manual_entry",
         retrieved_at: material.savedAt,
         retrieved_by: "saved-history-import",
-        notes: "Text was imported into the saved library. OpenFrame did not fetch the URL.",
+        notes: "Text was imported into the saved library. SpectraX did not fetch the URL.",
       },
       missing_fields: missing,
     };

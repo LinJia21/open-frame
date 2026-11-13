@@ -102,7 +102,7 @@ export function mockUnretrievedBundle(topic = "Harbor ferries and weekday crowds
         coverage_gaps: ["No article was retrieved."],
       },
       outlet_level_observations: [],
-      method_notes: "OpenFrame did not retrieve articles. The note is an illustration on a reserved host.",
+      method_notes: "SpectraX did not retrieve articles. The note is an illustration on a reserved host.",
       missing_fields: [],
     },
     claim_extraction: {
@@ -147,7 +147,7 @@ export function mockUnretrievedBundle(topic = "Harbor ferries and weekday crowds
           original_source_url: null,
           explanation: "Nothing was retrieved, so the illustration cannot support or refute the claim.",
           confidence: { level: "low", rationale: "No retrieved document was available to check." },
-          confidence_limitations: ["OpenFrame did not retrieve or verify a source."],
+          confidence_limitations: ["SpectraX did not retrieve or verify a source."],
           additional_research_needed: ["A retrieved primary document would be required before any stronger label."],
           independent_source_count: { supporting: 0, contradicting: 0 },
           unverifiable_evidence_ids: [],
@@ -227,7 +227,7 @@ export function mockUnretrievedBundle(topic = "Harbor ferries and weekday crowds
           one_line_explanation: "No retrieved source was available.",
         },
       ],
-      evidence_limitations: ["No article was retrieved by OpenFrame."],
+      evidence_limitations: ["No article was retrieved by SpectraX."],
       information_gaps: [
         {
           gap: "Retrieved reporting is absent.",
