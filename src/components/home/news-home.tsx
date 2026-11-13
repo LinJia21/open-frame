@@ -294,7 +294,7 @@ function copyFor(language: Language): HomeCopy {
       asidePoints: [
         "字标仍是 SpectraX。搜索只筛选本页示例。",
         "All 展示现有卡片。For You 和 Locate 尚未开通。",
-        "底部三个图标没有名称，也不能点。设置和资料库沿用原来的入口。热度写「暂无数据」。",
+        "底部菜单是首页、资料库、订阅、我的。订阅和我的尚未开通。热度写「暂无数据」。",
       ],
     };
   }
@@ -324,7 +324,7 @@ function copyFor(language: Language): HomeCopy {
     asidePoints: [
       "The wordmark stays SpectraX. Search only filters the samples on this page.",
       "All shows those cards. For You and Locate are not open.",
-      "The three bottom icons have no name and cannot be used. Settings and the library keep their existing entries. Heat says there is no data.",
+      "The bottom menu is Home, Library, Subscribe, and Me. Subscribe and Me are not open. Heat says there is no data.",
     ],
   };
 }
