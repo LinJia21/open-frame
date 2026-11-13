@@ -57,7 +57,7 @@ export function PrototypeBanner({ provider }: { provider: PublicProviderStatus }
 export function SourceBadge({ label, mode }: { label: string; mode: string }) {
   const fictional = mode === "DEMO";
   return (
-    <span className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-semibold ${fictional ? "bg-of-accent text-of-accent-foreground" : "bg-sky-100 text-sky-950"}`}>
+    <span className="lav-badge">
       {label}
       {fictional ? <span className="tracking-[0.12em]">DEMO DATA</span> : null}
     </span>
@@ -66,7 +66,7 @@ export function SourceBadge({ label, mode }: { label: string; mode: string }) {
 
 export function AnalysisBadge({ label, generatedAt }: { label: string; generatedAt: string | null }) {
   return (
-    <span title={generatedAt ? `Generated ${generatedAt}` : undefined} className="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-900">
+    <span title={generatedAt ? `Generated ${generatedAt}` : undefined} className="lav-badge">
       {label}
     </span>
   );
@@ -103,17 +103,9 @@ export function AnalysisNav({
     ["report", labels.report, `/analysis/${id}/report`],
   ] as const;
   return (
-    <nav aria-label={labels.progress} className="no-print grid grid-cols-3 gap-2">
-      {items.map(([key, label, href], index) => (
-        <Link
-          key={key}
-          href={href}
-          aria-current={current === key ? "page" : undefined}
-          className={`rounded-lg border px-2 py-2 text-center text-sm ${
-            current === key ? "border-of-accent bg-of-accent text-of-accent-foreground" : "border-border bg-card"
-          }`}
-        >
-          <span className="block text-[10px] tracking-widest opacity-80">0{index + 1}</span>
+    <nav aria-label={labels.progress} className="scope-row no-print">
+      {items.map(([key, label, href]) => (
+        <Link key={key} href={href} aria-current={current === key ? "page" : undefined} className="scope-pill">
           {label}
         </Link>
       ))}

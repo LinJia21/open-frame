@@ -15,15 +15,17 @@ export function BriefingIntro({
   current: "perspectives" | "evidence" | "report" | null;
   copy: Messages;
 }) {
+  const nav =
+    copy.nav.home === "首页"
+      ? { ...copy.nav, perspectives: "观点", evidence: "证据核查", report: "研究报告", progress: "分析分页" }
+      : copy.nav;
+  const zh = copy.nav.home === "首页";
   return (
     <header className="space-y-4">
-      <AnalysisNav
-        id={view.bundleId}
-        current={current}
-        labels={{ ...copy.nav, progress: copy.nav.progress }}
-      />
+      <p className="wordmark text-[1.85rem]">OpenFrame</p>
+      <AnalysisNav id={view.bundleId} current={current} labels={nav} />
       <p className="text-sm text-muted-foreground">{view.generic ? copy.briefing.genericMatch : copy.briefing.preparedMatch}</p>
-      <h1 className="font-serif text-3xl leading-tight sm:text-4xl">{view.subject}</h1>
+      <h1 className="text-2xl font-bold leading-tight">{view.subject}</h1>
       <p className="text-sm">
         <span className="text-muted-foreground">{copy.briefing.yourTopic}: </span>
         {view.query}
@@ -38,7 +40,25 @@ export function BriefingIntro({
       {view.generation === "LIVE_AI" ? (
         <p className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">{copy.briefing.generatedUnretrieved}</p>
       ) : null}
-      <p className="text-sm">{view.notice}</p>
+      <section className="paper-card space-y-2 p-4">
+        <h2 className="text-base font-bold">{zh ? "数据模式" : "Data mode"}</h2>
+        <p className="text-sm">
+          {view.sourceMode === "DEMO"
+            ? zh
+              ? "虚构演示。来源保持 DEMO 标记。分析是预生成的（PRECOMPUTED），不是真实新闻，也不是实时模型调用。"
+              : "Fictional demonstration. Sources stay marked DEMO. The analysis is pre-generated (PRECOMPUTED), not real news and not a live model call."
+            : view.generation === "PRECOMPUTED"
+              ? zh
+                ? "真实来源样本。报道链接是真实报道。分析是预生成的（PRECOMPUTED），不是打开这一页时的模型调用。"
+                : "Real-source sample. The reporting links are real. The analysis is pre-generated (PRECOMPUTED), not a live model call on this page."
+              : view.masthead}
+        </p>
+        {view.notice ? <p className="text-sm">{view.notice}</p> : null}
+        <p className="text-sm text-muted-foreground">{view.masthead}</p>
+        <p className="text-xs text-muted-foreground">
+          data_mode {view.sourceMode} · analysis_generation {view.generation}
+        </p>
+      </section>
       {view.integrityIssues.length > 0 ? (
         <ul className="space-y-1 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">
           {view.integrityIssues.slice(0, 8).map((issue) => (
@@ -59,7 +79,7 @@ export function PerspectivesBody({ view, copy }: { view: BriefingView; copy: Mes
       <section className="space-y-4">
         <h2 className="font-serif text-2xl">{copy.briefing.narrativeTitle}</h2>
         <p>{view.comparisonSummary}</p>
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-4">
           <article className="rounded-xl border border-border bg-card p-4">
             <h3 className="font-medium">{copy.briefing.sharedTitle}</h3>
             <ul className="mt-2 space-y-2 text-sm">
@@ -86,8 +106,13 @@ export function PerspectivesBody({ view, copy }: { view: BriefingView; copy: Mes
         <p className="text-sm text-muted-foreground">{view.voices}</p>
       </section>
       <section className="space-y-4">
-        <h2 className="font-serif text-2xl">{copy.briefing.articlesTitle}</h2>
-        <div className="grid gap-4 lg:grid-cols-3">
+        <h2 className="text-2xl font-bold">{copy.briefing.articlesTitle}</h2>
+        <p className="text-sm text-muted-foreground">
+          {copy.nav.home === "首页"
+            ? "每一条描述的是这篇文章，不是这家媒体的整体。"
+            : "Each note describes that article, not the outlet as a whole."}
+        </p>
+        <div className="grid gap-4">
           {view.analysed.map((article) => (
             <article id={`article-${article.id}`} key={article.id} className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
               <SourceBadge label={article.sourceLabel} mode={article.sourceMode} />
@@ -156,7 +181,12 @@ export function EvidenceBody({ view, copy }: { view: BriefingView; copy: Message
   }
   return (
     <div className="mt-8 space-y-6">
-      <section className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+      <p className="paper-card p-4 text-sm">
+        {copy.nav.home === "首页"
+          ? "这些状态只核对单条主张，不是对整件事的真或假结论。状态名称保持夹具里的英文。"
+          : "These statuses check individual claims. They are not a true or false verdict for the whole story. Status names stay in the fixture’s English."}
+      </p>
+      <section className="grid gap-2">
         {(Object.keys(copy.verificationHelp) as Array<keyof typeof copy.verificationHelp>).map((status) => (
           <article key={status} className="rounded-xl border border-border bg-card p-3">
             <StatusBadge status={status} />
@@ -281,12 +311,14 @@ export function ReportBody({
         filename={`openframe-demo-${view.bundleId}`}
         labels={{ md: copy.report.exportMd, json: copy.report.exportJson, print: copy.report.print, done: copy.report.downloaded }}
       />
-      <Section title={copy.report.summary}>
-        <p>{view.report.summary}</p>
-        <p className="mt-2 font-medium">{view.report.bottomLine}</p>
+      <Section title={copy.nav.home === "首页" ? "底线" : "Bottom line"}>
+        <p className="font-medium">{view.report.bottomLine}</p>
         <BottomLineLinks view={view} />
       </Section>
-      <Section title="Findings">
+      <Section title={copy.nav.home === "首页" ? "执行摘要" : "Executive summary"}>
+        <p>{view.report.summary}</p>
+      </Section>
+      <Section title={copy.nav.home === "首页" ? "主要发现" : "Key findings"}>
         <ul className="space-y-4">
           {view.report.findings.map((finding) => (
             <li id={`finding-${finding.id}`} key={finding.id}>
