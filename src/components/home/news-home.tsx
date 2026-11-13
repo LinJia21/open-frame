@@ -10,6 +10,7 @@ import { PageDock } from "@/components/layout/page-dock";
 import { NEWS_SOURCES, sourceTitle } from "@/lib/sources/catalog";
 import { useSourceIds } from "@/lib/sources/use-source-ids";
 import type { NewsDiscoveryResult } from "@/lib/sources/types";
+import { StoryFigure } from "@/components/media/story-figure";
 import { SearchProgressCard } from "@/components/home/search-progress-card";
 import { PREPARED_REPORT_HREF, matchPreparedTopic } from "@/lib/demo/topic-match";
 import { readDemoProgress } from "@/lib/home/demo-progress";
@@ -273,6 +274,7 @@ function EventCard({ card, copy }: { card: HomeCardView; copy: HomeCopy }) {
   const titleClass = "text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-foreground";
   return (
     <article className="topic-card">
+      <StoryFigure title={card.title} note={copy.imageNote} />
       <div className="flex flex-wrap items-start justify-between gap-3">
         <h2 className="min-w-0 flex-1 text-[1.35rem] font-bold leading-[1.35] text-foreground">
           {card.perspectivesHref ? (
@@ -302,11 +304,20 @@ function EventCard({ card, copy }: { card: HomeCardView; copy: HomeCopy }) {
           <span className="min-w-0">{source}</span>
         </p>
         {card.evidenceHref ? (
-          <Link href={card.evidenceHref} className="evidence-pill">
+          <Link href={card.evidenceHref} className="paper-action-quiet">
             {copy.evidenceLink}
           </Link>
-        ) : null}
+        ) : (
+          <button type="button" className="closed-action" disabled>
+            {copy.noAnalysis}
+          </button>
+        )}
       </div>
+      {card.perspectivesHref ? (
+        <Link href={card.perspectivesHref} className="paper-action mt-3 w-full">
+          {copy.openPerspectives}
+        </Link>
+      ) : null}
       <p className="mt-3 text-[13px] leading-[1.55] text-muted-foreground">
         {copy.verify}：{card.sampleKind === "layout-sample" ? copy.verifyLayout : copy.verifyOpen}
       </p>
@@ -396,6 +407,7 @@ function SearchResults({
             return (
               <li key={`${item.sourceId}:${item.id}`}>
                 <article className="topic-card">
+                  <StoryFigure title={item.title || ""} note={copy.imageNote} />
                   <h2 className="text-[1.35rem] font-bold leading-[1.35] text-foreground">
                     {href ? (
                       <a href={href} target="_blank" rel="noreferrer noopener" className="text-foreground">
@@ -476,6 +488,9 @@ interface HomeCopy {
   verifyOpen: string;
   verifyLayout: string;
   evidenceLink: string;
+  openPerspectives: string;
+  noAnalysis: string;
+  imageNote: string;
   forYouTitle: string;
   forYouBody: string;
   locateTitle: string;
@@ -516,6 +531,9 @@ function copyFor(language: UiLanguage): HomeCopy {
       verifyOpen: "未判斷整件事",
       verifyLayout: "不適用",
       evidenceLink: "具體主張",
+      openPerspectives: "打開觀點",
+      noAnalysis: "沒有分析頁",
+      imageNote: "公開授權的主題配圖，不是這篇報導的原圖。",
       forYouTitle: "For You 尚未開通",
       forYouBody: "沒有關注推薦。這裡不展示推薦列表。",
       locateTitle: "Locate 尚未開通",
@@ -559,6 +577,9 @@ function copyFor(language: UiLanguage): HomeCopy {
       verifyOpen: "未判断整件事",
       verifyLayout: "不适用",
       evidenceLink: "具体主张",
+      openPerspectives: "打开观点",
+      noAnalysis: "没有分析页",
+      imageNote: "公开授权的主题配图，不是这篇报道的原图。",
       forYouTitle: "For You 尚未开通",
       forYouBody: "没有关注推荐。这里不展示推荐列表。",
       locateTitle: "Locate 尚未开通",
@@ -601,6 +622,9 @@ function copyFor(language: UiLanguage): HomeCopy {
     verifyOpen: "No verdict on the whole event",
     verifyLayout: "Not applicable",
     evidenceLink: "Specific claims",
+    openPerspectives: "Open perspectives",
+    noAnalysis: "No analysis page",
+    imageNote: "Openly licensed thematic photo, not a picture from this article.",
     forYouTitle: "For You is not open",
     forYouBody: "There are no follow recommendations and no recommendation list.",
     locateTitle: "Locate is not open",

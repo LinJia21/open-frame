@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { corpusCopy } from "@/lib/i18n/corpus-copy";
 import { providerErrorText } from "@/lib/i18n/provider-copy";
+import { StoryFigure } from "@/components/media/story-figure";
 import type { PublicProviderStatus } from "@/lib/analysis/provider-status";
 
 interface LibraryStats {
@@ -227,6 +228,7 @@ export function CorpusPanel({
             <ul className="mt-3 space-y-2">
               {rows.map((row) => (
                 <li key={row.id} className="rounded-[1.15rem] border border-border bg-[#f4efe6] p-3">
+                  <StoryFigure title={row.title} note={copy.imageNote} />
                   <label className="flex min-h-11 cursor-pointer gap-3">
                     <input type="checkbox" checked={selectedIds.includes(row.id)} onChange={() => toggle(row.id)} className="mt-1 size-5 shrink-0" />
                     <span className="min-w-0">

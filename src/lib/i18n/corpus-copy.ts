@@ -37,6 +37,7 @@ const COPY = {
     testFixture: "Test fixture, not a saved historical article",
     truncated: "Excerpt truncated. The missing part was not written.",
     formatHint: "Use the format in docs/CORPUS-IMPORT.md. A sample with example.com is rejected on purpose.",
+    imageNote: "Openly licensed thematic photo, not a picture from this article.",
   },
   zh: {
     title: "已保存的历史资料",
@@ -74,6 +75,7 @@ const COPY = {
     testFixture: "测试样本，不是已保存的历史报道",
     truncated: "摘录被截断。缺的部分没有补写。",
     formatHint: "格式见 docs/CORPUS-IMPORT.md。带 example.com 的示例会故意被拒绝。",
+    imageNote: "公开授权的主题配图，不是这篇报道的原图。",
   },
   "zh-Hant": {
     title: "已保存的歷史資料",
@@ -111,6 +113,7 @@ const COPY = {
     testFixture: "測試樣本，不是已保存的歷史報導",
     truncated: "摘錄被截斷。缺的部分沒有補寫。",
     formatHint: "格式見 docs/CORPUS-IMPORT.md。帶 example.com 的示例會故意被拒絕。",
+    imageNote: "公開授權的主題配圖，不是這篇報導的原圖。",
   },
   es: {
     title: "Materiales históricos guardados",
@@ -148,6 +151,7 @@ const COPY = {
     testFixture: "Fixture de prueba, no un artículo histórico guardado",
     truncated: "Extracto truncado. La parte que falta no se escribió.",
     formatHint: "El formato está en docs/CORPUS-IMPORT.md. Un ejemplo con example.com se rechaza a propósito.",
+    imageNote: "Foto temática con licencia abierta, no es una imagen de este artículo.",
   },
   fr: {
     title: "Documents historiques enregistrés",
@@ -185,6 +189,7 @@ const COPY = {
     testFixture: "Jeu de test, pas un article historique enregistré",
     truncated: "Extrait tronqué. La partie manquante n’a pas été écrite.",
     formatHint: "Le format est dans docs/CORPUS-IMPORT.md. Un exemple avec example.com est refusé exprès.",
+    imageNote: "Photo thématique sous licence ouverte, pas une image de cet article.",
   },
 } as const;
 

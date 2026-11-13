@@ -25,6 +25,9 @@ export interface SubscribeCopy extends FrameCopy {
   intro: string;
   unpriced: string;
   cta: string;
+  closeDemo: string;
+  demoTitle: string;
+  demoBody: string;
   noCharge: string;
   footnote: string;
   plans: ClosedPlan[];
@@ -43,19 +46,27 @@ export interface MeCopy extends FrameCopy {
   accountState: string;
   login: string;
   loginHint: string;
+  closeDemo: string;
+  demoTitle: string;
+  demoField: string;
+  demoSubmit: string;
+  demoResult: string;
 }
 
 const subscribe: Record<PageScript, SubscribeCopy> = {
   zh: {
-    lead: "订阅是一张还不能用的方案页。没有价格，也不会扣款。",
-    points: ["按钮是停用的。", "不会创建订单。", "不会出现购买成功。"],
+    lead: "订阅可以打开方案演示。没有价格，也不会扣款。",
+    points: ["点开方案会看到演示说明。", "不会创建订单。", "不会出现购买成功。"],
     title: "订阅",
     badge: "尚未开通",
-    intro: "订阅还没开通。下面的方案只是页面样子，现在不能购买。",
+    intro: "方案还没开通。可以点开看演示说明，现在不能购买。",
     unpriced: "未定价",
-    cta: "尚未开通",
+    cta: "查看演示",
+    closeDemo: "收起演示",
+    demoTitle: "这是演示",
+    demoBody: "「{name}」没有价格。这里没有创建订单，也没有购买成功。",
     noCharge: "没有可支付的价格，也不会扣款。",
-    footnote: "上面的方案按钮点不了。不会创建订单，也不会显示购买成功。",
+    footnote: "查看演示不会创建订单，也不会显示购买成功。",
     plans: [
       {
         name: "阅读",
@@ -75,15 +86,18 @@ const subscribe: Record<PageScript, SubscribeCopy> = {
     ],
   },
   "zh-Hant": {
-    lead: "訂閱是一張還不能用的方案頁。沒有價格，也不會扣款。",
-    points: ["按鈕是停用的。", "不會建立訂單。", "不會出現購買成功。"],
+    lead: "訂閱可以打開方案演示。沒有價格，也不會扣款。",
+    points: ["點開方案會看到演示說明。", "不會建立訂單。", "不會出現購買成功。"],
     title: "訂閱",
     badge: "尚未開通",
-    intro: "訂閱還沒開通。下面的方案只是頁面樣子，現在不能購買。",
+    intro: "方案還沒開通。可以點開看演示說明，現在不能購買。",
     unpriced: "未定價",
-    cta: "尚未開通",
+    cta: "查看演示",
+    closeDemo: "收起演示",
+    demoTitle: "這是演示",
+    demoBody: "「{name}」沒有價格。這裡沒有建立訂單，也沒有購買成功。",
     noCharge: "沒有可支付的價格，也不會扣款。",
-    footnote: "上面的方案按鈕點不了。不會建立訂單，也不會顯示購買成功。",
+    footnote: "查看演示不會建立訂單，也不會顯示購買成功。",
     plans: [
       {
         name: "閱讀",
@@ -103,15 +117,18 @@ const subscribe: Record<PageScript, SubscribeCopy> = {
     ],
   },
   en: {
-    lead: "Subscribe is a plan screen that is not open. There is no price and nothing is charged.",
-    points: ["The buttons are off.", "No order is created.", "A purchase cannot succeed here."],
+    lead: "Subscribe can open a plan demo. There is no price and nothing is charged.",
+    points: ["Opening a plan shows a demo note.", "No order is created.", "A purchase cannot succeed here."],
     title: "Subscribe",
     badge: "Not open",
-    intro: "Subscribe is not open. The plans below are the screen only. Nothing can be bought.",
+    intro: "Plans are not open. You can open a demo note. Nothing can be bought.",
     unpriced: "Unpriced",
-    cta: "Not open",
+    cta: "View demo",
+    closeDemo: "Hide demo",
+    demoTitle: "This is a demo",
+    demoBody: "{name} has no price. No order was created, and this is not a successful purchase.",
     noCharge: "There is no payable price, and nothing is charged.",
-    footnote: "The plan buttons above do nothing. This page does not create an order or show a successful purchase.",
+    footnote: "View demo does not create an order or show a successful purchase.",
     plans: [
       {
         name: "Reading",
@@ -134,52 +151,67 @@ const subscribe: Record<PageScript, SubscribeCopy> = {
 
 const me: Record<PageScript, MeCopy> = {
   zh: {
-    lead: "我的是个人入口。账号和登录还没开通。设置可以打开。",
-    points: ["没有账号。", "登录按钮是停用的。", "设置仍在单独的页面。"],
+    lead: "我的可以打开登录演示。演示不会登录成功。设置可以打开。",
+    points: ["没有账号。", "登录演示不会连接账号服务。", "设置仍在单独的页面。"],
     title: "我的",
     name: "未登录",
     badge: "尚未开通",
-    intro: "这里还没有账号。登录是停用的，不会出现登录成功。",
+    intro: "这里还没有账号。可以打开登录演示，但不会出现登录成功。",
     settings: "设置",
     settingsHint: "提供方说明，以及首页示例的范围",
     settingsState: "可打开",
     account: "账号",
     accountHint: "没有个人资料，也没有头像",
     accountState: "尚未开通",
-    login: "登录",
+    login: "查看登录演示",
     loginHint: "不会连接账号服务",
+    closeDemo: "收起演示",
+    demoTitle: "登录演示",
+    demoField: "称呼，只留在这一页",
+    demoSubmit: "试试演示",
+    demoResult: "没有连接账号服务。你仍然是未登录。这不是登录成功。",
   },
   "zh-Hant": {
-    lead: "我的是個人入口。帳號和登入還沒開通。設定可以打開。",
-    points: ["沒有帳號。", "登入按鈕是停用的。", "設定仍在單獨的頁面。"],
+    lead: "我的可以打開登入演示。演示不會登入成功。設定可以打開。",
+    points: ["沒有帳號。", "登入演示不會連接帳號服務。", "設定仍在單獨的頁面。"],
     title: "我的",
     name: "未登入",
     badge: "尚未開通",
-    intro: "這裡還沒有帳號。登入是停用的，不會出現登入成功。",
+    intro: "這裡還沒有帳號。可以打開登入演示，但不會出現登入成功。",
     settings: "設定",
     settingsHint: "提供方說明，以及首頁示例的範圍",
     settingsState: "可打開",
     account: "帳號",
     accountHint: "沒有個人資料，也沒有頭像",
     accountState: "尚未開通",
-    login: "登入",
+    login: "查看登入演示",
     loginHint: "不會連接帳號服務",
+    closeDemo: "收起演示",
+    demoTitle: "登入演示",
+    demoField: "稱呼，只留在這一頁",
+    demoSubmit: "試試演示",
+    demoResult: "沒有連接帳號服務。你仍然是未登入。這不是登入成功。",
   },
   en: {
-    lead: "Me is the profile entry. Account and sign-in are not open. Settings can be opened.",
-    points: ["There is no account.", "Sign-in is off.", "Settings stays on its own page."],
+    lead: "Me can open a sign-in demo. The demo cannot sign you in. Settings can be opened.",
+    points: ["There is no account.", "The sign-in demo does not contact an account service.", "Settings stays on its own page."],
     title: "Me",
     name: "Not signed in",
     badge: "Not open",
-    intro: "There is no account here. Sign-in is off, so it cannot succeed.",
+    intro: "There is no account here. You can open a sign-in demo. It cannot succeed.",
     settings: "Settings",
     settingsHint: "Provider note and the scope of the home samples",
     settingsState: "Open",
     account: "Account",
     accountHint: "No profile and no portrait",
     accountState: "Not open",
-    login: "Sign in",
+    login: "View sign-in demo",
     loginHint: "Does not contact an account service",
+    closeDemo: "Hide demo",
+    demoTitle: "Sign-in demo",
+    demoField: "A name, kept only on this page",
+    demoSubmit: "Try the demo",
+    demoResult: "No account service was contacted. You are still not signed in. This is not a successful sign-in.",
   },
 };
 

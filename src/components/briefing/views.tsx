@@ -5,6 +5,8 @@ import { AnalysisBadge, AnalysisNav, SourceBadge, StatusBadge } from "@/componen
 import { FICTIONAL_DEMO_PUBLISHER_LABEL } from "@/lib/openframe/openframe";
 import { formatLongDate, formatTimestamp } from "@/lib/i18n/languages";
 import { ExportBar } from "@/components/briefing/export-bar";
+import { StoryFigure } from "@/components/media/story-figure";
+import { CardFold } from "@/components/ui/card-fold";
 
 function han(copy: Messages): "zh" | "zh-Hant" | null {
   if (copy.nav.home === "首页") return "zh";
@@ -132,7 +134,11 @@ export function PerspectivesBody({ view, copy }: { view: BriefingView; copy: Mes
         </p>
         <div className="grid gap-4">
           {view.analysed.map((article) => (
-            <article id={`article-${article.id}`} key={article.id} className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
+            <article id={`article-${article.id}`} key={article.id} className="topic-card flex flex-col gap-3">
+              <StoryFigure
+                title={article.title}
+                note={pick(copy, "公开授权的主题配图，不是这篇报道的原图。", "公開授權的主題配圖，不是這篇報導的原圖。", "Openly licensed thematic photo, not a picture from this article.")}
+              />
               <SourceBadge label={article.sourceLabel} mode={article.sourceMode} />
               <p className="text-xs text-muted-foreground">
                 <PublisherName name={article.publisher} fictional={article.fictional} />
@@ -148,7 +154,12 @@ export function PerspectivesBody({ view, copy }: { view: BriefingView; copy: Mes
                 <span className="mt-1 block break-all text-xs text-muted-foreground">{article.url}</span>
               </a>
               <p className="font-mono text-[11px] text-muted-foreground">{article.id}</p>
-              <div className="space-y-3 border-t border-border pt-3">
+              <CardFold
+                label={pick(copy, "展开这篇的对照", "展開這篇的對照", "Show the comparison")}
+                openLabel={pick(copy, "收起对照", "收起對照", "Hide the comparison")}
+                startOpen
+              >
+              <div className="space-y-3">
                 {article.dimensions.map((dimension) => (
                   <div key={dimension.key}>
                     <h4 className="text-sm font-semibold">{dimension.label}</h4>
@@ -163,6 +174,7 @@ export function PerspectivesBody({ view, copy }: { view: BriefingView; copy: Mes
                   </div>
                 ))}
               </div>
+              </CardFold>
               {article.articleOnlyNote ? <p className="text-xs text-muted-foreground">{article.articleOnlyNote}</p> : null}
             </article>
           ))}

@@ -529,6 +529,35 @@ body:not(:has(.news-home)) {
   background: transparent;
   padding: 1rem 1.15rem;
 }
+.story-figure {
+  margin: 0 0 0.85rem;
+}
+.story-figure img {
+  display: block;
+  width: 100%;
+  height: 10.5rem;
+  border-radius: 1.05rem;
+  object-fit: cover;
+}
+.story-figure figcaption {
+  margin-top: 0.35rem;
+  color: #5c564c;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.card-fold {
+  display: grid;
+  grid-template-rows: 0fr;
+}
+.card-fold > div {
+  overflow: hidden;
+}
+.card-fold[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+.topic-card[data-selected="true"] {
+  border-color: #e4d48a;
+}
 .news-home article.rounded-xl,
 .news-home li.rounded-xl {
   border-radius: 1.45rem;
@@ -540,8 +569,12 @@ body:not(:has(.news-home)) {
   .paper-action,
   .paper-action-quiet,
   .closed-action,
-  .evidence-pill {
+  .evidence-pill,
+  .topic-card {
     transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, opacity 160ms ease;
+  }
+  .card-fold {
+    transition: grid-template-rows 180ms ease;
   }
 }
 ::view-transition {

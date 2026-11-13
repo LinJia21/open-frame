@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { CardFold } from "@/components/ui/card-fold";
 import { NEWS_SOURCES, sourceTitle } from "@/lib/sources/catalog";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { DEMO_STEP_COUNT, DEMO_STEP_MS, demoProgressPhase, type DemoProgressSnapshot } from "@/lib/home/demo-progress";
@@ -24,6 +25,8 @@ interface ProgressCopy {
   completed: string;
   completedNote: string;
   openSample: string;
+  showSources: string;
+  hideSources: string;
   liveSummary: (step: number) => string;
 }
 
@@ -47,6 +50,8 @@ const COPY: Record<Script, ProgressCopy> = {
     completed: "演示完成",
     completedNote: "真实分析完成后，这里会变成可打开的事件卡片。",
     openSample: "查看示例报告",
+    showSources: "展开已找到的来源",
+    hideSources: "收起来源",
     liveSummary: (step) => `第 ${step} 步，共 ${DEMO_STEP_COUNT} 步`,
   },
   "zh-Hant": {
@@ -68,6 +73,8 @@ const COPY: Record<Script, ProgressCopy> = {
     completed: "演示完成",
     completedNote: "真實分析完成後，這裡會變成可打開的事件卡片。",
     openSample: "查看示例報告",
+    showSources: "展開已找到的來源",
+    hideSources: "收起來源",
     liveSummary: (step) => `第 ${step} 步，共 ${DEMO_STEP_COUNT} 步`,
   },
   en: {
@@ -89,6 +96,8 @@ const COPY: Record<Script, ProgressCopy> = {
     completed: "Demo complete",
     completedNote: "When a real analysis finishes, this becomes a card you can open.",
     openSample: "Open the sample report",
+    showSources: "Show sources found",
+    hideSources: "Hide sources",
     liveSummary: (step) => `Step ${step} of ${DEMO_STEP_COUNT}`,
   },
 };
@@ -126,14 +135,16 @@ export function SearchProgressCard({ progress, language }: { progress: DemoProgr
           {sources.length > 0 ? copy.foundSources(sources.length) : copy.noSourcesYet}
         </p>
         {sources.length > 0 ? (
-          <ul className="mt-2 flex flex-wrap gap-1.5">
-            {sources.map((source) => (
-              <li key={source.id} className="flex items-center gap-1.5 rounded-full border border-of-cream-border bg-white px-1.5 py-1">
-                <Image src={source.logo} alt="" width={20} height={20} className="size-5 object-contain" />
-                <span className="max-w-[9rem] truncate text-xs text-foreground">{sourceTitle(source, language)}</span>
-              </li>
-            ))}
-          </ul>
+          <CardFold label={copy.showSources} openLabel={copy.hideSources}>
+            <ul className="flex flex-wrap gap-1.5">
+              {sources.map((source) => (
+                <li key={source.id} className="flex min-h-11 items-center gap-1.5 rounded-full border border-of-cream-border bg-white px-2 py-1">
+                  <Image src={source.logo} alt="" width={20} height={20} className="size-5 object-contain" />
+                  <span className="max-w-[9rem] truncate text-xs text-foreground">{sourceTitle(source, language)}</span>
+                </li>
+              ))}
+            </ul>
+          </CardFold>
         ) : null}
       </div>
 
