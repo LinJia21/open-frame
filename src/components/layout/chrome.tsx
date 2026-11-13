@@ -12,12 +12,19 @@ export function FrameMark() {
 
 export function SiteHeader() {
   return (
-    <header className="no-print border-b border-[#ddd6c8] bg-[#f7f4ee] text-[#1c1915]">
-      <div className="mx-auto flex max-w-[40rem] items-baseline justify-between gap-4 px-5 py-4">
-        <Link href="/" className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1c1915]">
-          <span className="text-[1.375rem] font-medium leading-none tracking-[-0.02em]">OpenFrame</span>
+    <header className="site-header no-print border-b border-[#eadfce] bg-[#f4efe6] text-[#1c1915]">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4">
+        <Link href="/" className="wordmark text-[1.85rem] text-[#1c1915]">
+          OpenFrame
         </Link>
-        <span className="text-[13px] leading-5 text-[#3a342c]">See Beyond the Headlines</span>
+        <nav aria-label="页面" className="flex items-center gap-2">
+          <Link href="/library" className="dock-pill">
+            资料库<span className="sr-only"> Library</span>
+          </Link>
+          <Link href="/settings" className="dock-pill">
+            设置<span className="sr-only"> Settings</span>
+          </Link>
+        </nav>
       </div>
     </header>
   );
@@ -39,7 +46,7 @@ export function PrototypeBanner({ provider }: { provider: PublicProviderStatus }
 export function SourceBadge({ label, mode }: { label: string; mode: string }) {
   const fictional = mode === "DEMO";
   return (
-    <span className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-semibold ${fictional ? "bg-[#8d4324] text-white" : "bg-sky-100 text-sky-950"}`}>
+    <span className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-semibold ${fictional ? "bg-[#8d4324] text-white" : "bg-[#eadcf8] text-[#4d3d6b]"}`}>
       {label}
       {fictional ? <span className="tracking-[0.12em]">DEMO DATA</span> : null}
     </span>
@@ -48,7 +55,7 @@ export function SourceBadge({ label, mode }: { label: string; mode: string }) {
 
 export function AnalysisBadge({ label, generatedAt }: { label: string; generatedAt: string | null }) {
   return (
-    <span title={generatedAt ? `Generated ${generatedAt}` : undefined} className="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-900">
+    <span title={generatedAt ? `Generated ${generatedAt}` : undefined} className="inline-flex rounded-full bg-[#f3eee4] px-2.5 py-1 text-xs font-semibold text-[#1c1915]">
       {label}
     </span>
   );
@@ -91,8 +98,8 @@ export function AnalysisNav({
           key={key}
           href={href}
           aria-current={current === key ? "page" : undefined}
-          className={`rounded-lg border px-2 py-2 text-center text-sm ${
-            current === key ? "border-[#8d4324] bg-[#8d4324] text-white" : "border-border bg-card"
+          className={`rounded-full border px-2 py-2 text-center text-sm ${
+            current === key ? "border-[#1c1915] bg-[#1c1915] text-[#fbf7f1]" : "border-[#eadfce] bg-[#fbf7f1] text-[#1c1915]"
           }`}
         >
           <span className="block text-[10px] tracking-widest opacity-80">0{index + 1}</span>

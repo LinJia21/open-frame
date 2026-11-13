@@ -10,6 +10,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## 协作说明
 
+给队友 Agent 的阅读顺序、分支、测试和 PR 步骤见 [CONTRIBUTING.md](CONTRIBUTING.md)。下面这些规则仍然有效，不要用那份指南替换它们。
+
 队友共用这一份代码库。每个任务、每个 owner 使用自己的分支。禁止直接向 `main` 提交或推送。
 
 从已经验收的 `main` 起步。动手前先确认基线：当前 HEAD、分支，以及这批改动相对哪一次已验收提交。

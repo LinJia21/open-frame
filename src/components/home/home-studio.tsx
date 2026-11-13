@@ -138,7 +138,7 @@ export function HomeStudio({
               <label
                 key={option.id}
                 className={`cursor-pointer rounded-lg border px-3 py-2 text-center text-sm ${
-                  language === option.id ? "border-[#8d4324] bg-[#f6e7cf]" : "border-border"
+                  language === option.id ? "border-[#1c1915] bg-[#f3e6a4]" : "border-border"
                 }`}
               >
                 <input
@@ -185,9 +185,9 @@ export function HomeStudio({
                   setQuery(topic.title);
                   setError(null);
                 }}
-                className="block w-full rounded-xl border border-border px-3 py-3 text-left hover:border-[#8d4324]"
+                className="paper-card block w-full px-3 py-3 text-left"
               >
-                <span className="text-xs tracking-wide text-[#8d4324]">{index === 0 ? "Primary demo" : "Prepared demo"}</span>
+                <span className="text-xs tracking-wide text-[#5c564c]">{index === 0 ? "Primary demo" : "Prepared demo"}</span>
                 <span className="mt-1 block font-medium">{topic.title}</span>
                 <span className="mt-1 block text-sm text-muted-foreground">{topic.blurb}</span>
               </button>
@@ -201,7 +201,7 @@ export function HomeStudio({
           <ol className="mt-3 space-y-3">
             {copy.home.steps.map((step, index) => (
               <li key={step.title} className="rounded-xl border border-border bg-card p-4">
-                <span className="font-serif text-[#8d4324]">0{index + 1}</span>
+                <span className="font-serif text-[#5c564c]">0{index + 1}</span>
                 <h3 className="font-medium">{step.title}</h3>
                 <p className="text-sm text-muted-foreground">{step.body}</p>
               </li>
@@ -224,7 +224,7 @@ export function HomeStudio({
             <ul className="mt-3 space-y-2">
               {recent.map((item) => (
                 <li key={item.bundleId}>
-                  <a href={`/analysis/${item.bundleId}/perspectives`} className="block rounded-xl border border-border bg-card p-3 hover:border-[#8d4324]">
+                  <a href={`/analysis/${item.bundleId}/perspectives`} className="paper-card block p-3">
                     <span className="text-xs text-muted-foreground">{item.generic ? copy.home.genericChip : copy.home.preparedChip} · {item.sourceLabel} · data_mode {item.dataMode}</span>
                     <span className="mt-1 block font-medium">{item.subject}</span>
                   </a>

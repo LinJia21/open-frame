@@ -4,6 +4,7 @@ import { useMemo, useState, type FormEvent, type KeyboardEvent } from "react";
 import Link from "next/link";
 import type { HomeCardView } from "@/lib/home/feed";
 import type { Language } from "@/lib/i18n/languages";
+import { PageDock } from "@/components/layout/page-dock";
 
 const TABS = [
   { id: "all", label: "All" },
@@ -12,6 +13,8 @@ const TABS = [
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
+
+const SOURCE_SWATCHES = ["#f0d0c4", "#e4d4f6", "#f3e3b0", "#d5e2d4", "#f0d0e2"];
 
 export function NewsHome({
   cards,
@@ -44,103 +47,107 @@ export function NewsHome({
   }
 
   return (
-    <div className="newsroom news-home">
-      <div className="mx-auto w-full max-w-[40rem] px-5 pb-8 pt-6">
-        <form
-          role="search"
-          onSubmit={(event: FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            setTab("all");
-          }}
-        >
-          <label htmlFor="home-q" className="sr-only">
-            {copy.searchLabel}
-          </label>
-          <div className="relative">
-            <SearchIcon />
-            <input
-              id="home-q"
-              name="q"
-              value={query}
-              onChange={(event) => {
-                setQuery(event.target.value);
-                setTab("all");
-              }}
-              placeholder={copy.searchPlaceholder}
-              className="w-full rounded-sm border border-[#c4baab] bg-white py-2.5 pl-11 pr-3 text-[16px] leading-[1.65] text-[#1c1915] placeholder:text-[#6b645b] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c1915]"
-            />
-          </div>
-          <p className="mt-2 text-[13px] leading-[1.65] text-[#3a342c]">{copy.searchHint}</p>
-        </form>
-
-        <div
-          role="tablist"
-          aria-label={copy.tabsLabel}
-          onKeyDown={onTabsKeyDown}
-          className="mt-6 flex gap-6 border-b border-[#e4ddd2]"
-        >
-          {TABS.map((item) => {
-            const selected = tab === item.id;
-            return (
-              <button
-                key={item.id}
-                id={`tab-${item.id}`}
-                type="button"
-                role="tab"
-                aria-selected={selected}
-                aria-controls={`panel-${item.id}`}
-                tabIndex={selected ? 0 : -1}
-                onClick={() => setTab(item.id)}
-                className={`-mb-px border-b-2 pb-2 text-[16px] leading-[1.4] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1c1915] ${
-                  selected ? "border-[#1c1915] font-medium text-[#1c1915]" : "border-transparent text-[#3a342c] hover:text-[#1c1915]"
-                }`}
+    <div className="spectrax-stage">
+      <aside className="spectrax-aside">
+        <p className="wordmark text-[3.25rem]">OpenFrame</p>
+        <p className="mt-3 text-[15px] leading-7 text-[#5c564c]">See Beyond the Headlines</p>
+        <p className="mt-6 text-[16px] leading-7">{copy.asideLead}</p>
+        <ol className="mt-5 list-decimal space-y-3 pl-5 text-[15px] leading-7 text-[#3a342c]">
+          {copy.asidePoints.map((point) => (
+            <li key={point}>{point}</li>
+          ))}
+        </ol>
+      </aside>
+      <div className="newsroom news-home">
+        <div className="news-home-scroll">
+          <div className="mx-auto w-full max-w-[40rem] px-4 pb-6 pt-5">
+            <div className="flex items-center gap-3">
+              <Link href="/" className="wordmark shrink-0 text-[1.85rem] text-[#1c1915]">
+                OpenFrame
+              </Link>
+              <form
+                role="search"
+                className="ml-auto min-w-0 flex-1"
+                onSubmit={(event: FormEvent<HTMLFormElement>) => {
+                  event.preventDefault();
+                  setTab("all");
+                }}
               >
-                {item.label}
-              </button>
-            );
-          })}
-        </div>
+                <label htmlFor="home-q" className="sr-only">
+                  {copy.searchLabel}
+                </label>
+                <div className="search-pill ml-auto">
+                  <input
+                    id="home-q"
+                    name="q"
+                    value={query}
+                    onChange={(event) => {
+                      setQuery(event.target.value);
+                      setTab("all");
+                    }}
+                    placeholder={copy.searchPlaceholder}
+                  />
+                  <button type="submit" aria-label={copy.searchLabel}>
+                    <SearchIcon />
+                  </button>
+                </div>
+              </form>
+            </div>
+            <p className="mt-3 text-[13px] leading-[1.65] text-[#5c564c]">{copy.searchHint}</p>
 
-        <p className="mt-6 text-[13px] leading-[1.65] text-[#3a342c]">{copy.globalMark}</p>
+            <div role="tablist" aria-label={copy.tabsLabel} onKeyDown={onTabsKeyDown} className="scope-row mt-4">
+              {TABS.map((item) => {
+                const selected = tab === item.id;
+                const unavailable = item.id !== "all";
+                return (
+                  <button
+                    key={item.id}
+                    id={`tab-${item.id}`}
+                    type="button"
+                    role="tab"
+                    aria-selected={selected}
+                    aria-controls={`panel-${item.id}`}
+                    aria-describedby={unavailable ? "scope-unavailable" : undefined}
+                    data-unavailable={unavailable ? "true" : undefined}
+                    tabIndex={selected ? 0 : -1}
+                    onClick={() => setTab(item.id)}
+                    className="scope-pill"
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+            <p id="scope-unavailable" className="mt-3 text-[13px] leading-[1.65] text-[#5c564c]">
+              {copy.scopeNote}
+            </p>
+            <p className="mt-1 text-[13px] leading-[1.65] text-[#5c564c]">{copy.globalMark}</p>
 
-        <div id="panel-all" role="tabpanel" aria-labelledby="tab-all" hidden={tab !== "all"} className="mt-2">
-          {tab === "all" ? (
-            visible.length === 0 ? (
-              <p className="py-6 text-[16px] leading-[1.65] text-[#1c1915]">{copy.noMatch}</p>
-            ) : (
-              <ol>
-                {visible.map((card) => (
-                  <li key={card.sampleKind + (card.bundleId ?? "layout")} className="border-b border-[#e4ddd2] py-6">
-                    <EventCard card={card} copy={copy} />
-                  </li>
-                ))}
-              </ol>
-            )
-          ) : null}
-        </div>
-        <div id="panel-foryou" role="tabpanel" aria-labelledby="tab-foryou" hidden={tab !== "foryou"} className="mt-2">
-          {tab === "foryou" ? <Unavailable title={copy.forYouTitle} body={copy.forYouBody} /> : null}
-        </div>
-        <div id="panel-locate" role="tabpanel" aria-labelledby="tab-locate" hidden={tab !== "locate"} className="mt-2">
-          {tab === "locate" ? <Unavailable title={copy.locateTitle} body={copy.locateBody} /> : null}
-        </div>
-      </div>
-      <nav aria-label={copy.bottomLabel} className="border-t border-[#e4ddd2]">
-        <div className="mx-auto grid max-w-[40rem] grid-cols-4 items-center px-5 py-4">
-          <div className="col-span-3 flex items-center justify-around text-[#9a9388]" role="group" aria-label={copy.pendingGroup}>
-            <MarkIcon />
-            <LinesIcon />
-            <SquareIcon />
+            <div id="panel-all" role="tabpanel" aria-labelledby="tab-all" hidden={tab !== "all"} className="mt-4">
+              {tab === "all" ? (
+                visible.length === 0 ? (
+                  <p className="topic-card text-[16px] leading-[1.65] text-[#1c1915]">{copy.noMatch}</p>
+                ) : (
+                  <ol className="space-y-4">
+                    {visible.map((card) => (
+                      <li key={card.sampleKind + (card.bundleId ?? "layout")}>
+                        <EventCard card={card} copy={copy} />
+                      </li>
+                    ))}
+                  </ol>
+                )
+              ) : null}
+            </div>
+            <div id="panel-foryou" role="tabpanel" aria-labelledby="tab-foryou" hidden={tab !== "foryou"} className="mt-4">
+              {tab === "foryou" ? <Unavailable title={copy.forYouTitle} body={copy.forYouBody} /> : null}
+            </div>
+            <div id="panel-locate" role="tabpanel" aria-labelledby="tab-locate" hidden={tab !== "locate"} className="mt-4">
+              {tab === "locate" ? <Unavailable title={copy.locateTitle} body={copy.locateBody} /> : null}
+            </div>
           </div>
-          <Link
-            href="/settings"
-            className="text-center text-[16px] font-medium leading-[1.4] text-[#1c1915] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1c1915]"
-          >
-            {copy.settings}
-          </Link>
         </div>
-        <p className="mx-auto max-w-[40rem] px-5 pb-5 text-center text-[13px] leading-[1.65] text-[#3a342c]">{copy.pendingNote}</p>
-      </nav>
+        <PageDock placement="frame" language={language} />
+      </div>
     </div>
   );
 }
@@ -152,58 +159,62 @@ function EventCard({ card, copy }: { card: HomeCardView; copy: HomeCopy }) {
     card.sourceName && card.sourceDate
       ? `${card.sourceName} · ${card.sourceDate}`
       : copy.noSource;
-  const titleClass =
-    "text-[22px] font-medium leading-[1.4] text-[#1c1915] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1c1915] hover:underline hover:decoration-[#1c1915]/40 hover:underline-offset-4";
+  const titleClass = "text-[#1c1915] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1c1915]";
   return (
-    <article>
-      <p className="text-[13px] leading-[1.65] text-[#3a342c]">{kicker}</p>
-      <h2 className="mt-2 text-[22px] font-medium leading-[1.4] text-[#1c1915]">
-        {card.perspectivesHref ? (
-          <Link href={card.perspectivesHref} className={titleClass}>
-            {card.title}
-          </Link>
-        ) : (
-          card.title
-        )}
-      </h2>
-      <p className="mt-3 text-[16px] leading-[1.65] text-[#1c1915]">
-        {card.sourceName && card.sourceDate ? (
-          <>
-            {card.sourceName}
-            <span className="whitespace-nowrap"> · {card.sourceDate}</span>
-          </>
-        ) : (
-          source
-        )}
+    <article className="topic-card">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <h2 className="min-w-0 flex-1 text-[1.35rem] font-bold leading-[1.35] text-[#1c1915]">
+          {card.perspectivesHref ? (
+            <Link href={card.perspectivesHref} className={titleClass}>
+              {card.title}
+            </Link>
+          ) : (
+            card.title
+          )}
+        </h2>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <p className="text-[13px] leading-[1.4] text-[#5c564c]">
+            <span className="sr-only">{copy.heat} </span>
+            {copy.heatMissing}
+          </p>
+          <span className="lav-badge">{kicker}</span>
+        </div>
+      </div>
+      <p className="mt-3 text-[15px] leading-[1.7] text-[#3a342c]">
+        <span className="lav-kicker">{kicker}</span> {source}
       </p>
-      <dl className="mt-4 flex gap-10 text-[16px] leading-[1.65] text-[#1c1915]">
-        <div>
-          <dt className="text-[13px] leading-[1.65] text-[#3a342c]">{copy.heat}</dt>
-          <dd>{copy.heatMissing}</dd>
-        </div>
-        <div>
-          <dt className="text-[13px] leading-[1.65] text-[#3a342c]">{copy.verify}</dt>
-          <dd>{card.sampleKind === "layout-sample" ? copy.verifyLayout : copy.verifyOpen}</dd>
-          {card.evidenceHref ? (
-            <dd className="mt-1">
-              <Link
-                href={card.evidenceHref}
-                className="text-[13px] leading-[1.65] text-[#1c1915] underline decoration-[#1c1915]/40 underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1c1915]"
-              >
-                {copy.evidenceLink}
-              </Link>
-            </dd>
-          ) : null}
-        </div>
-      </dl>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+        <p className="flex min-w-0 items-center gap-2 text-[14px] leading-[1.5] text-[#1c1915]">
+          <SourceMark name={card.sourceName} />
+          <span className="min-w-0">{source}</span>
+        </p>
+        {card.evidenceHref ? (
+          <Link href={card.evidenceHref} className="evidence-pill">
+            {copy.evidenceLink}
+          </Link>
+        ) : null}
+      </div>
+      <p className="mt-3 text-[13px] leading-[1.55] text-[#5c564c]">
+        {copy.verify}：{card.sampleKind === "layout-sample" ? copy.verifyLayout : copy.verifyOpen}
+      </p>
     </article>
+  );
+}
+
+function SourceMark({ name }: { name: string | null }) {
+  if (!name) return null;
+  const swatch = SOURCE_SWATCHES[name.charCodeAt(0) % SOURCE_SWATCHES.length] ?? SOURCE_SWATCHES[0];
+  return (
+    <span className="source-mark" style={{ background: swatch }} aria-hidden="true">
+      {name.slice(0, 1)}
+    </span>
   );
 }
 
 function Unavailable({ title, body }: { title: string; body: string }) {
   return (
-    <section className="border-b border-[#e4ddd2] py-6">
-      <h2 className="text-[22px] font-medium leading-[1.4] text-[#1c1915]">{title}</h2>
+    <section className="topic-card">
+      <h2 className="text-[1.35rem] font-bold leading-[1.35] text-[#1c1915]">{title}</h2>
       <p className="mt-3 text-[16px] leading-[1.65] text-[#1c1915]">{body}</p>
     </section>
   );
@@ -211,34 +222,9 @@ function Unavailable({ title, body }: { title: string; body: string }) {
 
 function SearchIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2 text-[#3a342c]">
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
       <circle cx="11" cy="11" r="6.25" fill="none" stroke="currentColor" strokeWidth="1.6" />
       <path d="M16 16.5 20 20.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function MarkIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
-      <path d="M7 4.5h7.5L19 9v10.5H7z" fill="none" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M14.2 4.7V9H18.6" fill="none" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  );
-}
-
-function LinesIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
-      <path d="M5 7.5h14M5 12h14M5 16.5h9" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function SquareIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
-      <rect x="5" y="5" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.6" />
     </svg>
   );
 }
@@ -248,6 +234,7 @@ interface HomeCopy {
   searchPlaceholder: string;
   searchHint: string;
   tabsLabel: string;
+  scopeNote: string;
   globalMark: string;
   noMatch: string;
   sampleKicker: string;
@@ -264,10 +251,8 @@ interface HomeCopy {
   forYouBody: string;
   locateTitle: string;
   locateBody: string;
-  bottomLabel: string;
-  pendingGroup: string;
-  pendingNote: string;
-  settings: string;
+  asideLead: string;
+  asidePoints: string[];
 }
 
 function copyFor(language: Language): HomeCopy {
@@ -277,6 +262,7 @@ function copyFor(language: Language): HomeCopy {
       searchPlaceholder: "筛选标题",
       searchHint: "只筛选本页示例，不搜索互联网或资料库。",
       tabsLabel: "内容范围",
+      scopeNote: "For You 和 Locate 尚未开通。点开会看到说明，不会出现推荐或地点结果。",
       globalMark: "演示示例 · 非实时",
       noMatch: "本页示例里没有这个词。",
       sampleKicker: "示例",
@@ -293,10 +279,12 @@ function copyFor(language: Language): HomeCopy {
       forYouBody: "没有关注推荐。这里不展示推荐列表。",
       locateTitle: "Locate 尚未开通",
       locateBody: "没有当地检索，也不会请求定位。这里不展示预警。",
-      bottomLabel: "底部入口",
-      pendingGroup: "导航待确认，这三个图标没有名称，不能点击",
-      pendingNote: "导航待确认。前三个图标没有名称，也不能点。",
-      settings: "设置",
+      asideLead: "桌面把现有首页收在一张纸色卡片里。窄屏则铺满宽度。卡片仍是仓库里的示例，不是新的话题。",
+      asidePoints: [
+        "字标仍是 OpenFrame。搜索只筛选本页示例。",
+        "All 展示现有卡片。For You 和 Locate 尚未开通。",
+        "底部三个图标没有名称，也不能点。设置和资料库沿用原来的入口。热度写「暂无数据」。",
+      ],
     };
   }
   return {
@@ -304,6 +292,7 @@ function copyFor(language: Language): HomeCopy {
     searchPlaceholder: "Filter titles",
     searchHint: "Filters the samples on this page only. It does not search the web or the saved library.",
     tabsLabel: "Scope",
+    scopeNote: "For You and Locate are not open. Choosing one shows this notice only. There is no recommendation list and no location result.",
     globalMark: "Sample · not live",
     noMatch: "No sample on this page contains that word.",
     sampleKicker: "Sample",
@@ -320,9 +309,11 @@ function copyFor(language: Language): HomeCopy {
     forYouBody: "There are no follow recommendations and no recommendation list.",
     locateTitle: "Locate is not open",
     locateBody: "There is no local search and this page does not ask for your location. There is no alert list.",
-    bottomLabel: "Bottom entries",
-    pendingGroup: "Navigation not confirmed. These three icons have no name and are not clickable.",
-    pendingNote: "导航待确认. The first three icons have no name and cannot be used.",
-    settings: "设置",
+    asideLead: "On a wide screen the existing home sits in a paper card. On a narrow screen it uses the full width. The cards are still the repository samples.",
+    asidePoints: [
+      "The wordmark stays OpenFrame. Search only filters the samples on this page.",
+      "All shows those cards. For You and Locate are not open.",
+      "The three bottom icons have no name and cannot be used. Settings and the library keep their existing entries. Heat says there is no data.",
+    ],
   };
 }
