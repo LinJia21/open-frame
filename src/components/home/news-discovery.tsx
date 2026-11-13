@@ -128,7 +128,7 @@ export function NewsDiscovery() {
   }
 
   return (
-    <section id="news-discovery" aria-labelledby="news-discovery-title" className="mt-8 min-w-0 scroll-mt-6 rounded-2xl border border-of-cream-border bg-card [overflow-wrap:anywhere]">
+    <section id="news-discovery" aria-labelledby="news-discovery-title" className="@container mt-8 min-w-0 scroll-mt-6 rounded-2xl border border-of-cream-border bg-card [overflow-wrap:anywhere]">
       <div className="rounded-t-2xl border-b border-of-cream-border bg-of-cream/50 p-5 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs tracking-[0.16em] text-of-accent">01 / NEWS DISCOVERY</p>
@@ -183,7 +183,7 @@ export function NewsDiscovery() {
                 {SOURCE_GROUPS.map((group) => (
                   <fieldset key={group.kind} className="min-w-0">
                     <legend className="mb-3 text-sm font-medium text-of-accent">{group.label}</legend>
-                    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid gap-2 @sm:grid-cols-2">
                       {NEWS_SOURCES.filter((source) => source.kind === group.kind).map((source) => (
                         <label key={source.id} className="flex min-w-0 cursor-pointer items-start gap-3 rounded-xl border border-border p-3 hover:border-of-accent has-checked:border-of-cream-border has-checked:bg-of-cream/25 has-disabled:cursor-wait has-disabled:opacity-60">
                           <input
@@ -251,7 +251,7 @@ export function NewsDiscovery() {
                 </summary>
                 <div className="border-t border-border p-4">
                   <p className="mb-3 text-xs leading-5 text-muted-foreground">条目数为各来源返回的 RSS 条目数，不是独立确认数；缓存时间不代表新闻发布时间，列表读取成功也不代表内容已核实。</p>
-                  <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  <ul className="grid gap-3 @sm:grid-cols-2">
                     {result.reports.map((report) => (
                       <li key={report.sourceId} className="min-w-0 rounded-lg border border-border bg-background p-3 text-xs leading-5">
                         <h4 className="text-sm font-medium">{sourceName(report.sourceId)}</h4>
@@ -273,7 +273,7 @@ export function NewsDiscovery() {
               {result.items.length > 0 ? (
                 <section aria-labelledby="news-results-title">
                   <h3 id="news-results-title" className="font-serif text-xl">新闻线索 <span className="font-sans text-sm text-muted-foreground">/ {result.items.length} 条 · 均未核实</span></h3>
-                  <ul className="mt-3 grid gap-3 md:grid-cols-2">
+                  <ul className="mt-3 grid gap-3">
                     {result.items.map((item) => {
                       const href = safeHref(item.url);
                       return (

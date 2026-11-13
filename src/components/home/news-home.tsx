@@ -55,7 +55,7 @@ export function NewsHome({
   return (
     <div className="spectrax-stage">
       <aside className="spectrax-aside">
-        <p className="wordmark text-[3.25rem]">OpenFrame</p>
+        <p className="wordmark text-[3.25rem]">SpectraX</p>
         <p className="mt-3 text-[15px] leading-7 text-muted-foreground">See Beyond the Headlines</p>
         <p className="mt-6 text-[16px] leading-7">{copy.asideLead}</p>
         <ol className="mt-5 list-decimal space-y-3 pl-5 text-[15px] leading-7 text-foreground">
@@ -66,10 +66,10 @@ export function NewsHome({
       </aside>
       <div className="newsroom news-home">
         <div className="news-home-scroll">
-          <div className="app-ink-bar">
-            <div className="mx-auto flex w-full max-w-[40rem] items-center gap-3 px-4 py-3">
-              <Link href="/" className="wordmark shrink-0 text-[1.85rem] text-of-ink-foreground">
-                OpenFrame
+          <div className="mx-auto w-full max-w-[40rem] px-4 pb-6 pt-5">
+            <div className="flex items-center gap-3">
+              <Link href="/" className="wordmark shrink-0 text-[1.85rem] text-foreground">
+                SpectraX
               </Link>
               <form
                 role="search"
@@ -99,11 +99,7 @@ export function NewsHome({
                 </div>
               </form>
             </div>
-          </div>
-          <div className="app-cream-note">
-            <p className="mx-auto w-full max-w-[40rem] px-4 py-2.5 text-[13px] leading-[1.65] text-of-cream-foreground">{copy.searchHint}</p>
-          </div>
-          <div className="mx-auto w-full max-w-[40rem] px-4 pb-6 pt-4">
+            <p className="mt-3 text-[13px] leading-[1.65] text-muted-foreground">{copy.searchHint}</p>
             <div role="tablist" aria-label={copy.tabsLabel} onKeyDown={onTabsKeyDown} className="scope-row">
               {TABS.map((item) => {
                 const selected = tab === item.id;
@@ -172,7 +168,7 @@ function EventCard({ card, copy }: { card: HomeCardView; copy: HomeCopy }) {
   return (
     <article className="topic-card">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <h2 className="line-clamp-3 min-w-0 flex-1 text-[18px] font-bold leading-[1.25] text-foreground">
+        <h2 className="min-w-0 flex-1 text-[1.35rem] font-bold leading-[1.35] text-foreground">
           {card.perspectivesHref ? (
             <Link href={card.perspectivesHref} className={titleClass}>
               {card.title}
@@ -292,9 +288,9 @@ function copyFor(language: Language): HomeCopy {
       locateBody: "没有当地检索，也不会请求定位。这里不展示预警。",
       asideLead: "桌面把现有首页收在一张纸色卡片里。窄屏则铺满宽度。卡片仍是仓库里的示例，不是新的话题。",
       asidePoints: [
-        "字标仍是 OpenFrame。搜索只筛选本页示例。",
+        "字标仍是 SpectraX。搜索只筛选本页示例。",
         "All 展示现有卡片。For You 和 Locate 尚未开通。",
-        "底部三个图标没有名称，也不能点。设置和资料库沿用原来的入口。热度写「暂无数据」。",
+        "底部菜单是首页、资料库、订阅、我的。订阅和我的尚未开通。热度写「暂无数据」。",
       ],
     };
   }
@@ -322,9 +318,9 @@ function copyFor(language: Language): HomeCopy {
     locateBody: "There is no local search and this page does not ask for your location. There is no alert list.",
     asideLead: "On a wide screen the existing home sits in a paper card. On a narrow screen it uses the full width. The cards are still the repository samples.",
     asidePoints: [
-      "The wordmark stays OpenFrame. Search only filters the samples on this page.",
+      "The wordmark stays SpectraX. Search only filters the samples on this page.",
       "All shows those cards. For You and Locate are not open.",
-      "The three bottom icons have no name and cannot be used. Settings and the library keep their existing entries. Heat says there is no data.",
+      "The bottom menu is Home, Library, Subscribe, and Me. Subscribe and Me are not open. Heat says there is no data.",
     ],
   };
 }

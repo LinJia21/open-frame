@@ -21,7 +21,7 @@ export function SiteHeader({ language, provider }: { language: Language; provide
         <Link href="/" className="header-brand flex shrink-0 items-center gap-3">
           <FrameMark />
           <span>
-            <span className="font-serif text-xl leading-none">OpenFrame</span>
+            <span className="font-serif text-xl leading-none">SpectraX</span>
             <span className="header-tagline mt-1 hidden text-xs tracking-wide text-white/70 sm:block">See Beyond the Headlines.</span>
           </span>
         </Link>
@@ -57,7 +57,7 @@ export function PrototypeBanner({ provider }: { provider: PublicProviderStatus }
 export function SourceBadge({ label, mode }: { label: string; mode: string }) {
   const fictional = mode === "DEMO";
   return (
-    <span className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-semibold ${fictional ? "bg-of-accent text-of-accent-foreground" : "bg-sky-100 text-sky-950"}`}>
+    <span className="lav-badge">
       {label}
       {fictional ? <span className="tracking-[0.12em]">DEMO DATA</span> : null}
     </span>
@@ -66,7 +66,7 @@ export function SourceBadge({ label, mode }: { label: string; mode: string }) {
 
 export function AnalysisBadge({ label, generatedAt }: { label: string; generatedAt: string | null }) {
   return (
-    <span title={generatedAt ? `Generated ${generatedAt}` : undefined} className="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-900">
+    <span title={generatedAt ? `Generated ${generatedAt}` : undefined} className="lav-badge">
       {label}
     </span>
   );
@@ -103,17 +103,9 @@ export function AnalysisNav({
     ["report", labels.report, `/analysis/${id}/report`],
   ] as const;
   return (
-    <nav aria-label={labels.progress} className="no-print grid grid-cols-3 gap-2">
-      {items.map(([key, label, href], index) => (
-        <Link
-          key={key}
-          href={href}
-          aria-current={current === key ? "page" : undefined}
-          className={`rounded-lg border px-2 py-2 text-center text-sm ${
-            current === key ? "border-of-accent bg-of-accent text-of-accent-foreground" : "border-border bg-card"
-          }`}
-        >
-          <span className="block text-[10px] tracking-widest opacity-80">0{index + 1}</span>
+    <nav aria-label={labels.progress} className="scope-row no-print">
+      {items.map(([key, label, href]) => (
+        <Link key={key} href={href} aria-current={current === key ? "page" : undefined} className="scope-pill">
           {label}
         </Link>
       ))}
@@ -123,7 +115,7 @@ export function AnalysisNav({
 
 export function SiteFooter({ provider }: { provider: PublicProviderStatus }) {
   const body = provider.provider === "demo"
-    ? "OpenFrame AI is a research prototype. It does not call a model. Analyses are pre-generated. The fictional set uses reserved domains; the primary sample uses the fixture’s source links."
+    ? "SpectraX AI is a research prototype. It does not call a model. Analyses are pre-generated. The fictional set uses reserved domains; the primary sample uses the fixture’s source links."
     : `${provider.note} Live calls are not marked verified on this screen.`;
   return (
     <footer className="no-print border-t border-border px-4 py-6 text-center text-xs text-muted-foreground sm:px-6">

@@ -1,48 +1,53 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
-import { cookies } from "next/headers";
 import { unstable_rethrow } from "next/navigation";
 import { HomeStudio } from "@/components/home/home-studio";
 import { NewsDiscovery } from "@/components/home/news-discovery";
 import { preparedTopics } from "@/lib/demo/catalog";
-import { isLanguage, type Language } from "@/lib/i18n/languages";
+import { PaperFrame, readUiLanguage } from "@/components/layout/paper-frame";
+import type { Language } from "@/lib/i18n/languages";
 import { listBundles } from "@/lib/store/bundle-store";
 import { toSummary } from "@/lib/adapters/to-view";
 import { getPublicProviderStatus } from "@/lib/analysis/live-deps";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function LibraryPage() {
+export default async function LibraryPage() {
+  const language = await readUiLanguage();
+  const zh = language === "zh";
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
-      <p className="text-xs tracking-[0.18em] text-of-accent uppercase">Library</p>
-      <h1 className="mt-3 max-w-3xl font-serif text-4xl leading-tight">资料库</h1>
-      <p className="mt-4 max-w-2xl text-lg leading-8 text-muted-foreground">
-        发现新闻线索，或使用已保存的历史资料。两者分区展示，新闻标题不会自动成为分析证据。
-      </p>
-      <nav aria-label="资料库分区" className="mt-4 flex flex-wrap gap-3 text-sm">
-        <a href="#news-discovery" className="inline-flex min-h-11 items-center rounded-full border border-of-cream-border bg-of-cream/40 px-4 text-of-accent hover:bg-of-cream focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-of-accent">新闻发现</a>
-        <a href="#saved-library" className="inline-flex min-h-11 items-center rounded-full border border-border px-4 hover:border-of-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-of-accent">已存资料与分析</a>
-      </nav>
+    <PaperFrame
+      language={language}
+      lead={
+        zh
+          ? "资料库分两部分：上方只从固定来源发现新闻线索，不抓正文、不送 AI；下方导入、检索和分析都只作用在已保存的文字上。两者不会自动互通。"
+          : "The library has two parts: news discovery reads headlines from fixed sources only, without fetching articles or calling a model; import, search, and analysis below use saved text only. They are not joined automatically."
+      }
+      points={
+        zh
+          ? ["新闻线索均未核实，也不会自动保存。", "默认没有历史记录，这里不会填入假列表。", "演示模式不会假装已经接上实时模型。"]
+          : ["News leads stay unverified and are never saved automatically.", "There is no saved history until you import. Nothing here is filled in.", "Demo mode does not pretend a live model is connected."]
+      }
+    >
+      <p className="wordmark text-[1.85rem]">SpectraX</p>
       <NewsDiscovery />
-      <section id="saved-library" aria-labelledby="saved-library-title" className="mt-12 scroll-mt-6 border-t border-border pt-8">
+      <section id="saved-library" aria-labelledby="saved-library-title" className="mt-10 scroll-mt-6 border-t border-border pt-6">
         <p className="text-xs tracking-[0.16em] text-of-accent">02 / SAVED LIBRARY</p>
-        <h2 id="saved-library-title" className="mt-3 font-serif text-2xl sm:text-3xl">已保存的历史资料</h2>
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">
-          以下保留资料导入、已存资料检索与分析功能，与上方新闻发现独立。每篇分析只纳入已保存文本的前 2000 字，超出部分未纳入分析；不能据此推断完整原文缺乏证据。
+        <h1 id="saved-library-title" className="mt-3 text-[1.75rem] font-bold">{zh ? "已保存的历史资料" : "Saved historical materials"}</h1>
+        <p className="mt-3 text-base leading-7 text-[#3a342c]">
+          {zh
+            ? "每篇分析只纳入已保存文本的前 2000 字。超出部分未纳入分析。不能据此推断完整原文缺乏证据。"
+            : "Each analysis includes only the first 2000 characters of saved text. The rest is not included, and that cutoff is not evidence about the rest of the original."}
         </p>
         <Suspense fallback={<Skeleton className="mt-6 h-80 w-full" />}>
-          <LibraryData />
+          <LibraryData language={language} />
         </Suspense>
       </section>
-    </div>
+    </PaperFrame>
   );
 }
 
-async function LibraryData() {
+async function LibraryData({ language }: { language: Language }) {
   await connection();
-  const jar = await cookies();
-  const cookie = jar.get("openframe_lang")?.value;
-  const language: Language = isLanguage(cookie) ? cookie : "en";
   let recentError = false;
   let recent: ReturnType<typeof toSummary>[] = [];
   try {

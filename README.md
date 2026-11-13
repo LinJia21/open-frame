@@ -71,7 +71,7 @@ npm run validate:demo
 - `http://127.0.0.1:4317/analysis/bnd_ai_animation_2026/perspectives`
 - `http://127.0.0.1:4317/analysis/bnd_demo_ai_animation/perspectives`
 
-第三张是虚构布局样例，没有来源、日期和分析链接。底部三个图标没有名称，也不能点。「首页」和「设置」可以点。说明文字里有资料库链接。导入、检索和分析仍在 `/library`。
+第三张是虚构布局样例，没有来源、日期和分析链接。底部菜单是首页、资料库、订阅、我的。导入、检索和分析仍在 `/library`。订阅和我的尚未开通：没有套餐，也没有账号。设置仍在 `/settings`。
 
 ### 导入已保存的历史资料
 
@@ -235,7 +235,7 @@ Two spec fields, shown with the labels from `PROVENANCE_BADGES`:
 - `src/lib/demo/catalog.ts` — loads the official JSON files and the generic fallback.
 - `src/app/api/analyses/` — create and read a briefing.
 - `src/app/api/corpus/` — import and search saved historical materials. It does not fetch URLs.
-- `src/app/library` — the import, search, and analyze form. `src/app/settings` links there. The other three bottom slots on the home page are unnamed.
+- `src/app/library` — the import, search, and analyze form. The app menu also links here. Subscribe (`/subscribe`) and Me (`/me`) are named and not open. `src/app/settings` is still the settings page.
 - `data/store/analyses.json` — created when you analyze a topic. It stays on this machine.
 - `data/corpus/items.json` — saved articles you import. It starts empty and is not committed.
 

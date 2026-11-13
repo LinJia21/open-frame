@@ -5,10 +5,9 @@ import { usePathname } from "next/navigation";
 import type { Language } from "@/lib/i18n/languages";
 
 /**
- * Bottom bar for the paper layout.
- * The accent pill is only the page you are actually on.
- * The three icons stay unnamed and are not links: the repo has not named them.
- * Follow and Me are not pages here. Settings and the library link are the real entries.
+ * App tab bar: 首页, 资料库, 订阅, 我的.
+ * Subscribe and Me are named entries. Those sections are not open:
+ * no plans, no charges, and no account.
  */
 export function PageDock({
   placement,
@@ -18,67 +17,65 @@ export function PageDock({
   language: Language;
 }) {
   const pathname = usePathname();
-  const onHome = pathname === "/" || pathname === "/app";
-  const onSettings = pathname.startsWith("/settings");
-  const onLibrary = pathname.startsWith("/library");
   const copy = language === "zh" ? zhCopy : enCopy;
+  const items = [
+    { href: "/", label: copy.home, current: pathname === "/" || pathname === "/app", icon: HomeIcon },
+    { href: "/library", label: copy.library, current: pathname.startsWith("/library"), icon: LibraryIcon },
+    { href: "/subscribe", label: copy.subscribe, current: pathname.startsWith("/subscribe"), icon: SubscribeIcon },
+    { href: "/me", label: copy.me, current: pathname.startsWith("/me"), icon: MeIcon },
+  ] as const;
 
   return (
     <nav aria-label={copy.bottomLabel} className={placement === "frame" ? "news-dock" : "viewport-dock no-print"}>
       <div className="dock-row">
-        {onHome ? (
-          <span className="dock-pill" aria-current="page">
-            {copy.home}
-          </span>
-        ) : (
-          <Link href="/" className="dock-pill">
-            {copy.home}
-          </Link>
-        )}
-        <div className="dock-icons" role="group" aria-label={copy.pendingGroup}>
-          <MarkIcon />
-          <LinesIcon />
-          <SquareIcon />
-        </div>
-        {onSettings ? (
-          <span className="dock-pill" aria-current="page">
-            {copy.settings}
-          </span>
-        ) : (
-          <Link href="/settings" className="dock-pill">
-            {copy.settings}
-          </Link>
-        )}
+        {items.map((item) => {
+          const Icon = item.icon;
+          const body = (
+            <>
+              <Icon />
+              <span>{item.label}</span>
+            </>
+          );
+          return item.current ? (
+            <span key={item.href} className="dock-tab" aria-current="page">
+              {body}
+            </span>
+          ) : (
+            <Link key={item.href} href={item.href} className="dock-tab">
+              {body}
+            </Link>
+          );
+        })}
       </div>
-      <p className="dock-note">
-        {copy.pendingNote}{" "}
-        <Link href="/library" className="paper-link" aria-current={onLibrary ? "page" : undefined}>
-          {copy.library}
-        </Link>
-      </p>
     </nav>
   );
 }
 
 const zhCopy = {
   home: "首页",
-  settings: "设置",
   library: "资料库",
-  bottomLabel: "底部入口",
-  pendingGroup: "导航待确认，这三个图标没有名称，不能点击",
-  pendingNote: "导航待确认。这三个图标没有名称，也不能点。资料库在设置里，也可以从这里打开：",
+  subscribe: "订阅",
+  me: "我的",
+  bottomLabel: "底部菜单",
 };
 
 const enCopy = {
   home: "Home",
-  settings: "Settings",
   library: "Library",
-  bottomLabel: "Bottom entries",
-  pendingGroup: "Navigation not confirmed. These three icons have no name and are not clickable.",
-  pendingNote: "Navigation is not confirmed. These three icons have no name and cannot be used. The library is linked from Settings, and also here:",
+  subscribe: "Subscribe",
+  me: "Me",
+  bottomLabel: "Bottom menu",
 };
 
-function MarkIcon() {
+function HomeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4.5 10.5 12 4.5l7.5 6V19a1 1 0 0 1-1 1h-4.2v-5.2H9.7V20H5.5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function LibraryIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M7 4.5h7.5L19 9v10.5H7z" fill="none" stroke="currentColor" strokeWidth="1.6" />
@@ -87,18 +84,19 @@ function MarkIcon() {
   );
 }
 
-function LinesIcon() {
+function SubscribeIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M5 7.5h14M5 12h14M5 16.5h9" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M7 4.5h10a1 1 0 0 1 1 1V20l-6-3.2L6 20V5.5a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
     </svg>
   );
 }
 
-function SquareIcon() {
+function MeIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="5" y="5" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="12" cy="8.2" r="3.1" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M5.5 19.2c1.2-2.6 3.4-3.9 6.5-3.9s5.3 1.3 6.5 3.9" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   );
 }

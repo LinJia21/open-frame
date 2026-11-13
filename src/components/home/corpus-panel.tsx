@@ -137,14 +137,14 @@ export function CorpusPanel({
     <section className="rounded-2xl border border-border bg-card p-5 sm:p-6">
       <h2 className="font-serif text-2xl">{copy.title}</h2>
       <p className="mt-2 text-sm text-muted-foreground">{copy.intro}</p>
-      <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
+      <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
         <Stat label={copy.cutoff} value={library.cutoff ?? copy.noCutoff} />
         <Stat label={copy.libraryItems} value={String(library.itemCount)} />
         <Stat label={copy.libraryOutlets} value={String(library.outletCount)} />
         <Stat label={copy.hitOutlets} value={`${hits.outletCount} / ${copy.hitItems} ${hits.itemCount}`} />
       </dl>
       <form
-        className="mt-4 grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.7fr)_auto]"
+        className="mt-4 grid gap-3"
         onSubmit={(submitEvent) => {
           submitEvent.preventDefault();
           void load();
