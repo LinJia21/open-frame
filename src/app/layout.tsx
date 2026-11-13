@@ -12,8 +12,8 @@ export const instant = false;
 
 export const metadata: Metadata = {
   title: {
-    default: "OpenFrame AI",
-    template: "%s · OpenFrame AI",
+    default: "SpectraX AI",
+    template: "%s · SpectraX AI",
   },
   description: "See Beyond the Headlines. Compare reporting, audit claims, and export a research briefing. Source badges follow data_mode.",
 };

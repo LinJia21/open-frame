@@ -212,7 +212,7 @@ function toEvidence(item: EvidenceItem, articlesById: Map<string, NewsArticle>):
 
 function mastheadFor(bundle: AnalysisBundle): string {
   if (bundle.analysis_generation === "LIVE_AI" && bundle.data_mode === "DEMO") {
-    return "Generated analysis. OpenFrame did not retrieve or verify these sources. Example links are illustrations, not citations.";
+    return "Generated analysis. SpectraX did not retrieve or verify these sources. Example links are illustrations, not citations.";
   }
   if (bundle.analysis_generation === "LIVE_AI") {
     return "Analysis of saved historical materials. Not a live internet search and not an external fact check. Citations are limited to the materials selected for this run.";

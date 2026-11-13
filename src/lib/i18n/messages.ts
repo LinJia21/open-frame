@@ -111,7 +111,7 @@ export interface Messages {
 const en: Messages = {
   skip: "Skip to content",
   footer:
-    "OpenFrame AI is a research prototype. It does not search the live web. Sample briefings are fiction.",
+    "SpectraX AI is a research prototype. It does not search the live web. Sample briefings are fiction.",
   bannerBody:
     "This prototype does not search live news. Briefings are fictional, and links open example.com.",
   nav: {
@@ -251,7 +251,7 @@ const en: Messages = {
 const zh: Messages = {
   skip: "跳到正文",
   footer:
-    "OpenFrame AI 是一个研究原型。它不搜索实时网页。示例简报都是虚构的。",
+    "SpectraX AI 是一个研究原型。它不搜索实时网页。示例简报都是虚构的。",
   bannerBody:
     "此原型不搜索实时新闻。简报是虚构的，链接会打开 example.com。",
   nav: {
@@ -381,7 +381,7 @@ const zh: Messages = {
 const es: Messages = {
   skip: "Saltar al contenido",
   footer:
-    "OpenFrame AI es un prototipo de investigación. No busca en la web en vivo. Los informes de muestra son ficción.",
+    "SpectraX AI es un prototipo de investigación. No busca en la web en vivo. Los informes de muestra son ficción.",
   bannerBody:
     "Este prototipo no busca noticias en vivo. Los informes son ficticios y los enlaces abren example.com.",
   nav: {
@@ -523,7 +523,7 @@ const es: Messages = {
 const fr: Messages = {
   skip: "Aller au contenu",
   footer:
-    "OpenFrame AI est un prototype de recherche. Il ne cherche pas sur le web en direct. Les dossiers d’exemple sont fictifs.",
+    "SpectraX AI est un prototype de recherche. Il ne cherche pas sur le web en direct. Les dossiers d’exemple sont fictifs.",
   bannerBody:
     "Ce prototype ne cherche pas l’actualité en direct. Les dossiers sont fictifs et les liens ouvrent example.com.",
   nav: {

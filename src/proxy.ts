@@ -58,7 +58,7 @@ function missingAnalysisHtml(): string {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Briefing not found · OpenFrame AI</title>
+  <title>Briefing not found · SpectraX AI</title>
   <style>
     body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif; background: #f6f1e7; color: #1c1915; }
     main { max-width: 36rem; margin: 4rem auto; padding: 0 1.25rem; }
@@ -84,7 +84,7 @@ function unsupportedSchemaHtml(found: string): string {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex" />
-  <title>Unsupported schema · OpenFrame AI</title>
+  <title>Unsupported schema · SpectraX AI</title>
   <style>
     body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif; background: #f6f1e7; color: #1c1915; }
     main { max-width: 36rem; margin: 4rem auto; padding: 0 1.25rem; }
