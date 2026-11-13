@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { HeaderLockup, StageLockup } from "@/components/layout/brand-lockup";
 import { LanguageSwitch } from "@/components/layout/language-switch";
 import { PageDock } from "@/components/layout/page-dock";
+import { messagesForUi } from "@/lib/i18n/messages";
 import { parseUiLanguage, type UiLanguage } from "@/lib/i18n/ui-language";
 
 export async function readUiLanguage(): Promise<UiLanguage> {
@@ -12,7 +13,7 @@ export async function readUiLanguage(): Promise<UiLanguage> {
 
 export function PaperFrame({
   language,
-  kicker = "See Beyond the Headlines",
+  kicker,
   lead,
   points = [],
   children,
@@ -23,13 +24,14 @@ export function PaperFrame({
   points?: string[];
   children: ReactNode;
 }) {
+  const slogan = kicker ?? messagesForUi(language).home.sloganTranslated;
   return (
     <div className="spectrax-stage">
       <aside className="spectrax-aside">
         <StageLockup />
         <ViewTransition name="spectrax-aside" share="paper-fade" enter="paper-fade" exit="paper-fade" update="none" default="none">
           <div>
-            <p className="mt-3 text-[15px] leading-7 text-muted-foreground">{kicker}</p>
+            <p className="mt-3 text-[15px] leading-7 text-muted-foreground">{slogan}</p>
             <p className="mt-6 text-[16px] leading-7 text-[#3a342c]">{lead}</p>
             {points.length > 0 ? (
               <ol className="mt-5 list-decimal space-y-3 pl-5 text-[15px] leading-7 text-[#3a342c]">

@@ -7,7 +7,7 @@ import type { UiLanguage } from "@/lib/i18n/ui-language";
 /**
  * App tab bar: 首页, 资料库, 订阅, 我的.
  * Subscribe lists the fixed news sources and stores choices locally.
- * Me is a named entry only: no plans, no charges, and no account.
+ * Subscribe and Me open demos only: no charge, no order, and no successful sign-in.
  */
 export function PageDock({
   placement,

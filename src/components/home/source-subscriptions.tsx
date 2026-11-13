@@ -141,8 +141,8 @@ export function SourceSubscriptions({ language }: { language: UiLanguage }) {
                         type="button"
                         aria-pressed={active}
                         onClick={() => toggle(source.id)}
-                        className={`flex min-h-14 w-full items-center gap-3 rounded-[1.15rem] border p-3 text-left transition-[border-color,background-color,opacity] ${focusClass} ${
-                          active ? "border-[#e4d48a] bg-card" : "border-border bg-transparent opacity-60"
+                        className={`flex min-h-14 w-full items-center gap-3 rounded-[1.15rem] border p-3 text-left transition-[border-color,background-color] ${focusClass} ${
+                          active ? "border-[#e4d48a] bg-card" : "border-border bg-transparent text-[#5c564c]"
                         }`}
                       >
                         <span className={`grid size-11 shrink-0 place-items-center overflow-hidden rounded-lg border ${active ? "border-[#eadfce] bg-white" : "border-border bg-white grayscale"}`}>

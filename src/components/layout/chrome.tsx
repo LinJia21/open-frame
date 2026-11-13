@@ -63,12 +63,12 @@ export function PrototypeBanner({ provider }: { provider: PublicProviderStatus }
   );
 }
 
-export function SourceBadge({ label, mode }: { label: string; mode: string }) {
+export function SourceBadge({ label, mode, demoMark = "DEMO DATA" }: { label: string; mode: string; demoMark?: string }) {
   const fictional = mode === "DEMO";
   return (
     <span className="lav-badge">
       {label}
-      {fictional ? <span className="tracking-[0.12em]">DEMO DATA</span> : null}
+      {fictional ? <span className="tracking-[0.12em]">{demoMark}</span> : null}
     </span>
   );
 }
@@ -91,7 +91,7 @@ const STATUS_TONE: Record<string, string> = {
 
 export function StatusBadge({ status }: { status: string }) {
   return (
-    <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ${STATUS_TONE[status] ?? "bg-muted"}`}>
+    <span className={`inline-flex whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ${STATUS_TONE[status] ?? "bg-muted"}`}>
       {status}
     </span>
   );

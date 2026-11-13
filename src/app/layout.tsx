@@ -6,6 +6,7 @@ import { PrototypeBanner, SiteFooter, SiteHeader } from "@/components/layout/chr
 import { PageDock } from "@/components/layout/page-dock";
 import { readUiLanguage } from "@/components/layout/paper-frame";
 import { getPublicProviderStatus } from "@/lib/analysis/live-deps";
+import { messagesForUi } from "@/lib/i18n/messages";
 import { htmlLangFor, toAnalysisLanguage } from "@/lib/i18n/ui-language";
 
 export const instant = false;
@@ -34,7 +35,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     <html lang={htmlLangFor(language)} className="h-full antialiased">
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <a href="#content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-card focus:px-3 focus:py-2">
-          Skip to content
+          {messagesForUi(language).skip}
         </a>
         <SiteHeader language={toAnalysisLanguage(language)} uiLanguage={language} provider={provider} />
         <PrototypeBanner provider={provider} />

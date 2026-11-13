@@ -5,9 +5,14 @@ import { providerStatusText } from "@/lib/i18n/provider-copy";
 import { liveCorpusStore } from "@/lib/corpus/live";
 import { homeEventCards } from "@/lib/home/feed";
 import { PaperFrame, readUiLanguage } from "@/components/layout/paper-frame";
-import { describeHomeSample, settingsFrame } from "@/lib/i18n/app-pages";
+import type { Metadata } from "next";
+import { describeHomeSample, screenTitle, settingsFrame } from "@/lib/i18n/app-pages";
 
 export const instant = false;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: screenTitle(await readUiLanguage(), "settings") };
+}
 
 export default async function SettingsPage() {
   await connection();
@@ -26,7 +31,7 @@ export default async function SettingsPage() {
       <h1 className="text-[1.75rem] font-bold">{copy.title}</h1>
       <ul className="mt-6 space-y-4">
         <li className="topic-card">
-          <Link href="/library" className="paper-link text-base font-medium">
+          <Link href="/library" className="paper-action inline-flex min-h-11">
             {copy.library}
           </Link>
           <p className="mt-2 text-base leading-7">{copy.libraryBody(libraryCount)}</p>

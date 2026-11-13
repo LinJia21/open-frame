@@ -1,12 +1,16 @@
+import type { Metadata } from "next";
 import { messagesForUi } from "@/lib/i18n/messages";
 import { loadBriefing } from "@/lib/analysis/load";
 import { briefingToMarkdown } from "@/lib/adapters/markdown";
 import { readUiLanguage } from "@/components/layout/paper-frame";
 import { BriefingIntro, ReportBody } from "@/components/briefing/views";
+import { screenTitle } from "@/lib/i18n/app-pages";
 
 export const instant = false;
 
-export const metadata = { title: "Research Report" };
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: screenTitle(await readUiLanguage(), "report") };
+}
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

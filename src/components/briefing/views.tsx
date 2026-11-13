@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import type { BriefingView } from "@/lib/adapters/to-view";
 import type { Messages } from "@/lib/i18n/messages";
 import { AnalysisBadge, AnalysisNav, SourceBadge, StatusBadge } from "@/components/layout/chrome";
-import { FICTIONAL_DEMO_PUBLISHER_LABEL } from "@/lib/openframe/openframe";
 import { formatLongDate, formatTimestamp } from "@/lib/i18n/languages";
 import { ExportBar } from "@/components/briefing/export-bar";
 import { StoryFigure } from "@/components/media/story-figure";
@@ -19,6 +18,72 @@ function pick(copy: Messages, simplified: string, traditional: string, english: 
   if (script === "zh") return simplified;
   if (script === "zh-Hant") return traditional;
   return english;
+}
+
+function knownPhrase(copy: Messages, label: string, table: Record<string, [string, string, string]>) {
+  const row = table[label];
+  return row ? pick(copy, row[0], row[1], row[2]) : label;
+}
+
+const BADGE_TEXT: Record<string, [string, string, string]> = {
+  "Real Source": ["真实来源", "真實來源", "Real source"],
+  "Demo Source": ["演示来源", "演示來源", "Demo source"],
+  "Mixed sources": ["混合来源", "混合來源", "Mixed sources"],
+  "Pre-generated Analysis": ["预生成分析", "預生成分析", "Pre-generated analysis"],
+  "Live AI Analysis": ["即时分析", "即時分析", "Live analysis"],
+};
+
+const ORIGIN_TEXT: Record<string, [string, string, string]> = {
+  page_capture: ["页面摘录", "頁面摘錄", "Page capture"],
+  pdf_text: ["PDF 文本", "PDF 文字", "PDF text"],
+  search_snippet: ["搜索摘要", "搜尋摘要", "search_snippet"],
+};
+
+const CHIP_TEXT: Record<string, [string, string, string]> = {
+  Paywalled: ["付费墙", "付費牆", "Paywalled"],
+  "Snippet only": ["只有摘要", "只有摘要", "Snippet only"],
+};
+
+const STRENGTH_TEXT: Record<string, [string, string, string]> = {
+  established: ["已成立", "已成立", "Established"],
+  partially_established: ["部分成立", "部分成立", "Partly established"],
+  contested: ["有争议", "有爭議", "Contested"],
+  not_established: ["尚未成立", "尚未成立", "Not established"],
+};
+
+function demoDataMark(copy: Messages) {
+  return pick(copy, "演示数据", "演示資料", "DEMO DATA");
+}
+
+function fictionalPublisher(copy: Messages) {
+  return pick(copy, "虚构演示媒体", "虛構演示媒體", "Fictional demo publisher");
+}
+
+function originText(copy: Messages, origin: string | null, fallback: string) {
+  if (!origin) return fallback;
+  return knownPhrase(copy, origin, ORIGIN_TEXT);
+}
+
+function quoteMark(copy: Messages, item: { matchLabel: string | null; quoteVerification: string }) {
+  if (item.matchLabel === "Matches stored excerpt") return pick(copy, "与已保存摘录一致", "與已保存摘錄一致", "Matches stored excerpt");
+  if (item.quoteVerification === "unverifiable") return pick(copy, "引文无法核验", "引文無法核驗", "Quote not checkable");
+  return pick(copy, "转述", "轉述", "Paraphrase");
+}
+
+function unlinkedText(copy: Messages) {
+  return pick(copy, "数据里没有挂上", "資料裡沒有掛上", "Not linked in this data");
+}
+
+function strengthLine(copy: Messages, strength: string | null) {
+  const label = pick(copy, "强度", "強度", "Strength");
+  if (!strength) return `${label} ${pick(copy, "未标注", "未標注", "not labeled")}`;
+  return `${label} ${knownPhrase(copy, strength, STRENGTH_TEXT)}`;
+}
+
+function usedForText(copy: Messages, usedFor: string[]) {
+  return usedFor
+    .map((item) => (item in copy.report.kind ? copy.report.kind[item as keyof typeof copy.report.kind] : item))
+    .join(" · ");
 }
 
 export function BriefingIntro({
@@ -50,8 +115,8 @@ export function BriefingIntro({
         {copy.briefing.created} {formatTimestamp(view.createdAt, view.language)} · schema {view.schemaVersion}
       </p>
       <div className="flex flex-wrap gap-2">
-        <SourceBadge label={view.sourceLabel} mode={view.sourceMode} />
-        {view.analysisLabel ? <AnalysisBadge label={view.analysisLabel} generatedAt={view.analysisGeneratedAt} /> : null}
+        <SourceBadge label={knownPhrase(copy, view.sourceLabel, BADGE_TEXT)} mode={view.sourceMode} demoMark={demoDataMark(copy)} />
+        {view.analysisLabel ? <AnalysisBadge label={knownPhrase(copy, view.analysisLabel, BADGE_TEXT)} generatedAt={view.analysisGeneratedAt} /> : null}
       </div>
       {view.generation === "LIVE_AI" ? (
         <p className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">{copy.briefing.generatedUnretrieved}</p>
@@ -139,13 +204,13 @@ export function PerspectivesBody({ view, copy }: { view: BriefingView; copy: Mes
                 title={article.title}
                 note={pick(copy, "公开授权的主题配图，不是这篇报道的原图。", "公開授權的主題配圖，不是這篇報導的原圖。", "Openly licensed thematic photo, not a picture from this article.")}
               />
-              <SourceBadge label={article.sourceLabel} mode={article.sourceMode} />
+              <SourceBadge label={knownPhrase(copy, article.sourceLabel, BADGE_TEXT)} mode={article.sourceMode} demoMark={demoDataMark(copy)} />
               <p className="text-xs text-muted-foreground">
-                <PublisherName name={article.publisher} fictional={article.fictional} />
+                <PublisherName name={article.publisher} fictional={article.fictional} copy={copy} />
                 {article.date ? ` · ${formatLongDate(article.date, view.language)}` : ""}
                 {" · "}
-                <AccessChips chips={article.accessChips} />
-                {article.textOrigin ?? pick(copy, "未记录来源", "未記錄來源", "origin not stored")}
+                <AccessChips chips={article.accessChips} copy={copy} />
+                {originText(copy, article.textOrigin, pick(copy, "未记录来源", "未記錄來源", "origin not stored"))}
               </p>
               <h3 className="font-serif text-xl leading-snug">{article.title}</h3>
               <p className="text-sm">{article.summary}</p>
@@ -190,8 +255,8 @@ export function PerspectivesBody({ view, copy }: { view: BriefingView; copy: Mes
                 <li id={`article-${article.id}`} key={article.id} className="rounded-xl border border-border bg-card p-4 text-sm">
                   <p className="font-medium">{article.title}</p>
                   <p className="text-muted-foreground">
-                    <PublisherName name={article.publisher} fictional={article.fictional} />
-                    {article.date ? ` · ${formatLongDate(article.date, view.language)}` : ""} · <AccessChips chips={article.accessChips} /> {article.textOrigin ?? pick(copy, "未记录来源", "未記錄來源", "origin not stored")} · {article.id}
+                    <PublisherName name={article.publisher} fictional={article.fictional} copy={copy} />
+                    {article.date ? ` · ${formatLongDate(article.date, view.language)}` : ""} · <AccessChips chips={article.accessChips} copy={copy} /> {originText(copy, article.textOrigin, pick(copy, "未记录来源", "未記錄來源", "origin not stored"))} · {article.id}
                   </p>
                   <a href={article.url} className="break-all text-of-accent underline-offset-2 hover:underline" target="_blank" rel="noopener noreferrer">
                     {article.url}
@@ -238,12 +303,14 @@ export function EvidenceBody({ view, copy }: { view: BriefingView; copy: Message
           <h2 className="font-serif text-xl">{audit.claimText}</h2>
           <p className="text-sm">{audit.explanation}</p>
           <p className="text-xs text-muted-foreground">
-            confidence {audit.confidenceLevel}. {audit.confidenceRationale} Independent groups: {audit.independentSupporting} supporting / {audit.independentContradicting} contradicting.
+            {pick(copy, "置信度", "信心程度", "Confidence")} {audit.confidenceLevel}. {audit.confidenceRationale}{" "}
+            {pick(copy, "独立来源组", "獨立來源組", "Independent groups")}: {audit.independentSupporting} {pick(copy, "支持", "支持", "supporting")} / {audit.independentContradicting} {pick(copy, "相反", "相反", "contradicting")}.
           </p>
           <EvidenceList
             title={pick(copy, "支持该主张的证据", "支持該主張的證據", "Supporting evidence")}
             items={audit.supporting}
             bundleId={view.bundleId}
+            copy={copy}
             empty={pick(copy, "这份记录里没有", "這份記錄裡沒有", "None in this file.")}
             originFallback={pick(copy, "未记录来源", "未記錄來源", "origin not stored")}
           />
@@ -251,6 +318,7 @@ export function EvidenceBody({ view, copy }: { view: BriefingView; copy: Message
             title={pick(copy, "与该主张相反的证据", "與該主張相反的證據", "Contradicting evidence")}
             items={audit.contradicting}
             bundleId={view.bundleId}
+            copy={copy}
             empty={pick(copy, "这份记录里没有", "這份記錄裡沒有", "None in this file.")}
             originFallback={pick(copy, "未记录来源", "未記錄來源", "origin not stored")}
           />
@@ -258,6 +326,7 @@ export function EvidenceBody({ view, copy }: { view: BriefingView; copy: Message
             title={pick(copy, "不计入 Verified", "不計入 Verified", "Not counted toward Verified")}
             items={audit.unverifiable}
             bundleId={view.bundleId}
+            copy={copy}
             note={pick(copy, "引文无法核验", "引文無法核驗", "Quote not checkable")}
             empty={pick(copy, "这份记录里没有", "這份記錄裡沒有", "None in this file.")}
             originFallback={pick(copy, "未记录来源", "未記錄來源", "origin not stored")}
@@ -288,6 +357,7 @@ function EvidenceList({
   title,
   items,
   bundleId,
+  copy,
   note,
   empty = "None in this file.",
   originFallback = "origin not stored",
@@ -295,6 +365,7 @@ function EvidenceList({
   title: string;
   items: BriefingView["audits"][number]["supporting"];
   bundleId: string;
+  copy: Messages;
   note?: string;
   empty?: string;
   originFallback?: string;
@@ -308,12 +379,12 @@ function EvidenceList({
         {items.map((item) => (
           <li id={item.id} key={item.id} className="rounded-lg bg-muted/60 p-3 text-sm">
             <p className="font-medium">
-              <PublisherName name={item.publisher} fictional={item.fictional} />
-              <AccessChips chips={item.accessChips} />
-              <span className="ml-2 font-normal text-muted-foreground">{item.textOrigin ?? originFallback}</span>
+              <PublisherName name={item.publisher} fictional={item.fictional} copy={copy} />
+              <AccessChips chips={item.accessChips} copy={copy} />
+              <span className="ml-2 font-normal text-muted-foreground">{originText(copy, item.textOrigin, originFallback)}</span>
             </p>
             <p>{item.summary}</p>
-            {item.excerpt ? <QuoteText item={item} /> : null}
+            {item.excerpt ? <QuoteText item={item} copy={copy} /> : null}
             <p className="mt-1 font-mono text-[11px] text-muted-foreground">
               <a href={`#claim-${item.claimId}`}>{item.claimId}</a>
               {" · "}
@@ -351,8 +422,8 @@ export function ReportBody({
     <article className="print-sheet topic-card mt-8 space-y-8">
       <header className="space-y-2 border-b border-border pb-4">
         <div className="flex flex-wrap gap-2">
-          <SourceBadge label={view.sourceLabel} mode={view.sourceMode} />
-          {view.analysisLabel ? <AnalysisBadge label={view.analysisLabel} generatedAt={view.analysisGeneratedAt} /> : null}
+          <SourceBadge label={knownPhrase(copy, view.sourceLabel, BADGE_TEXT)} mode={view.sourceMode} demoMark={demoDataMark(copy)} />
+          {view.analysisLabel ? <AnalysisBadge label={knownPhrase(copy, view.analysisLabel, BADGE_TEXT)} generatedAt={view.analysisGeneratedAt} /> : null}
         </div>
         <p className="text-sm">{view.masthead}</p>
         <p className="text-sm leading-relaxed text-muted-foreground">{copy.report.excerptLimit}</p>
@@ -369,7 +440,7 @@ export function ReportBody({
       />
       <Section title={pick(copy, "底线", "底線", "Bottom line")}>
         <p className="font-medium">{view.report.bottomLine}</p>
-        <BottomLineLinks view={view} />
+        <BottomLineLinks view={view} copy={copy} />
       </Section>
       <Section title={pick(copy, "执行摘要", "執行摘要", "Executive summary")}>
         <p>{view.report.summary}</p>
@@ -379,8 +450,8 @@ export function ReportBody({
           {view.report.findings.map((finding) => (
             <li id={`finding-${finding.id}`} key={finding.id}>
               <p className="font-medium">{finding.text}</p>
-              <p className="text-xs text-muted-foreground">{finding.id} · strength {finding.strength}</p>
-              <FindingTrace finding={finding} bundleId={view.bundleId} articles={view.articles} />
+              <p className="text-xs text-muted-foreground">{finding.id} · {strengthLine(copy, finding.strength)}</p>
+              <FindingTrace finding={finding} bundleId={view.bundleId} articles={view.articles} copy={copy} />
             </li>
           ))}
         </ul>
@@ -391,7 +462,7 @@ export function ReportBody({
             <li key={`${finding.heading}-${finding.text.slice(0, 48)}`}>
               <p className="font-medium">{finding.heading}</p>
               <p>{finding.text}</p>
-              <FindingTrace finding={finding} bundleId={view.bundleId} articles={view.articles} />
+              <FindingTrace finding={finding} bundleId={view.bundleId} articles={view.articles} copy={copy} />
             </li>
           ))}
         </ul>
@@ -401,7 +472,7 @@ export function ReportBody({
           {view.report.rows.map((row) => (
             <li key={row.articleId}>
               <span className="font-medium">
-                <PublisherName name={row.publisher} fictional={row.fictional} />.
+                <PublisherName name={row.publisher} fictional={row.fictional} copy={copy} />.
               </span>{" "}
               {row.argument}
               <span className="mt-1 block text-sm text-muted-foreground">
@@ -412,38 +483,25 @@ export function ReportBody({
         </ul>
       </Section>
       <Section title={copy.report.claimAudit}>
-        <div className="max-w-full overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="py-2 pr-3">{copy.report.columnClaim}</th>
-                <th className="py-2 pr-3">{copy.report.columnLabel}</th>
-                <th className="py-2">{copy.report.columnRationale}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {view.report.claims.map((claim) => (
-                <tr key={claim.auditId} className="border-b border-border align-top">
-                  <td className="py-3 pr-3">
-                    {claim.text}
-                    <span className="mt-1 block font-mono text-[11px] text-muted-foreground">
-                      <a href={`/analysis/${view.bundleId}/evidence#claim-${claim.claimId}`}>{claim.claimId}</a>
-                      {" → "}
-                      <a href={`/analysis/${view.bundleId}/perspectives#article-${claim.articleId}`}>{claim.articleId}</a>
-                    </span>
-                  </td>
-                  <td className="py-3 pr-3">
-                    {claim.status ? <StatusBadge status={claim.status} /> : <span className="text-amber-800">{claim.statusWithheld}</span>}
-                  </td>
-                  <td className="py-3">{claim.explanation}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ul className="space-y-4">
+          {view.report.claims.map((claim) => (
+            <li key={claim.auditId} className="border-b border-border pb-4">
+              <p>{claim.text}</p>
+              <p className="mt-2">
+                {claim.status ? <StatusBadge status={claim.status} /> : <span className="text-amber-800">{claim.statusWithheld}</span>}
+              </p>
+              <p className="mt-2">{claim.explanation}</p>
+              <p className="mt-2 font-mono text-[11px] text-muted-foreground">
+                <a href={`/analysis/${view.bundleId}/evidence#claim-${claim.claimId}`}>{claim.claimId}</a>
+                {" → "}
+                <a href={`/analysis/${view.bundleId}/perspectives#article-${claim.articleId}`}>{claim.articleId}</a>
+              </p>
+            </li>
+          ))}
+        </ul>
       </Section>
-      <Section title="Timeline">
-        <TimelineList events={view.report.timeline} />
+      <Section title={pick(copy, "时间线", "時間線", "Timeline")}>
+        <TimelineList events={view.report.timeline} copy={copy} />
       </Section>
       <Section title={copy.report.methodology}>
         <p>{view.report.methodology}</p>
@@ -463,8 +521,8 @@ export function ReportBody({
                 {source.title}
               </a>
               <span className="block text-muted-foreground">
-                <PublisherName name={source.publisher} fictional={source.fictional} />
-                {source.date ? ` · ${formatLongDate(source.date, view.language)}` : ""} · {source.usedFor.join(", ")}
+                <PublisherName name={source.publisher} fictional={source.fictional} copy={copy} />
+                {source.date ? ` · ${formatLongDate(source.date, view.language)}` : ""} · {usedForText(copy, source.usedFor)}
               </span>
             </li>
           ))}
@@ -478,15 +536,17 @@ function FindingTrace({
   finding,
   bundleId,
   articles,
+  copy,
 }: {
   finding: BriefingView["report"]["findings"][number];
   bundleId: string;
   articles: BriefingView["articles"];
+  copy: Messages;
 }) {
   if (!finding.claimIds) {
     return (
       <div className="text-xs text-muted-foreground">
-        <p>not linked in data</p>
+        <p>{unlinkedText(copy)}</p>
         {finding.articleIds.map((articleId) => {
           const article = articles.find((item) => item.id === articleId);
           return (
@@ -514,14 +574,14 @@ function FindingTrace({
         <li key={claim.claimId}>
           {claim.auditId ? (
             <a className="text-of-accent underline-offset-2 hover:underline" href={`/analysis/${bundleId}/evidence#claim-${claim.claimId}`}>
-              Audit {claim.auditId}
+              {pick(copy, "审核", "審核", "Audit")} {claim.auditId}
             </a>
           ) : (
-            <span>not linked in data</span>
+            <span>{unlinkedText(copy)}</span>
           )}
           {" → "}
           <a className="text-of-accent underline-offset-2 hover:underline" href={`/analysis/${bundleId}/evidence#claim-${claim.claimId}`}>
-            Claim {claim.claimId}
+            {pick(copy, "主张", "主張", "Claim")} {claim.claimId}
           </a>
           {claim.evidence.map((item) => (
             <span key={item.id}>
@@ -529,7 +589,7 @@ function FindingTrace({
               <a className="text-of-accent underline-offset-2 hover:underline" href={`/analysis/${bundleId}/evidence#${item.id}`}>
                 {item.id}
               </a>
-              {item.matchLabel ? ` (${item.matchLabel})` : item.quoteVerification === "unverifiable" ? " (Quote not checkable)" : " (paraphrase)"}
+              {` (${quoteMark(copy, item)})`}
             </span>
           ))}
           {articles.find((article) => article.id === claim.articleId) ? (
@@ -546,24 +606,24 @@ function FindingTrace({
   );
 }
 
-function TimelineList({ events }: { events: BriefingView["report"]["timeline"] }) {
+function TimelineList({ events, copy }: { events: BriefingView["report"]["timeline"]; copy: Messages }) {
   const dated = events.filter((event) => event.date);
-  if (dated.length === 0) return <p>No timeline data available</p>;
+  if (dated.length === 0) return <p>{pick(copy, "这份记录里没有时间线。", "這份記錄裡沒有時間線。", "No timeline in this record.")}</p>;
   return (
     <ul className="space-y-1">
       {dated.map((event) => (
         <li key={`${event.date}-${event.event}`}>
           <span className="font-medium">{event.date}.</span> {event.event}
           {event.sourceIds.length > 0 ? (
-            <span className="ml-2 font-mono text-xs">
+            <span className="mt-1 flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs">
               {event.sourceIds.map((id) => (
-                <a key={id} href={`#source-${id}`} className="mr-2 text-of-accent">
+                <a key={id} href={`#source-${id}`} className="whitespace-nowrap text-of-accent">
                   {id}
                 </a>
               ))}
             </span>
           ) : (
-            <span className="ml-2 text-xs text-muted-foreground">not linked in data</span>
+            <span className="ml-2 text-xs text-muted-foreground">{unlinkedText(copy)}</span>
           )}
         </li>
       ))}
@@ -571,9 +631,9 @@ function TimelineList({ events }: { events: BriefingView["report"]["timeline"] }
   );
 }
 
-function BottomLineLinks({ view }: { view: BriefingView }) {
+function BottomLineLinks({ view, copy }: { view: BriefingView; copy: Messages }) {
   if (!view.report.bottomLineClaimIds || view.report.bottomLineClaimIds.length === 0) {
-    return <p className="mt-2 text-xs text-muted-foreground">not linked in data</p>;
+    return <p className="mt-2 text-xs text-muted-foreground">{unlinkedText(copy)}</p>;
   }
   return (
     <p className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs">
@@ -591,44 +651,42 @@ function BottomLineLinks({ view }: { view: BriefingView }) {
   );
 }
 
-function QuoteText({ item }: { item: BriefingView["audits"][number]["supporting"][number] }) {
+function QuoteText({ item, copy }: { item: BriefingView["audits"][number]["supporting"][number]; copy: Messages }) {
+  const mark = quoteMark(copy, item);
   if (item.asQuotation && item.excerpt) {
     return (
       <p className="mt-1">
         “{item.excerpt}”
         <span className="ml-2 text-xs text-muted-foreground">
-          Matches stored excerpt
-          {item.span ? ` · characters ${item.span.start}–${item.span.end}` : ""}
+          {mark}
+          {item.span ? ` · ${pick(copy, "字符", "字元", "characters")} ${item.span.start}–${item.span.end}` : ""}
         </span>
       </p>
     );
   }
-  if (item.quoteVerification === "unverifiable") {
-    return <p className="mt-1 text-muted-foreground">{item.excerpt} (Quote not checkable)</p>;
-  }
-  return <p className="mt-1 text-muted-foreground">{item.excerpt} (paraphrase)</p>;
+  return <p className="mt-1 text-muted-foreground">{item.excerpt} ({mark})</p>;
 }
 
-function AccessChips({ chips }: { chips: string[] }) {
+function AccessChips({ chips, copy }: { chips: string[]; copy: Messages }) {
   if (chips.length === 0) return null;
   return (
     <span className="mr-2 inline-flex flex-wrap gap-1 align-middle">
       {chips.map((chip) => (
         <span key={chip} className="inline-flex rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-950">
-          {chip}
+          {knownPhrase(copy, chip, CHIP_TEXT)}
         </span>
       ))}
     </span>
   );
 }
 
-function PublisherName({ name, fictional }: { name: string; fictional: boolean }) {
+function PublisherName({ name, fictional, copy }: { name: string; fictional: boolean; copy: Messages }) {
   return (
     <>
       {name}
       {fictional ? (
         <span className="ml-2 inline-flex rounded-full bg-of-accent px-2 py-0.5 text-[10px] font-semibold tracking-wide text-of-accent-foreground">
-          {FICTIONAL_DEMO_PUBLISHER_LABEL}
+          {fictionalPublisher(copy)}
         </span>
       ) : null}
     </>
@@ -646,7 +704,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 function Empty({ title, body }: { title: string; body: string }) {
   return (
-    <div className="paper-note mt-8">
+    <div className="topic-card mt-8">
       <h2 className="text-[1.35rem] font-bold">{title}</h2>
       <p className="mt-2 text-sm text-muted-foreground">{body}</p>
     </div>

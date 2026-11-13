@@ -4,12 +4,17 @@ import { unstable_rethrow } from "next/navigation";
 import { HomeStudio } from "@/components/home/home-studio";
 import { preparedTopics } from "@/lib/demo/catalog";
 import { PaperFrame, readUiLanguage } from "@/components/layout/paper-frame";
-import { libraryFrame } from "@/lib/i18n/app-pages";
+import type { Metadata } from "next";
+import { libraryFrame, screenTitle } from "@/lib/i18n/app-pages";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { listBundles } from "@/lib/store/bundle-store";
 import { toSummary } from "@/lib/adapters/to-view";
 import { getPublicProviderStatus } from "@/lib/analysis/live-deps";
 import { Skeleton } from "@/components/ui/skeleton";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: screenTitle(await readUiLanguage(), "library") };
+}
 
 export default async function LibraryPage() {
   const language = await readUiLanguage();
