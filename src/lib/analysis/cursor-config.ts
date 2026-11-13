@@ -10,7 +10,7 @@ export const PINNED_EFFORT = "medium";
 export const PINNED_EFFORT_PARAM = "effort";
 export const PINNED_FAST = "false";
 export const DEFAULT_API_BASE = "https://api.cursor.com";
-export const DEFAULT_TIMEOUT_MS = 180_000;
+export const DEFAULT_TIMEOUT_MS = 600_000;
 export const DEFAULT_POLL_INTERVAL_MS = 5_000;
 
 export interface ModelSelection {
