@@ -174,7 +174,7 @@ export function SearchProgressCard({ progress, language }: { progress: DemoProgr
                     {state === "done" ? copy.statusDone : state === "active" ? copy.statusActive : copy.statusPending}
                   </span>
                 </div>
-                <p className={`mt-0.5 text-[13px] leading-[1.55] ${state === "pending" ? "text-muted-foreground/70" : "text-muted-foreground"}`}>
+                <p className="mt-0.5 text-[13px] leading-[1.55] text-muted-foreground">
                   {item.body}
                 </p>
                 {state === "active" ? (

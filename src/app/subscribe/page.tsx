@@ -1,7 +1,12 @@
 import { PaperFrame, readUiLanguage } from "@/components/layout/paper-frame";
 import { SourceSubscriptions } from "@/components/home/source-subscriptions";
 import { SubscribePlans } from "@/components/home/subscribe-plans";
-import { subscribeCopy } from "@/lib/i18n/app-pages";
+import type { Metadata } from "next";
+import { screenTitle, subscribeCopy } from "@/lib/i18n/app-pages";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: screenTitle(await readUiLanguage(), "subscribe") };
+}
 
 export default async function SubscribePage() {
   const language = await readUiLanguage();

@@ -1,6 +1,11 @@
 import { PaperFrame, readUiLanguage } from "@/components/layout/paper-frame";
 import { MePanel } from "@/components/home/me-panel";
-import { meCopy } from "@/lib/i18n/app-pages";
+import type { Metadata } from "next";
+import { meCopy, screenTitle } from "@/lib/i18n/app-pages";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: screenTitle(await readUiLanguage(), "me") };
+}
 
 export default async function MePage() {
   const language = await readUiLanguage();

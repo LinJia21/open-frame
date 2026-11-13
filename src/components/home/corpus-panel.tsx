@@ -200,10 +200,10 @@ export function CorpusPanel({
         </button>
       </form>
       {phase === "loading" ? (
-        <p className="paper-note mt-4 text-[15px] leading-7" role="status">{copy.searching}</p>
+        <p className="topic-card mt-4 text-[15px] leading-7" role="status">{copy.searching}</p>
       ) : null}
       {phase === "error" ? (
-        <div className="paper-note mt-4" role="alert">
+        <div className="topic-card mt-4" role="alert">
           <p className="text-[15px] leading-7">{error ?? copy.loadFailed}</p>
           <button type="button" className="paper-action mt-3 w-full" disabled={searching} onClick={() => void load()}>
             {searching ? copy.searching : copy.retry}
@@ -223,7 +223,7 @@ export function CorpusPanel({
           </p>
           {listedAll ? <p className="mt-2 text-[13px] leading-6 text-muted-foreground">{copy.listedAll}</p> : null}
           {rows.length === 0 ? (
-            <p className="paper-note mt-3 text-[15px] leading-7" role="status">{library.itemCount === 0 ? copy.empty : copy.noHits}</p>
+            <p className="topic-card mt-3 text-[15px] leading-7" role="status">{library.itemCount === 0 ? copy.empty : copy.noHits}</p>
           ) : (
             <ul className="mt-3 space-y-2">
               {rows.map((row) => (

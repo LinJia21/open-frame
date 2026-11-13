@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import type { HomeCardView } from "@/lib/home/feed";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { LanguageSwitch } from "@/components/layout/language-switch";
+import { messagesForUi } from "@/lib/i18n/messages";
 import { PageDock } from "@/components/layout/page-dock";
 import { NEWS_SOURCES, sourceTitle } from "@/lib/sources/catalog";
 import { useSourceIds } from "@/lib/sources/use-source-ids";
@@ -124,13 +125,15 @@ export function NewsHome({
     }
   }
 
+  const emptyDone = searched && !pending && searchError === null && result !== null && result.items.length === 0;
+
   return (
     <div className="spectrax-stage">
       <aside className="spectrax-aside">
         <p className="wordmark text-[3.25rem]">SpectraX</p>
         <ViewTransition name="spectrax-aside" share="paper-fade" enter="paper-fade" exit="paper-fade" update="none" default="none">
           <div>
-            <p className="mt-3 text-[15px] leading-7 text-muted-foreground">See Beyond the Headlines</p>
+            <p className="mt-3 text-[15px] leading-7 text-muted-foreground">{messagesForUi(language).home.sloganTranslated}</p>
             <p className="mt-6 text-[16px] leading-7">{copy.asideLead}</p>
             <ol className="mt-5 list-decimal space-y-3 pl-5 text-[15px] leading-7 text-foreground">
               {copy.asidePoints.map((point) => (
@@ -224,12 +227,24 @@ export function NewsHome({
               default="none"
             >
             <div id="panel-all" role="tabpanel" aria-labelledby="tab-all" hidden={tab !== "all"} className="mt-4">
+              {emptyDone ? (
+                <div className="mb-4">
+                  <SearchResults
+                    copy={copy}
+                    language={language}
+                    pending={pending}
+                    error={searchError}
+                    result={result}
+                    onRetry={() => void runSearch()}
+                  />
+                </div>
+              ) : null}
               {progress ? (
                 <div className="mb-4">
                   <SearchProgressCard progress={progress} language={language} />
                 </div>
               ) : null}
-              {tab === "all" && searched ? (
+              {tab === "all" && searched && !emptyDone ? (
                 <SearchResults
                   copy={copy}
                   language={language}
@@ -361,7 +376,7 @@ function SearchResults({
 }) {
   if (pending) {
     return (
-      <section className="paper-note" aria-busy="true" role="status">
+      <section className="topic-card" aria-busy="true" role="status">
         <h2 className="text-[1.25rem] font-bold">{copy.searching}</h2>
         <p className="mt-2 text-[15px] leading-7 text-[#3a342c]">{copy.searchingBody}</p>
       </section>
@@ -369,7 +384,7 @@ function SearchResults({
   }
   if (error === "none") {
     return (
-      <section className="paper-note" role="status">
+      <section className="topic-card" role="status">
         <h2 className="text-[1.25rem] font-bold">{copy.noSourcesTitle}</h2>
         <p className="mt-2 text-[15px] leading-7 text-[#3a342c]">{copy.noSources}</p>
         <Link href="/subscribe#source-subscriptions" className="paper-action mt-4 w-full">
@@ -380,7 +395,7 @@ function SearchResults({
   }
   if (error === "failed") {
     return (
-      <section className="paper-note" role="alert">
+      <section className="topic-card" role="alert">
         <h2 className="text-[1.25rem] font-bold">{copy.searchFailedTitle}</h2>
         <p className="mt-2 text-[15px] leading-7 text-[#3a342c]">{copy.searchFailed}</p>
         <button type="button" className="paper-action mt-4 w-full" onClick={onRetry}>
@@ -391,7 +406,7 @@ function SearchResults({
   }
   if (!result || result.items.length === 0) {
     return (
-      <section className="paper-note" role="status">
+      <section className="topic-card" role="status">
         <h2 className="text-[1.25rem] font-bold">{copy.noLeadsTitle}</h2>
         <p className="mt-2 text-[15px] leading-7 text-[#3a342c]">{copy.noLeads}</p>
       </section>
@@ -542,7 +557,7 @@ function copyFor(language: UiLanguage): HomeCopy {
       asidePoints: [
         "字標仍是 SpectraX。搜索讀訂閱裡選中的來源。",
         "All 展示現有卡片。For You 和 Locate 尚未開通。",
-        "底部選單是首頁、資料庫、訂閱、我的。方案和登入尚未開通。來源關注只留在這台瀏覽器。熱度寫「暫無數據」。",
+        "底部選單是首頁、資料庫、訂閱、我的。方案和登入是可點開的演示，不會扣款，也不會登入成功。來源關注只留在這台瀏覽器。熱度寫「暫無數據」。",
       ],
     };
   }
@@ -588,7 +603,7 @@ function copyFor(language: UiLanguage): HomeCopy {
       asidePoints: [
         "字标仍是 SpectraX。搜索读订阅里选中的来源。",
         "All 展示现有卡片。For You 和 Locate 尚未开通。",
-        "底部菜单是首页、资料库、订阅、我的。方案和登录尚未开通。来源关注只留在这台浏览器。热度写「暂无数据」。",
+        "底部菜单是首页、资料库、订阅、我的。方案和登录是可点开的演示，不会扣款，也不会登录成功。来源关注只留在这台浏览器。热度写「暂无数据」。",
       ],
     };
   }
@@ -633,7 +648,7 @@ function copyFor(language: UiLanguage): HomeCopy {
     asidePoints: [
       "The wordmark stays SpectraX. Search reads the sources selected on Subscribe.",
       "All shows those cards. For You and Locate are not open.",
-      "The bottom menu is Home, Library, Subscribe, and Me. Plans and sign-in are not open. Followed sources stay in this browser. Heat says there is no data.",
+      "The bottom menu is Home, Library, Subscribe, and Me. Plans and sign-in are walkable demos: nothing is charged, and sign-in cannot succeed. Followed sources stay in this browser. Heat says there is no data.",
     ],
   };
 }

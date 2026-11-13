@@ -60,7 +60,7 @@ test("interface language keeps the existing cookie and does not send traditional
   assert.equal(isLanguage("zh-Hant"), false);
 });
 
-test("subscribe and me stay closed, and the language switch names the three scripts", async () => {
+test("subscribe and me stay unpaid demos, and the language switch names the three scripts", async () => {
   const subscribe = await readFile("src/app/subscribe/page.tsx", "utf8");
   const me = await readFile("src/app/me/page.tsx", "utf8");
   const copy = await readFile("src/lib/i18n/app-pages.ts", "utf8");
@@ -75,9 +75,16 @@ test("subscribe and me stay closed, and the language switch names the three scri
   assert.match(copy, /這不是登入成功/);
   assert.match(copy, /not a successful sign-in/);
   assert.match(await readFile("src/components/home/subscribe-plans.tsx", "utf8"), /demoBody|noCharge|demoTitle/);
-  assert.match(copy, /尚未开通/);
-  assert.match(copy, /尚未開通/);
+  assert.match(copy, /方案演示/);
+  assert.match(copy, /登录演示/);
+  assert.match(copy, /登入演示/);
+  assert.match(copy, /Plan demo/);
+  assert.match(copy, /Sign-in demo/);
   assert.match(copy, /不会出现购买成功/);
+  assert.match(copy, /不會出現購買成功/);
+  assert.doesNotMatch(copy, /尚未开通/);
+  assert.doesNotMatch(copy, /尚未開通/);
+  assert.doesNotMatch(copy, /Not open/);
   assert.doesNotMatch(copy, /¥|\$\d|checkout|stripe/i);
   assert.match(switcher, /简体/);
   assert.match(switcher, /繁體/);
@@ -95,5 +102,8 @@ test("the news home does not request geolocation or put fixture counts on the ca
   const home = await readFile("src/components/home/news-home.tsx", "utf8");
   assert.match(home, /暂无数据/);
   assert.match(home, /演示示例 · 非实时/);
+  assert.match(home, /For You 尚未开通/);
+  assert.match(home, /不会扣款/);
+  assert.doesNotMatch(home, /方案和登录尚未开通/);
   assert.doesNotMatch(home, /Partially Supported|statusCounts|generatedAt/);
 });

@@ -25,7 +25,7 @@ export function NotFoundPanel({ language = "zh" }: { language?: UiLanguage }) {
     <div className="paper-card space-y-3 p-6">
       <h1 className="text-2xl font-bold">{copy.notFoundTitle}</h1>
       <p className="text-sm text-muted-foreground">{copy.notFoundBody}</p>
-      <Link href="/" className="paper-link text-sm">
+      <Link href="/" className="paper-action mt-2 inline-flex">
         {copy.backHome}
       </Link>
     </div>
@@ -58,7 +58,7 @@ export function UnsupportedSchemaPanel({
     <div className="paper-card space-y-3 p-6">
       <h1 className="text-2xl font-bold">{title}</h1>
       <p className="text-sm text-muted-foreground">{body}</p>
-      <Link href="/" className="paper-link text-sm">
+      <Link href="/" className="paper-action mt-2 inline-flex">
         {copy.backHome}
       </Link>
     </div>
@@ -72,11 +72,11 @@ export function ErrorPanel({ retry, language = "zh" }: { retry?: () => void; lan
       <h1 className="text-2xl font-bold">{copy.errorTitle}</h1>
       <p className="text-sm text-muted-foreground">{copy.errorBody}</p>
       {retry ? (
-        <button type="button" onClick={retry} className="rounded-full border border-[#e4d48a] bg-[#f3e6a4] px-4 py-2 text-sm text-[#1c1915]">
+        <button type="button" onClick={retry} className="paper-action">
           {copy.retry}
         </button>
       ) : null}
-      <Link href="/" className="paper-link block text-sm">
+      <Link href="/" className="paper-action inline-flex">
         {copy.backHome}
       </Link>
     </div>
