@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { ViewTransition, type ReactNode } from "react";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { LanguageSwitch } from "@/components/layout/language-switch";
@@ -27,15 +27,19 @@ export function PaperFrame({
     <div className="spectrax-stage">
       <aside className="spectrax-aside">
         <p className="wordmark text-[3.25rem]">SpectraX</p>
-        <p className="mt-3 text-[15px] leading-7 text-muted-foreground">{kicker}</p>
-        <p className="mt-6 text-[16px] leading-7 text-[#3a342c]">{lead}</p>
-        {points.length > 0 ? (
-          <ol className="mt-5 list-decimal space-y-3 pl-5 text-[15px] leading-7 text-[#3a342c]">
-            {points.map((point) => (
-              <li key={point}>{point}</li>
-            ))}
-          </ol>
-        ) : null}
+        <ViewTransition name="spectrax-aside" share="paper-fade" enter="paper-fade" exit="paper-fade" update="none" default="none">
+          <div>
+            <p className="mt-3 text-[15px] leading-7 text-muted-foreground">{kicker}</p>
+            <p className="mt-6 text-[16px] leading-7 text-[#3a342c]">{lead}</p>
+            {points.length > 0 ? (
+              <ol className="mt-5 list-decimal space-y-3 pl-5 text-[15px] leading-7 text-[#3a342c]">
+                {points.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ol>
+            ) : null}
+          </div>
+        </ViewTransition>
       </aside>
       <div className="newsroom news-home">
         <div className="news-home-scroll">
@@ -46,7 +50,9 @@ export function PaperFrame({
               </Link>
               <LanguageSwitch language={language} />
             </div>
-            <div className="mt-4">{children}</div>
+            <ViewTransition name="paper-page" share="paper-fade" enter="paper-fade" exit="paper-fade" update="none" default="none">
+              <div className="mt-4">{children}</div>
+            </ViewTransition>
           </div>
         </div>
         <PageDock placement="frame" language={language} />

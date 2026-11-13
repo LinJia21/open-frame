@@ -336,7 +336,7 @@ export function ReportBody({
     return <Empty title={copy.briefing.emptyReportTitle} body={copy.briefing.emptyReportBody} />;
   }
   return (
-    <article className="print-sheet mt-8 space-y-8 rounded-2xl border border-border bg-card p-5 sm:p-8">
+    <article className="print-sheet topic-card mt-8 space-y-8">
       <header className="space-y-2 border-b border-border pb-4">
         <div className="flex flex-wrap gap-2">
           <SourceBadge label={view.sourceLabel} mode={view.sourceMode} />
@@ -634,8 +634,8 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 function Empty({ title, body }: { title: string; body: string }) {
   return (
-    <div className="mt-8 rounded-xl border border-dashed border-border p-6">
-      <h2 className="font-serif text-2xl">{title}</h2>
+    <div className="paper-note mt-8">
+      <h2 className="text-[1.35rem] font-bold">{title}</h2>
       <p className="mt-2 text-sm text-muted-foreground">{body}</p>
     </div>
   );

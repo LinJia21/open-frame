@@ -55,7 +55,7 @@ const subscribe: Record<PageScript, SubscribeCopy> = {
     unpriced: "未定价",
     cta: "尚未开通",
     noCharge: "没有可支付的价格，也不会扣款。",
-    footnote: "这些按钮点不了。这里不会创建订单，也不会显示购买成功。",
+    footnote: "上面的方案按钮点不了。不会创建订单，也不会显示购买成功。",
     plans: [
       {
         name: "阅读",
@@ -83,7 +83,7 @@ const subscribe: Record<PageScript, SubscribeCopy> = {
     unpriced: "未定價",
     cta: "尚未開通",
     noCharge: "沒有可支付的價格，也不會扣款。",
-    footnote: "這些按鈕點不了。這裡不會建立訂單，也不會顯示購買成功。",
+    footnote: "上面的方案按鈕點不了。不會建立訂單，也不會顯示購買成功。",
     plans: [
       {
         name: "閱讀",
@@ -111,7 +111,7 @@ const subscribe: Record<PageScript, SubscribeCopy> = {
     unpriced: "Unpriced",
     cta: "Not open",
     noCharge: "There is no payable price, and nothing is charged.",
-    footnote: "These buttons do nothing. This page does not create an order or show a successful purchase.",
+    footnote: "The plan buttons above do nothing. This page does not create an order or show a successful purchase.",
     plans: [
       {
         name: "Reading",
@@ -195,7 +195,7 @@ export function libraryFrame(language: UiLanguage): FrameCopy & { title: string;
   if (language === "zh-Hant") {
     return {
       lead: "資料庫只處理已經保存的文字：導入、檢索和分析都不搜尋首頁的新聞來源。",
-      points: ["預設沒有歷史記錄，這裡不會填入假列表。", "演示模式不會假裝已經接上即時模型。", "首頁搜索讀的是訂閱裡選中的來源，不會把結果存進這裡。"],
+      points: ["列表來自已經保存的文字，不會為了演示填入假報導。", "演示模式不會假裝已經接上即時模型。", "首頁搜索讀的是訂閱裡選中的來源，不會把結果存進這裡。"],
       title: "已保存的歷史資料",
       intro: "每篇分析只納入已保存文本的前 2000 字。超出部分未納入分析。不能據此推斷完整原文缺乏證據。",
     };
@@ -203,7 +203,7 @@ export function libraryFrame(language: UiLanguage): FrameCopy & { title: string;
   if (language === "zh") {
     return {
       lead: "资料库只处理已经保存的文字：导入、检索和分析都不搜索首页的新闻来源。",
-      points: ["默认没有历史记录，这里不会填入假列表。", "演示模式不会假装已经接上实时模型。", "首页搜索读的是订阅里选中的来源，不会把结果存进这里。"],
+      points: ["列表来自已经保存的文字，不会为了演示填入假报道。", "演示模式不会假装已经接上实时模型。", "首页搜索读的是订阅里选中的来源，不会把结果存进这里。"],
       title: "已保存的历史资料",
       intro: "每篇分析只纳入已保存文本的前 2000 字。超出部分未纳入分析。不能据此推断完整原文缺乏证据。",
     };
@@ -211,7 +211,7 @@ export function libraryFrame(language: UiLanguage): FrameCopy & { title: string;
   return {
     lead: "The library only handles text you already saved. Import, search, and analysis do not search the sources followed on Subscribe.",
     points: [
-      "There is no saved history until you import. Nothing here is filled in.",
+      "The list is text already saved. It is not filled with sample articles.",
       "Demo mode does not pretend a live model is connected.",
       "Home search reads the sources selected on Subscribe and does not save those results here.",
     ],
@@ -229,6 +229,7 @@ export function settingsFrame(language: UiLanguage): FrameCopy & {
   providerSecret: string;
   samples: string;
   samplesBody: string;
+  providerLine: (name: string, verified: boolean) => string;
 } {
   if (language === "zh-Hant") {
     return {
@@ -242,6 +243,7 @@ export function settingsFrame(language: UiLanguage): FrameCopy & {
       providerSecret: "這裡不讀取密鑰，也不發起呼叫。",
       samples: "首頁示例",
       samplesBody: "首頁只標「演示示例 · 非即時」。熱度沒有記錄，所以寫暫無數據。熱度不是可信度。下面的主張計數來自夾具，不是對整件事的真偽判斷。",
+      providerLine: (name, verified) => `提供方 ${name}。liveCallVerified 為 ${verified ? "true" : "false"}。`,
     };
   }
   if (language === "zh") {
@@ -256,6 +258,7 @@ export function settingsFrame(language: UiLanguage): FrameCopy & {
       providerSecret: "这里不读取密钥，也不发起调用。",
       samples: "首页示例",
       samplesBody: "首页只标「演示示例 · 非实时」。热度没有记录，所以写暂无数据。热度不是可信度。下面的主张计数来自夹具，不是对整件事的真伪判断。",
+      providerLine: (name, verified) => `提供方 ${name}。liveCallVerified 为 ${verified ? "true" : "false"}。`,
     };
   }
   return {
@@ -270,6 +273,7 @@ export function settingsFrame(language: UiLanguage): FrameCopy & {
     samples: "Home samples",
     samplesBody:
       "Home is marked as a sample, not live. Heat has no record, so it says there is no data. Heat is not credibility. The claim counts below come from the fixtures and are not a verdict on the whole event.",
+    providerLine: (name, verified) => `Provider ${name}. liveCallVerified is ${verified ? "true" : "false"}.`,
   };
 }
 
@@ -330,6 +334,31 @@ export function analysisFrame(language: UiLanguage): FrameCopy {
       "The fictional demonstration stays DEMO. It is not real news.",
       "Evidence audit checks claims one by one. It does not judge the whole story.",
     ],
+  };
+}
+
+export function missingRoute(language: UiLanguage): { title: string; body: string; home: string; lead: string } {
+  if (language === "zh-Hant") {
+    return {
+      title: "這一頁不存在",
+      body: "地址可能寫錯了。可以從首頁、資料庫、訂閱或我的繼續。",
+      home: "返回首頁",
+      lead: "這一頁沒有對應的內容。",
+    };
+  }
+  if (language === "zh") {
+    return {
+      title: "这一页不存在",
+      body: "地址可能写错了。可以从首页、资料库、订阅或我的继续。",
+      home: "返回首页",
+      lead: "这一页没有对应的内容。",
+    };
+  }
+  return {
+    title: "This page is not here",
+    body: "The address may be wrong. Home, Library, Subscribe, and Me are still open.",
+    home: "Back to home",
+    lead: "Nothing on this address.",
   };
 }
 

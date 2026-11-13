@@ -3,6 +3,8 @@ import { loadBriefing } from "@/lib/analysis/load";
 import { readUiLanguage } from "@/components/layout/paper-frame";
 import { BriefingIntro, PerspectivesBody } from "@/components/briefing/views";
 
+export const instant = false;
+
 export const metadata = { title: "Perspectives" };
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {

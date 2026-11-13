@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { connection } from "next/server";
 import { getPublicProviderStatus } from "@/lib/analysis/live-deps";
+import { providerStatusText } from "@/lib/i18n/provider-copy";
 import { liveCorpusStore } from "@/lib/corpus/live";
 import { homeEventCards } from "@/lib/home/feed";
 import { PaperFrame, readUiLanguage } from "@/components/layout/paper-frame";
 import { describeHomeSample, settingsFrame } from "@/lib/i18n/app-pages";
+
+export const instant = false;
 
 export default async function SettingsPage() {
   await connection();
@@ -30,10 +33,9 @@ export default async function SettingsPage() {
         </li>
         <li className="topic-card">
           <h2 className="text-base font-bold">{copy.provider}</h2>
-          <p className="mt-2 text-base leading-7">{provider.note}</p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            provider {provider.provider} · liveCallVerified {String(provider.liveCallVerified)}。{copy.providerSecret}
-          </p>
+          <p className="mt-2 text-base leading-7">{providerStatusText(provider, language)}</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">{copy.providerLine(provider.provider, provider.liveCallVerified)}</p>
+          <p className="mt-1 text-sm leading-6 text-muted-foreground">{copy.providerSecret}</p>
         </li>
         <li className="topic-card">
           <h2 className="text-base font-bold">{copy.samples}</h2>

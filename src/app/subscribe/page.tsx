@@ -35,7 +35,7 @@ export default async function SubscribePage() {
         ))}
       </ul>
       <p className="mt-4 text-[13px] leading-6 text-muted-foreground">{copy.footnote}</p>
-      <div className="mt-8 border-t border-border pt-2">
+      <div className="mt-8">
         <SourceSubscriptions language={language} />
       </div>
     </PaperFrame>
