@@ -1,0 +1,12 @@
+{
+  "name": "openframe-spec-validation",
+  "private": true,
+  "type": "module",
+  "description": "Validation helpers for the OpenFrame 1.2.0 spec (not app code).",
+  "scripts": {
+    "ajv": "node validate.mjs ../data/demo-dataset.json ../data/sample-analysis-ai-animation.json",
+    "zod": "tsx zodcheck.ts ../data/demo-dataset.json ../data/sample-analysis-ai-animation.json",
+    "neg": "tsx negtest.ts"
+  },
+  "devDependencies": { "ajv": "^8.17.1", "ajv-formats": "^3.0.1", "zod": "^3.25.76", "tsx": "^4.19.0", "typescript": "^5.9.3", "@types/node": "^21.2.0" }
+}

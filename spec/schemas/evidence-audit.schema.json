@@ -1,0 +1,607 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openframe.example/schemas/evidence-audit.schema.json",
+  "title": "EvidenceAudit",
+  "description": "Verification audits. Status values exactly: Verified, Partially Supported, Disputed, Unverified, Contradicted. Independence counted by independence_group_id. Confidence qualitative only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "data_mode",
+    "analysis_generation",
+    "audits",
+    "missing_fields"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "common.schema.json#/$defs/schema_version"
+    },
+    "id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "data_mode": {
+      "$ref": "common.schema.json#/$defs/data_mode"
+    },
+    "analysis_generation": {
+      "$ref": "common.schema.json#/$defs/analysis_generation"
+    },
+    "analysis_metadata": {
+      "$ref": "common.schema.json#/$defs/analysis_metadata"
+    },
+    "audits": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/audit"
+      }
+    },
+    "independence_groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "description",
+          "origin_url"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "description": {
+            "type": "string"
+          },
+          "origin_url": {
+            "$ref": "common.schema.json#/$defs/nullable_url"
+          }
+        }
+      }
+    },
+    "provenance": {
+      "$ref": "common.schema.json#/$defs/provenance"
+    },
+    "missing_fields": {
+      "$ref": "common.schema.json#/$defs/missing_fields"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/error"
+      }
+    }
+  },
+  "$defs": {
+    "evidence_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "id",
+        "data_mode",
+        "claim_id",
+        "article_id",
+        "url",
+        "publisher",
+        "publication_date",
+        "excerpt",
+        "excerpt_is_verbatim",
+        "quote_verification",
+        "excerpt_span",
+        "summary",
+        "evidence_kind",
+        "independence_group_id",
+        "retrieval_method",
+        "accessed_at"
+      ],
+      "properties": {
+        "schema_version": {
+          "$ref": "common.schema.json#/$defs/schema_version"
+        },
+        "id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "data_mode": {
+          "$ref": "common.schema.json#/$defs/data_mode"
+        },
+        "claim_id": {
+          "$ref": "common.schema.json#/$defs/id",
+          "description": "-> Claim.id this evidence is assessed against."
+        },
+        "article_id": {
+          "$ref": "common.schema.json#/$defs/id",
+          "description": "-> NewsArticle.id of the source document the evidence comes from (every evidence source is registered as an article record, analysis_role evidence_only if not analysed)."
+        },
+        "url": {
+          "$ref": "common.schema.json#/$defs/nullable_url"
+        },
+        "publisher": {
+          "type": "string"
+        },
+        "publication_date": {
+          "$ref": "common.schema.json#/$defs/nullable_date"
+        },
+        "excerpt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500
+        },
+        "excerpt_is_verbatim": {
+          "type": "boolean",
+          "description": "true only if excerpt is an exact substring of the cited article's accessible_text and that text's origin is not search_snippet (cross-object rule)."
+        },
+        "quote_verification": {
+          "$ref": "common.schema.json#/$defs/quote_verification"
+        },
+        "excerpt_span": {
+          "$ref": "common.schema.json#/$defs/nullable_text_span"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "evidence_kind": {
+          "$ref": "common.schema.json#/$defs/evidence_kind"
+        },
+        "independence_group_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "retrieval_method": {
+          "$ref": "common.schema.json#/$defs/retrieval_method"
+        },
+        "accessed_at": {
+          "$ref": "common.schema.json#/$defs/iso_datetime"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "quote_verification": {
+                "const": "verified_substring"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "excerpt_is_verbatim": {
+                "const": true
+              },
+              "excerpt_span": {
+                "type": "object"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "excerpt_is_verbatim": {
+                "const": false
+              },
+              "excerpt_span": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "excerpt_is_verbatim": {
+                "const": true
+              }
+            },
+            "required": [
+              "excerpt_is_verbatim"
+            ]
+          },
+          "then": {
+            "properties": {
+              "excerpt": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "data_mode": {
+                "const": "DEMO"
+              }
+            },
+            "required": [
+              "data_mode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^https?://([^/?#:]*\\.)?(example\\.(com|org|net)|[A-Za-z0-9-]+\\.(example|test|invalid)|example|test|invalid|localhost)(:[0-9]+)?([/?#]|$)"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "data_mode": {
+                "const": "LIVE"
+              }
+            },
+            "required": [
+              "data_mode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "url": {
+                "not": {
+                  "type": "string",
+                  "pattern": "^https?://([^/?#:]*\\.)?(example\\.(com|org|net)|[A-Za-z0-9-]+\\.(example|test|invalid)|example|test|invalid|localhost)(:[0-9]+)?([/?#]|$)"
+                }
+              },
+              "retrieval_method": {
+                "not": {
+                  "const": "generated_demo"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "retrieval_method": {
+                "const": "generated_demo"
+              }
+            },
+            "required": [
+              "retrieval_method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "data_mode": {
+                "const": "DEMO"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "id",
+        "data_mode",
+        "claim_id",
+        "claim_text",
+        "status",
+        "supporting_evidence",
+        "contradicting_evidence",
+        "original_source_url",
+        "explanation",
+        "confidence",
+        "confidence_limitations",
+        "additional_research_needed",
+        "independent_source_count",
+        "unverifiable_evidence_ids",
+        "missing_fields"
+      ],
+      "properties": {
+        "schema_version": {
+          "$ref": "common.schema.json#/$defs/schema_version"
+        },
+        "id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "data_mode": {
+          "$ref": "common.schema.json#/$defs/data_mode"
+        },
+        "claim_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "claim_text": {
+          "type": "string"
+        },
+        "audited_proposition": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "$ref": "common.schema.json#/$defs/verification_status"
+        },
+        "supporting_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence_item"
+          }
+        },
+        "contradicting_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence_item"
+          }
+        },
+        "original_source_url": {
+          "$ref": "common.schema.json#/$defs/nullable_url"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 20
+        },
+        "confidence": {
+          "$ref": "common.schema.json#/$defs/confidence"
+        },
+        "confidence_limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "additional_research_needed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "independent_source_count": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "supporting",
+            "contradicting"
+          ],
+          "properties": {
+            "supporting": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "contradicting": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "description": "Computed = number of DISTINCT independence_group_id values on each side."
+        },
+        "unverifiable_evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "description": "Added in 1.2.0. Exactly the ids of this audit's evidence items with quote_verification 'unverifiable' (rule QTE-005). Flag them in the UI."
+        },
+        "audited_at": {
+          "$ref": "common.schema.json#/$defs/iso_datetime"
+        },
+        "missing_fields": {
+          "$ref": "common.schema.json#/$defs/missing_fields"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "Verified",
+                  "Partially Supported"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "supporting_evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "Disputed",
+                  "Contradicted"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "contradicting_evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "Verified"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "confidence": {
+                "properties": {
+                  "level": {
+                    "enum": [
+                      "medium",
+                      "high"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "Verified"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "description": "OF-QA-105: Verified requires a primary source or >= 2 independent supporting groups.",
+            "anyOf": [
+              {
+                "properties": {
+                  "supporting_evidence": {
+                    "contains": {
+                      "type": "object",
+                      "properties": {
+                        "evidence_kind": {
+                          "enum": [
+                            "primary_document",
+                            "primary_statement",
+                            "dataset"
+                          ]
+                        },
+                        "quote_verification": {
+                          "not": {
+                            "const": "unverifiable"
+                          }
+                        }
+                      },
+                      "required": [
+                        "evidence_kind",
+                        "quote_verification"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "independent_source_count": {
+                    "properties": {
+                      "supporting": {
+                        "minimum": 2
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "Verified"
+              },
+              "confidence": {
+                "properties": {
+                  "level": {
+                    "const": "high"
+                  }
+                },
+                "required": [
+                  "level"
+                ]
+              }
+            },
+            "required": [
+              "status",
+              "confidence"
+            ]
+          },
+          "then": {
+            "description": "Verified/high requires a directly read primary source (not only a search snippet) or >= 2 independent supporting groups.",
+            "anyOf": [
+              {
+                "properties": {
+                  "supporting_evidence": {
+                    "contains": {
+                      "type": "object",
+                      "properties": {
+                        "evidence_kind": {
+                          "enum": [
+                            "primary_document",
+                            "primary_statement",
+                            "dataset"
+                          ]
+                        },
+                        "retrieval_method": {
+                          "not": {
+                            "const": "web_search_snippet"
+                          }
+                        },
+                        "quote_verification": {
+                          "not": {
+                            "const": "unverifiable"
+                          }
+                        }
+                      },
+                      "required": [
+                        "evidence_kind",
+                        "retrieval_method",
+                        "quote_verification"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "independent_source_count": {
+                    "properties": {
+                      "supporting": {
+                        "minimum": 2
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "analysis_generation": {
+            "const": "LIVE_AI"
+          }
+        },
+        "required": [
+          "analysis_generation"
+        ]
+      },
+      "then": {
+        "required": [
+          "analysis_metadata"
+        ]
+      }
+    }
+  ]
+}

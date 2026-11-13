@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openframe.example/schemas/bundle.schema.json",
+  "title": "OpenFrameAnalysisBundle",
+  "description": "Complete analysis package; shape of data/*.json and API payloads. JSON Schema checks shape and per-record rules; cross-object rules (ids resolve, one audit per check-worthy claim, report rows equal audits, verbatim substrings, stance denylist in free text, timeline.source_ids -> source_list ids) are enforced by checkBundleIntegrity() in types/openframe.ts and scripts/zodcheck.ts. A bundle is valid only if BOTH pass.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "bundle_id",
+    "data_mode",
+    "analysis_generation",
+    "generated_at",
+    "articles",
+    "narrative_comparison",
+    "claim_extraction",
+    "evidence_audit",
+    "research_report"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schema_version": {
+      "$ref": "common.schema.json#/$defs/schema_version"
+    },
+    "bundle_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "data_mode": {
+      "$ref": "common.schema.json#/$defs/bundle_data_mode"
+    },
+    "data_mode_notice": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "analysis_generation": {
+      "$ref": "common.schema.json#/$defs/analysis_generation"
+    },
+    "analysis_metadata": {
+      "$ref": "common.schema.json#/$defs/analysis_metadata"
+    },
+    "generated_at": {
+      "$ref": "common.schema.json#/$defs/iso_datetime"
+    },
+    "articles": {
+      "type": "array",
+      "items": {
+        "$ref": "news-article.schema.json"
+      }
+    },
+    "narrative_comparison": {
+      "$ref": "narrative-comparison.schema.json"
+    },
+    "claim_extraction": {
+      "$ref": "claim-extraction.schema.json"
+    },
+    "evidence_audit": {
+      "$ref": "evidence-audit.schema.json"
+    },
+    "research_report": {
+      "$ref": "research-report.schema.json"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "analysis_generation": {
+            "const": "LIVE_AI"
+          }
+        },
+        "required": [
+          "analysis_generation"
+        ]
+      },
+      "then": {
+        "required": [
+          "analysis_metadata"
+        ]
+      }
+    }
+  ]
+}

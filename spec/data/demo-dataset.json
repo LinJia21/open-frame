@@ -1,0 +1,1780 @@
+{
+  "$schema": "../schemas/bundle.schema.json",
+  "schema_version": "1.2.0",
+  "bundle_id": "bnd_demo_ai_animation",
+  "data_mode": "DEMO",
+  "data_mode_notice": "DEMO SOURCE · PRE-GENERATED ANALYSIS — fictional demonstration data on reserved domains; not real reporting.",
+  "analysis_generation": "PRECOMPUTED",
+  "analysis_metadata": {
+    "generated_at": "2026-11-12T15:02:00+08:00",
+    "model_name": null,
+    "prompt_template_id": null,
+    "prompt_version": null
+  },
+  "generated_at": "2026-11-12T15:02:00+08:00",
+  "articles": [
+    {
+      "schema_version": "1.2.0",
+      "id": "art_demo_01",
+      "data_mode": "DEMO",
+      "analysis_role": "analysed",
+      "title": "[DEMO — fictional] Plumvale Toonworks says AI pipeline cut episode costs by 40%",
+      "publisher": {
+        "name": "Harbor Trade Daily (fictional)",
+        "domain": "harbor-trade.example",
+        "publisher_type": "trade_press",
+        "fictional_demo_publisher": true
+      },
+      "publication_date": "2026-03-02",
+      "original_url": "https://harbor-trade.example/news/plumvale-ai-pipeline",
+      "author": "Avery Quill",
+      "summary": "[DEMO — fictional] Fictional trade report on a fictional studio claiming its AI-assisted pipeline cut per-episode animation costs by 40% and that it is the first studio to deliver a full season with AI in-betweening.",
+      "accessible_text": "Plumvale Toonworks said its AI-assisted pipeline cut per-episode costs by 40%.",
+      "accessible_text_origin": "generated_demo",
+      "access_basis": "open_license",
+      "retrieval_timestamp": "2026-11-12T15:01:00+08:00",
+      "retrieval_method": "generated_demo",
+      "language": "en",
+      "content_type": "news_report",
+      "paywalled": false,
+      "dedup": {
+        "duplicate_of": null,
+        "syndicated_from": null,
+        "shared_original_sources": [
+          {
+            "description": "Plumvale Toonworks press release (fictional)",
+            "url": "https://plumvale-toonworks.example/press/ai-pipeline",
+            "independence_group_id": "grp_demo_studio_release"
+          }
+        ],
+        "independence_group_id": "grp_demo_studio_release",
+        "dedup_notes": null
+      },
+      "topics": [
+        "demo",
+        "ai",
+        "animation"
+      ],
+      "provenance": {
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "retrieved_at": "2026-11-12T15:01:00+08:00",
+        "retrieved_by": "openframe-analyst (demo fixture)",
+        "notes": "Fictional demonstration record. Not a real source."
+      },
+      "missing_fields": []
+    },
+    {
+      "schema_version": "1.2.0",
+      "id": "art_demo_02",
+      "data_mode": "DEMO",
+      "analysis_role": "analysed",
+      "title": "[DEMO — fictional] Animators warn AI tools are shrinking crews",
+      "publisher": {
+        "name": "Metro Wire Service (fictional)",
+        "domain": "wire.example",
+        "publisher_type": "wire_service",
+        "fictional_demo_publisher": true
+      },
+      "publication_date": "2026-03-05",
+      "original_url": "https://wire.example/stories/animators-warn",
+      "author": "Jordan Pell",
+      "summary": "[DEMO — fictional] Fictional wire story quoting a fictional animators' union survey: 58% of members report fewer hours since AI tools arrived; the union blames studios for adopting tools without consultation.",
+      "accessible_text": "In the survey, 58% of members said their hours had fallen since AI tools were introduced.",
+      "accessible_text_origin": "generated_demo",
+      "access_basis": "open_license",
+      "retrieval_timestamp": "2026-11-12T15:01:00+08:00",
+      "retrieval_method": "generated_demo",
+      "language": "en",
+      "content_type": "news_report",
+      "paywalled": false,
+      "dedup": {
+        "duplicate_of": null,
+        "syndicated_from": null,
+        "shared_original_sources": [
+          {
+            "description": "Guild of Screen Animators member survey (fictional)",
+            "url": "https://screen-animators.example/survey-2026",
+            "independence_group_id": "grp_demo_union_survey"
+          }
+        ],
+        "independence_group_id": "grp_demo_wire_story",
+        "dedup_notes": null
+      },
+      "topics": [
+        "demo",
+        "ai",
+        "animation"
+      ],
+      "provenance": {
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "retrieved_at": "2026-11-12T15:01:00+08:00",
+        "retrieved_by": "openframe-analyst (demo fixture)",
+        "notes": "Fictional demonstration record. Not a real source."
+      },
+      "missing_fields": []
+    },
+    {
+      "schema_version": "1.2.0",
+      "id": "art_demo_03",
+      "data_mode": "DEMO",
+      "analysis_role": "analysed",
+      "title": "[DEMO — fictional] Animators warn AI tools are shrinking crews",
+      "publisher": {
+        "name": "Brackenmoor Courier (fictional)",
+        "domain": "brackenmoor-courier.test",
+        "publisher_type": "mainstream_news",
+        "fictional_demo_publisher": true
+      },
+      "publication_date": "2026-03-05",
+      "original_url": "https://brackenmoor-courier.test/wire/animators-warn",
+      "author": null,
+      "summary": "[DEMO — fictional] Fictional newspaper republication of the Metro Wire story (near-verbatim syndication).",
+      "accessible_text": "In the survey, 58% of members said their hours had fallen since AI tools were introduced.",
+      "accessible_text_origin": "generated_demo",
+      "access_basis": "open_license",
+      "retrieval_timestamp": "2026-11-12T15:01:00+08:00",
+      "retrieval_method": "generated_demo",
+      "language": "en",
+      "content_type": "news_report",
+      "paywalled": false,
+      "dedup": {
+        "duplicate_of": "art_demo_02",
+        "syndicated_from": "art_demo_02",
+        "shared_original_sources": [
+          {
+            "description": "Guild of Screen Animators member survey (fictional)",
+            "url": "https://screen-animators.example/survey-2026",
+            "independence_group_id": "grp_demo_union_survey"
+          }
+        ],
+        "independence_group_id": "grp_demo_wire_story",
+        "dedup_notes": "Syndicated copy of art_demo_02; NOT independent confirmation."
+      },
+      "topics": [
+        "demo",
+        "ai",
+        "animation"
+      ],
+      "provenance": {
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "retrieved_at": "2026-11-12T15:01:00+08:00",
+        "retrieved_by": "openframe-analyst (demo fixture)",
+        "notes": "Fictional demonstration record. Not a real source."
+      },
+      "missing_fields": [
+        {
+          "field": "author",
+          "unknown_reason": "not_published",
+          "note": "Wire copy carried without byline."
+        }
+      ]
+    },
+    {
+      "schema_version": "1.2.0",
+      "id": "art_demo_04",
+      "data_mode": "DEMO",
+      "analysis_role": "analysed",
+      "title": "[DEMO — fictional] Opinion: AI animation is a gift to small studios",
+      "publisher": {
+        "name": "The Quillowick Review (fictional)",
+        "domain": "quillowick-review.example",
+        "publisher_type": "blog_or_newsletter",
+        "fictional_demo_publisher": true
+      },
+      "publication_date": "2026-03-09",
+      "original_url": "https://quillowick-review.example/opinion/ai-gift",
+      "author": "Sam Okafor",
+      "summary": "[DEMO — fictional] Fictional opinion column arguing AI tools lower barriers for small studios and predicting that independent animation output will double by 2028.",
+      "accessible_text": null,
+      "accessible_text_origin": null,
+      "access_basis": "none",
+      "retrieval_timestamp": "2026-11-12T15:01:00+08:00",
+      "retrieval_method": "generated_demo",
+      "language": "en",
+      "content_type": "opinion",
+      "paywalled": false,
+      "dedup": {
+        "duplicate_of": null,
+        "syndicated_from": null,
+        "shared_original_sources": [],
+        "independence_group_id": "grp_demo_opinion",
+        "dedup_notes": null
+      },
+      "topics": [
+        "demo",
+        "ai",
+        "animation"
+      ],
+      "provenance": {
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "retrieved_at": "2026-11-12T15:01:00+08:00",
+        "retrieved_by": "openframe-analyst (demo fixture)",
+        "notes": "Fictional demonstration record. Not a real source."
+      },
+      "missing_fields": [
+        {
+          "field": "accessible_text",
+          "unknown_reason": "withheld_for_copyright",
+          "note": "Demo: illustrates a record with no stored text."
+        }
+      ]
+    },
+    {
+      "schema_version": "1.2.0",
+      "id": "art_demo_ev_01",
+      "data_mode": "DEMO",
+      "analysis_role": "evidence_only",
+      "title": "[DEMO — fictional] Regional Animation Employment Bulletin Q1 2026",
+      "publisher": {
+        "name": "Office of Labor Statistics (fictional)",
+        "domain": "labor-stats.example",
+        "publisher_type": "government",
+        "fictional_demo_publisher": true
+      },
+      "publication_date": "2026-04-15",
+      "original_url": "https://labor-stats.example/bulletins/animation-q1-2026",
+      "author": null,
+      "summary": "[DEMO — fictional] Fictional government bulletin: animation employment in the region fell 6% year over year; average production crew size fell 9%.",
+      "accessible_text": "Animation employment declined 6% year over year; average crew size declined 9%.",
+      "accessible_text_origin": "generated_demo",
+      "access_basis": "open_license",
+      "retrieval_timestamp": "2026-11-12T15:01:00+08:00",
+      "retrieval_method": "generated_demo",
+      "language": "en",
+      "content_type": "official_notice",
+      "paywalled": false,
+      "dedup": {
+        "duplicate_of": null,
+        "syndicated_from": null,
+        "shared_original_sources": [],
+        "independence_group_id": "grp_demo_labor_stats",
+        "dedup_notes": null
+      },
+      "topics": [
+        "demo",
+        "ai",
+        "animation"
+      ],
+      "provenance": {
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "retrieved_at": "2026-11-12T15:01:00+08:00",
+        "retrieved_by": "openframe-analyst (demo fixture)",
+        "notes": "Fictional demonstration record. Not a real source."
+      },
+      "missing_fields": [
+        {
+          "field": "author",
+          "unknown_reason": "not_applicable",
+          "note": null
+        }
+      ]
+    },
+    {
+      "schema_version": "1.2.0",
+      "id": "art_demo_ev_02",
+      "data_mode": "DEMO",
+      "analysis_role": "evidence_only",
+      "title": "[DEMO — fictional] Studio history: AI in-betweening at Fernvale Pictures (2024)",
+      "publisher": {
+        "name": "Animation History Archive (fictional)",
+        "domain": "animation-archive.example",
+        "publisher_type": "research_org",
+        "fictional_demo_publisher": true
+      },
+      "publication_date": "2025-06-01",
+      "original_url": "https://animation-archive.example/fernvale-2024",
+      "author": null,
+      "summary": "[DEMO — fictional] Fictional archive entry documenting that a different fictional studio, Fernvale Pictures, delivered a full season with AI in-betweening in 2024.",
+      "accessible_text": "Fernvale Pictures delivered a full season using AI in-betweening in 2024.",
+      "accessible_text_origin": "generated_demo",
+      "access_basis": "open_license",
+      "retrieval_timestamp": "2026-11-12T15:01:00+08:00",
+      "retrieval_method": "generated_demo",
+      "language": "en",
+      "content_type": "research_report",
+      "paywalled": false,
+      "dedup": {
+        "duplicate_of": null,
+        "syndicated_from": null,
+        "shared_original_sources": [],
+        "independence_group_id": "grp_demo_history_archive",
+        "dedup_notes": null
+      },
+      "topics": [
+        "demo",
+        "ai",
+        "animation"
+      ],
+      "provenance": {
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "retrieved_at": "2026-11-12T15:01:00+08:00",
+        "retrieved_by": "openframe-analyst (demo fixture)",
+        "notes": "Fictional demonstration record. Not a real source."
+      },
+      "missing_fields": [
+        {
+          "field": "author",
+          "unknown_reason": "not_published",
+          "note": null
+        }
+      ]
+    },
+    {
+      "schema_version": "1.2.0",
+      "id": "art_demo_ev_03",
+      "data_mode": "DEMO",
+      "analysis_role": "evidence_only",
+      "title": "[DEMO — fictional] Plumvale Toonworks press release: AI pipeline results",
+      "publisher": {
+        "name": "Plumvale Toonworks (fictional)",
+        "domain": "plumvale-toonworks.example",
+        "publisher_type": "company",
+        "fictional_demo_publisher": true
+      },
+      "publication_date": "2026-03-01",
+      "original_url": "https://plumvale-toonworks.example/press/ai-pipeline",
+      "author": null,
+      "summary": "[DEMO — fictional] Fictional studio press release asserting a 40% per-episode cost reduction; no cost breakdown provided.",
+      "accessible_text": "Our AI-assisted pipeline reduced per-episode costs by 40%.",
+      "accessible_text_origin": "generated_demo",
+      "access_basis": "open_license",
+      "retrieval_timestamp": "2026-11-12T15:01:00+08:00",
+      "retrieval_method": "generated_demo",
+      "language": "en",
+      "content_type": "press_release",
+      "paywalled": false,
+      "dedup": {
+        "duplicate_of": null,
+        "syndicated_from": null,
+        "shared_original_sources": [],
+        "independence_group_id": "grp_demo_studio_release",
+        "dedup_notes": null
+      },
+      "topics": [
+        "demo",
+        "ai",
+        "animation"
+      ],
+      "provenance": {
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "retrieved_at": "2026-11-12T15:01:00+08:00",
+        "retrieved_by": "openframe-analyst (demo fixture)",
+        "notes": "Fictional demonstration record. Not a real source."
+      },
+      "missing_fields": [
+        {
+          "field": "author",
+          "unknown_reason": "not_applicable",
+          "note": null
+        }
+      ]
+    },
+    {
+      "schema_version": "1.2.0",
+      "id": "art_demo_ev_04",
+      "data_mode": "DEMO",
+      "analysis_role": "evidence_only",
+      "title": "[DEMO — fictional] Guild of Screen Animators 2026 member survey",
+      "publisher": {
+        "name": "Guild of Screen Animators (fictional)",
+        "domain": "screen-animators.example",
+        "publisher_type": "union_or_guild",
+        "fictional_demo_publisher": true
+      },
+      "publication_date": "2026-03-04",
+      "original_url": "https://screen-animators.example/survey-2026",
+      "author": null,
+      "summary": "[DEMO — fictional] Fictional union survey (n=1,200 members, self-reported): 58% report fewer paid hours since AI tools were introduced.",
+      "accessible_text": "58% of responding members reported fewer paid hours since AI tools were introduced (n=1,200).",
+      "accessible_text_origin": "generated_demo",
+      "access_basis": "open_license",
+      "retrieval_timestamp": "2026-11-12T15:01:00+08:00",
+      "retrieval_method": "generated_demo",
+      "language": "en",
+      "content_type": "union_statement",
+      "paywalled": false,
+      "dedup": {
+        "duplicate_of": null,
+        "syndicated_from": null,
+        "shared_original_sources": [],
+        "independence_group_id": "grp_demo_union_survey",
+        "dedup_notes": null
+      },
+      "topics": [
+        "demo",
+        "ai",
+        "animation"
+      ],
+      "provenance": {
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "retrieved_at": "2026-11-12T15:01:00+08:00",
+        "retrieved_by": "openframe-analyst (demo fixture)",
+        "notes": "Fictional demonstration record. Not a real source."
+      },
+      "missing_fields": [
+        {
+          "field": "author",
+          "unknown_reason": "not_applicable",
+          "note": null
+        }
+      ]
+    }
+  ],
+  "narrative_comparison": {
+    "schema_version": "1.2.0",
+    "id": "nar_demo_ai_animation",
+    "data_mode": "DEMO",
+    "analysis_generation": "PRECOMPUTED",
+    "analysis_metadata": {
+      "generated_at": "2026-11-12T15:02:00+08:00",
+      "model_name": null,
+      "prompt_template_id": null,
+      "prompt_version": null
+    },
+    "topic": "Is AI-generated Animation Disrupting the Traditional Film and Television Industry?",
+    "article_ids": [
+      "art_demo_01",
+      "art_demo_02",
+      "art_demo_03",
+      "art_demo_04"
+    ],
+    "article_analyses": [
+      {
+        "schema_version": "1.2.0",
+        "article_id": "art_demo_01",
+        "main_argument": {
+          "summary": "A studio's AI pipeline delivers large cost savings and an industry first.",
+          "key_actors": [
+            {
+              "name": "Plumvale Toonworks",
+              "actor_type": "company",
+              "role_in_article": "Claimant"
+            }
+          ]
+        },
+        "causal_attribution": {
+          "summary": "Cost savings attributed to the AI pipeline.",
+          "explanations": [
+            {
+              "cause": "AI-assisted in-betweening",
+              "effect": "40% lower per-episode cost",
+              "asserted_by": "Plumvale Toonworks",
+              "evidence_offered_in_article": "named_source"
+            }
+          ]
+        },
+        "responsibility_attribution": {
+          "summary": "No responsibility attributed.",
+          "attributions": []
+        },
+        "language_framing": {
+          "summary": "Innovation framing.",
+          "frames": [
+            "innovation / first-mover"
+          ],
+          "notable_terms": [
+            {
+              "term": "first",
+              "usage_note": "Unqualified 'first' claim."
+            }
+          ],
+          "tone_notes": "Demo record."
+        },
+        "source_selection": {
+          "summary": "Company statement only.",
+          "selected_facts": [
+            {
+              "fact": "40% cost reduction.",
+              "linked_claim_ids": [
+                "clm_demo_01"
+              ]
+            },
+            {
+              "fact": "First full season with AI in-betweening.",
+              "linked_claim_ids": [
+                "clm_demo_02"
+              ]
+            }
+          ],
+          "quoted_voices": [
+            {
+              "speaker": "Rina Castell",
+              "speaker_role": "CEO, Plumvale Toonworks (fictional)",
+              "speaker_category": "executive",
+              "quote_mode": "verbatim",
+              "verbatim_quote": "Plumvale Toonworks said its AI-assisted pipeline cut per-episode costs by 40%.",
+              "paraphrase": null,
+              "quote_verification": "verified_substring",
+              "quote_span": {
+                "start": 0,
+                "end": 78
+              }
+            }
+          ],
+          "source_mix_note": "Demo record."
+        },
+        "underrepresented_perspectives": {
+          "summary": "Animators",
+          "items": [
+            {
+              "perspective": "Animators",
+              "note": "No crew member quoted."
+            }
+          ]
+        },
+        "article_level_note": "Describes this (fictional) article only; not a characterisation of the outlet."
+      },
+      {
+        "schema_version": "1.2.0",
+        "article_id": "art_demo_02",
+        "main_argument": {
+          "summary": "AI tools are reducing animators' hours, according to a union survey.",
+          "key_actors": [
+            {
+              "name": "Guild of Screen Animators",
+              "actor_type": "union_or_guild",
+              "role_in_article": "Survey publisher"
+            }
+          ]
+        },
+        "causal_attribution": {
+          "summary": "Fewer hours attributed to AI tools.",
+          "explanations": [
+            {
+              "cause": "AI tool adoption",
+              "effect": "Fewer paid hours",
+              "asserted_by": "Guild of Screen Animators",
+              "evidence_offered_in_article": "data"
+            }
+          ]
+        },
+        "responsibility_attribution": {
+          "summary": "Union holds studios responsible.",
+          "attributions": [
+            {
+              "actor": "Studios",
+              "responsible_for": "Adopting tools without consultation",
+              "attributed_by": "Guild of Screen Animators"
+            }
+          ]
+        },
+        "language_framing": {
+          "summary": "Labour-displacement framing.",
+          "frames": [
+            "labour displacement"
+          ],
+          "notable_terms": [
+            {
+              "term": "shrinking crews",
+              "usage_note": "Headline term."
+            }
+          ],
+          "tone_notes": "Demo record."
+        },
+        "source_selection": {
+          "summary": "Union survey and spokesperson.",
+          "selected_facts": [
+            {
+              "fact": "58% report fewer hours.",
+              "linked_claim_ids": [
+                "clm_demo_03"
+              ]
+            }
+          ],
+          "quoted_voices": [
+            {
+              "speaker": "Union spokesperson (fictional)",
+              "speaker_role": "Guild of Screen Animators",
+              "speaker_category": "union_or_guild",
+              "quote_mode": "paraphrase",
+              "verbatim_quote": null,
+              "paraphrase": "Says studios introduced AI tools without consulting crews.",
+              "quote_verification": "paraphrase",
+              "quote_span": null
+            }
+          ],
+          "source_mix_note": "Demo record."
+        },
+        "underrepresented_perspectives": {
+          "summary": "Studios",
+          "items": [
+            {
+              "perspective": "Studios",
+              "note": "No studio response included."
+            }
+          ]
+        },
+        "article_level_note": "Describes this (fictional) article only; not a characterisation of the outlet."
+      },
+      {
+        "schema_version": "1.2.0",
+        "article_id": "art_demo_03",
+        "main_argument": {
+          "summary": "Same as art_demo_02 (syndicated copy).",
+          "key_actors": [
+            {
+              "name": "Guild of Screen Animators",
+              "actor_type": "union_or_guild",
+              "role_in_article": "Survey publisher"
+            }
+          ]
+        },
+        "causal_attribution": {
+          "summary": "Same as art_demo_02.",
+          "explanations": []
+        },
+        "responsibility_attribution": {
+          "summary": "Same as art_demo_02.",
+          "attributions": []
+        },
+        "language_framing": {
+          "summary": "Same framing as wire copy.",
+          "frames": [
+            "labour displacement"
+          ],
+          "notable_terms": [],
+          "tone_notes": "Demo record."
+        },
+        "source_selection": {
+          "summary": "Wire copy.",
+          "selected_facts": [
+            {
+              "fact": "58% report fewer hours.",
+              "linked_claim_ids": [
+                "clm_demo_03"
+              ]
+            }
+          ],
+          "quoted_voices": [],
+          "source_mix_note": "Demo record."
+        },
+        "underrepresented_perspectives": {
+          "summary": "Studios",
+          "items": [
+            {
+              "perspective": "Studios",
+              "note": "No studio response included."
+            }
+          ]
+        },
+        "article_level_note": "Describes this (fictional) article only; not a characterisation of the outlet."
+      },
+      {
+        "schema_version": "1.2.0",
+        "article_id": "art_demo_04",
+        "main_argument": {
+          "summary": "AI tools democratise animation for small studios.",
+          "key_actors": [
+            {
+              "name": "Small independent studios",
+              "actor_type": "group",
+              "role_in_article": "Beneficiaries"
+            }
+          ]
+        },
+        "causal_attribution": {
+          "summary": "Lower barriers attributed to AI tools.",
+          "explanations": [
+            {
+              "cause": "Cheaper AI tools",
+              "effect": "More independent output",
+              "asserted_by": "article_author",
+              "evidence_offered_in_article": "none"
+            }
+          ]
+        },
+        "responsibility_attribution": {
+          "summary": "No responsibility attributed.",
+          "attributions": []
+        },
+        "language_framing": {
+          "summary": "Opportunity framing.",
+          "frames": [
+            "democratisation",
+            "economic opportunity"
+          ],
+          "notable_terms": [
+            {
+              "term": "gift",
+              "usage_note": "Evaluative headline term."
+            }
+          ],
+          "tone_notes": "Demo record."
+        },
+        "source_selection": {
+          "summary": "Author's opinion only.",
+          "selected_facts": [
+            {
+              "fact": "Prediction: independent output doubles by 2028.",
+              "linked_claim_ids": [
+                "clm_demo_05"
+              ]
+            }
+          ],
+          "quoted_voices": [],
+          "source_mix_note": "Demo record."
+        },
+        "underrepresented_perspectives": {
+          "summary": "Displaced workers",
+          "items": [
+            {
+              "perspective": "Displaced workers",
+              "note": "Not considered."
+            }
+          ]
+        },
+        "article_level_note": "Describes this (fictional) article only; not a characterisation of the outlet."
+      }
+    ],
+    "cross_article_comparison": {
+      "shared_facts": [
+        {
+          "fact": "58% of surveyed members report fewer hours.",
+          "article_ids": [
+            "art_demo_02",
+            "art_demo_03"
+          ],
+          "independence_note": "art_demo_03 is a syndicated copy of art_demo_02; both rely on one union survey (grp_demo_union_survey). One source, not two."
+        }
+      ],
+      "divergences": [
+        {
+          "dimension": "main_argument",
+          "description": "Cost-saving/innovation (art_demo_01, art_demo_04) vs. labour displacement (art_demo_02).",
+          "article_ids": [
+            "art_demo_01",
+            "art_demo_02",
+            "art_demo_04"
+          ]
+        },
+        {
+          "dimension": "responsibility_attribution",
+          "description": "Only the union piece assigns responsibility (to studios).",
+          "article_ids": [
+            "art_demo_02"
+          ]
+        }
+      ],
+      "framing_differences": "Innovation and democratisation frames vs. displacement frame.",
+      "voice_distribution": "One executive, one union spokesperson, one columnist; no rank-and-file animators.",
+      "coverage_gaps": [
+        "Independent cost data",
+        "Audience perspective"
+      ]
+    },
+    "outlet_level_observations": [],
+    "method_notes": "DEMONSTRATION DATA. All outlets, people, figures and URLs are fictional and use reserved domains (.example/.test).",
+    "provenance": {
+      "data_mode": "DEMO",
+      "retrieval_method": "generated_demo",
+      "retrieved_at": "2026-11-12T15:01:00+08:00",
+      "retrieved_by": "openframe-analyst (demo fixture)",
+      "notes": "Fictional demonstration record. Not a real source."
+    },
+    "missing_fields": []
+  },
+  "claim_extraction": {
+    "schema_version": "1.2.0",
+    "id": "cx_demo_ai_animation",
+    "data_mode": "DEMO",
+    "analysis_generation": "PRECOMPUTED",
+    "analysis_metadata": {
+      "generated_at": "2026-11-12T15:02:00+08:00",
+      "model_name": null,
+      "prompt_template_id": null,
+      "prompt_version": null
+    },
+    "topic": "Is AI-generated Animation Disrupting the Traditional Film and Television Industry?",
+    "claims": [
+      {
+        "schema_version": "1.2.0",
+        "id": "clm_demo_01",
+        "data_mode": "DEMO",
+        "article_id": "art_demo_01",
+        "claim_text": "Plumvale Toonworks' AI pipeline cut per-episode costs by 40%.",
+        "is_verbatim": false,
+        "claim_type": "economic",
+        "assertion_kind": "factual_assertion",
+        "location": {
+          "section": null,
+          "paragraph_index": 0,
+          "context": "Lead paragraph."
+        },
+        "attributed_to": {
+          "name": "Rina Castell",
+          "role": "CEO, Plumvale Toonworks (fictional)",
+          "attribution_kind": "quoted_source"
+        },
+        "original_source_hint": null,
+        "check_worthy": true,
+        "missing_fields": []
+      },
+      {
+        "schema_version": "1.2.0",
+        "id": "clm_demo_02",
+        "data_mode": "DEMO",
+        "article_id": "art_demo_01",
+        "claim_text": "Plumvale is the first studio to deliver a full season using AI in-betweening.",
+        "is_verbatim": false,
+        "claim_type": "historical",
+        "assertion_kind": "factual_assertion",
+        "location": {
+          "section": null,
+          "paragraph_index": 0,
+          "context": "Second paragraph."
+        },
+        "attributed_to": {
+          "name": "Avery Quill",
+          "role": "Reporter (fictional)",
+          "attribution_kind": "article_author"
+        },
+        "original_source_hint": null,
+        "check_worthy": true,
+        "missing_fields": []
+      },
+      {
+        "schema_version": "1.2.0",
+        "id": "clm_demo_03",
+        "data_mode": "DEMO",
+        "article_id": "art_demo_02",
+        "claim_text": "In the survey, 58% of members said their hours had fallen since AI tools were introduced.",
+        "is_verbatim": true,
+        "claim_type": "quantitative",
+        "assertion_kind": "factual_assertion",
+        "location": {
+          "section": null,
+          "paragraph_index": 0,
+          "context": "Survey finding."
+        },
+        "attributed_to": {
+          "name": "Guild of Screen Animators",
+          "role": "Union (fictional)",
+          "attribution_kind": "cited_document"
+        },
+        "original_source_hint": null,
+        "check_worthy": true,
+        "missing_fields": []
+      },
+      {
+        "schema_version": "1.2.0",
+        "id": "clm_demo_04",
+        "data_mode": "DEMO",
+        "article_id": "art_demo_02",
+        "claim_text": "AI tools are the main cause of falling animation employment in the region.",
+        "is_verbatim": false,
+        "claim_type": "causal",
+        "assertion_kind": "interpretation",
+        "location": {
+          "section": null,
+          "paragraph_index": 0,
+          "context": "Union framing."
+        },
+        "attributed_to": {
+          "name": "Guild of Screen Animators",
+          "role": "Union (fictional)",
+          "attribution_kind": "quoted_source"
+        },
+        "original_source_hint": null,
+        "check_worthy": true,
+        "missing_fields": []
+      },
+      {
+        "schema_version": "1.2.0",
+        "id": "clm_demo_05",
+        "data_mode": "DEMO",
+        "article_id": "art_demo_04",
+        "claim_text": "Independent animation output will double by 2028.",
+        "is_verbatim": false,
+        "claim_type": "quantitative",
+        "assertion_kind": "prediction",
+        "location": {
+          "section": null,
+          "paragraph_index": 0,
+          "context": "Columnist's forecast."
+        },
+        "attributed_to": {
+          "name": "Sam Okafor",
+          "role": "Columnist (fictional)",
+          "attribution_kind": "article_author"
+        },
+        "original_source_hint": null,
+        "check_worthy": true,
+        "missing_fields": []
+      },
+      {
+        "schema_version": "1.2.0",
+        "id": "clm_demo_07",
+        "data_mode": "DEMO",
+        "article_id": "art_demo_02",
+        "claim_text": "Animation crews in the region have shrunk by about a fifth.",
+        "is_verbatim": false,
+        "claim_type": "quantitative",
+        "assertion_kind": "factual_assertion",
+        "location": {
+          "section": null,
+          "paragraph_index": 0,
+          "context": "Union spokesperson's characterisation."
+        },
+        "attributed_to": {
+          "name": "Union spokesperson (fictional)",
+          "role": "Guild of Screen Animators",
+          "attribution_kind": "quoted_source"
+        },
+        "original_source_hint": null,
+        "check_worthy": true,
+        "missing_fields": []
+      },
+      {
+        "schema_version": "1.2.0",
+        "id": "clm_demo_06",
+        "data_mode": "DEMO",
+        "article_id": "art_demo_04",
+        "claim_text": "AI animation is a gift to small studios.",
+        "is_verbatim": false,
+        "claim_type": "economic",
+        "assertion_kind": "opinion",
+        "location": {
+          "section": null,
+          "paragraph_index": 0,
+          "context": "Headline thesis."
+        },
+        "attributed_to": {
+          "name": "Sam Okafor",
+          "role": "Columnist (fictional)",
+          "attribution_kind": "article_author"
+        },
+        "original_source_hint": null,
+        "check_worthy": false,
+        "missing_fields": []
+      }
+    ],
+    "provenance": {
+      "data_mode": "DEMO",
+      "retrieval_method": "generated_demo",
+      "retrieved_at": "2026-11-12T15:01:00+08:00",
+      "retrieved_by": "openframe-analyst (demo fixture)",
+      "notes": "Fictional demonstration record. Not a real source."
+    },
+    "missing_fields": []
+  },
+  "evidence_audit": {
+    "schema_version": "1.2.0",
+    "id": "ea_demo_ai_animation",
+    "data_mode": "DEMO",
+    "analysis_generation": "PRECOMPUTED",
+    "analysis_metadata": {
+      "generated_at": "2026-11-12T15:02:00+08:00",
+      "model_name": null,
+      "prompt_template_id": null,
+      "prompt_version": null
+    },
+    "audits": [
+      {
+        "schema_version": "1.2.0",
+        "id": "aud_demo_01",
+        "data_mode": "DEMO",
+        "claim_id": "clm_demo_01",
+        "claim_text": "Plumvale Toonworks' AI pipeline cut per-episode costs by 40%.",
+        "audited_proposition": null,
+        "status": "Unverified",
+        "supporting_evidence": [
+          {
+            "schema_version": "1.2.0",
+            "id": "ev_demo_001",
+            "data_mode": "DEMO",
+            "claim_id": "clm_demo_01",
+            "article_id": "art_demo_ev_03",
+            "url": "https://plumvale-toonworks.example/press/ai-pipeline",
+            "publisher": "Plumvale Toonworks (fictional)",
+            "publication_date": "2026-03-01",
+            "excerpt": "Our AI-assisted pipeline reduced per-episode costs by 40%.",
+            "excerpt_is_verbatim": true,
+            "quote_verification": "verified_substring",
+            "excerpt_span": {
+              "start": 0,
+              "end": 58
+            },
+            "summary": "Only the claimant's own release.",
+            "evidence_kind": "primary_statement",
+            "independence_group_id": "grp_demo_studio_release",
+            "retrieval_method": "generated_demo",
+            "accessed_at": "2026-11-12T15:01:00+08:00"
+          },
+          {
+            "schema_version": "1.2.0",
+            "id": "ev_demo_002",
+            "data_mode": "DEMO",
+            "claim_id": "clm_demo_01",
+            "article_id": "art_demo_01",
+            "url": "https://harbor-trade.example/news/plumvale-ai-pipeline",
+            "publisher": "Harbor Trade Daily (fictional)",
+            "publication_date": "2026-03-02",
+            "excerpt": "Plumvale Toonworks said its AI-assisted pipeline cut per-episode costs by 40%.",
+            "excerpt_is_verbatim": true,
+            "quote_verification": "verified_substring",
+            "excerpt_span": {
+              "start": 0,
+              "end": 78
+            },
+            "summary": "Trade report repeating the release (same group).",
+            "evidence_kind": "secondary_reporting",
+            "independence_group_id": "grp_demo_studio_release",
+            "retrieval_method": "generated_demo",
+            "accessed_at": "2026-11-12T15:01:00+08:00"
+          }
+        ],
+        "contradicting_evidence": [],
+        "original_source_url": "https://plumvale-toonworks.example/press/ai-pipeline",
+        "explanation": "DEMO: Both items trace to the studio's own release (one independence group); no cost breakdown or independent data. A source's existence does not prove its claim.",
+        "confidence": {
+          "level": "low",
+          "rationale": "Self-reported figure only."
+        },
+        "confidence_limitations": [
+          "No cost breakdown."
+        ],
+        "additional_research_needed": [
+          "Request budget data or an independent producer account."
+        ],
+        "independent_source_count": {
+          "supporting": 1,
+          "contradicting": 0
+        },
+        "unverifiable_evidence_ids": [],
+        "audited_at": "2026-11-12T15:02:00+08:00",
+        "missing_fields": []
+      },
+      {
+        "schema_version": "1.2.0",
+        "id": "aud_demo_02",
+        "data_mode": "DEMO",
+        "claim_id": "clm_demo_02",
+        "claim_text": "Plumvale is the first studio to deliver a full season using AI in-betweening.",
+        "audited_proposition": null,
+        "status": "Contradicted",
+        "supporting_evidence": [],
+        "contradicting_evidence": [
+          {
+            "schema_version": "1.2.0",
+            "id": "ev_demo_003",
+            "data_mode": "DEMO",
+            "claim_id": "clm_demo_02",
+            "article_id": "art_demo_ev_02",
+            "url": "https://animation-archive.example/fernvale-2024",
+            "publisher": "Animation History Archive (fictional)",
+            "publication_date": "2025-06-01",
+            "excerpt": "Fernvale Pictures delivered a full season using AI in-betweening in 2024.",
+            "excerpt_is_verbatim": true,
+            "quote_verification": "verified_substring",
+            "excerpt_span": {
+              "start": 0,
+              "end": 73
+            },
+            "summary": "Archive documents an earlier studio doing the same.",
+            "evidence_kind": "primary_document",
+            "independence_group_id": "grp_demo_history_archive",
+            "retrieval_method": "generated_demo",
+            "accessed_at": "2026-11-12T15:01:00+08:00"
+          }
+        ],
+        "original_source_url": null,
+        "explanation": "DEMO: The archive records Fernvale Pictures delivering a full AI in-betweened season in 2024, two years earlier, directly refuting the 'first' claim.",
+        "confidence": {
+          "level": "high",
+          "rationale": "Direct documentary counter-example."
+        },
+        "confidence_limitations": [
+          "Archive completeness not independently checked."
+        ],
+        "additional_research_needed": [
+          "Confirm with Fernvale Pictures."
+        ],
+        "independent_source_count": {
+          "supporting": 0,
+          "contradicting": 1
+        },
+        "unverifiable_evidence_ids": [],
+        "audited_at": "2026-11-12T15:02:00+08:00",
+        "missing_fields": [
+          {
+            "field": "original_source_url",
+            "unknown_reason": "not_published",
+            "note": "Claim made by reporter without citation."
+          }
+        ]
+      },
+      {
+        "schema_version": "1.2.0",
+        "id": "aud_demo_03",
+        "data_mode": "DEMO",
+        "claim_id": "clm_demo_03",
+        "claim_text": "In the survey, 58% of members said their hours had fallen since AI tools were introduced.",
+        "audited_proposition": null,
+        "status": "Verified",
+        "supporting_evidence": [
+          {
+            "schema_version": "1.2.0",
+            "id": "ev_demo_004",
+            "data_mode": "DEMO",
+            "claim_id": "clm_demo_03",
+            "article_id": "art_demo_ev_04",
+            "url": "https://screen-animators.example/survey-2026",
+            "publisher": "Guild of Screen Animators (fictional)",
+            "publication_date": "2026-03-04",
+            "excerpt": "58% of responding members reported fewer paid hours since AI tools were introduced (n=1,200).",
+            "excerpt_is_verbatim": true,
+            "quote_verification": "verified_substring",
+            "excerpt_span": {
+              "start": 0,
+              "end": 93
+            },
+            "summary": "Primary survey document confirms the figure.",
+            "evidence_kind": "primary_document",
+            "independence_group_id": "grp_demo_union_survey",
+            "retrieval_method": "generated_demo",
+            "accessed_at": "2026-11-12T15:01:00+08:00"
+          },
+          {
+            "schema_version": "1.2.0",
+            "id": "ev_demo_005",
+            "data_mode": "DEMO",
+            "claim_id": "clm_demo_03",
+            "article_id": "art_demo_02",
+            "url": "https://wire.example/stories/animators-warn",
+            "publisher": "Metro Wire Service (fictional)",
+            "publication_date": "2026-03-05",
+            "excerpt": "In the survey, 58% of members said their hours had fallen since AI tools were introduced.",
+            "excerpt_is_verbatim": true,
+            "quote_verification": "verified_substring",
+            "excerpt_span": {
+              "start": 0,
+              "end": 89
+            },
+            "summary": "Wire report.",
+            "evidence_kind": "secondary_reporting",
+            "independence_group_id": "grp_demo_wire_story",
+            "retrieval_method": "generated_demo",
+            "accessed_at": "2026-11-12T15:01:00+08:00"
+          },
+          {
+            "schema_version": "1.2.0",
+            "id": "ev_demo_006",
+            "data_mode": "DEMO",
+            "claim_id": "clm_demo_03",
+            "article_id": "art_demo_03",
+            "url": "https://brackenmoor-courier.test/wire/animators-warn",
+            "publisher": "Brackenmoor Courier (fictional)",
+            "publication_date": "2026-03-05",
+            "excerpt": "In the survey, 58% of members said their hours had fallen since AI tools were introduced.",
+            "excerpt_is_verbatim": true,
+            "quote_verification": "verified_substring",
+            "excerpt_span": {
+              "start": 0,
+              "end": 89
+            },
+            "summary": "Syndicated copy — same group as wire report.",
+            "evidence_kind": "secondary_reporting",
+            "independence_group_id": "grp_demo_wire_story",
+            "retrieval_method": "generated_demo",
+            "accessed_at": "2026-11-12T15:01:00+08:00"
+          }
+        ],
+        "contradicting_evidence": [],
+        "original_source_url": "https://screen-animators.example/survey-2026",
+        "explanation": "DEMO: Confirmed against the primary survey. The wire story and its syndicated copy share one group (grp_demo_wire_story) and add no independent confirmation. Verified means the survey reported this — not that hours fell by that amount.",
+        "confidence": {
+          "level": "high",
+          "rationale": "Primary document checked."
+        },
+        "confidence_limitations": [
+          "Self-reported, member-only survey."
+        ],
+        "additional_research_needed": [
+          "Compare with payroll/hours data."
+        ],
+        "independent_source_count": {
+          "supporting": 2,
+          "contradicting": 0
+        },
+        "unverifiable_evidence_ids": [],
+        "audited_at": "2026-11-12T15:02:00+08:00",
+        "missing_fields": []
+      },
+      {
+        "schema_version": "1.2.0",
+        "id": "aud_demo_04",
+        "data_mode": "DEMO",
+        "claim_id": "clm_demo_04",
+        "claim_text": "AI tools are the main cause of falling animation employment in the region.",
+        "audited_proposition": null,
+        "status": "Disputed",
+        "supporting_evidence": [
+          {
+            "schema_version": "1.2.0",
+            "id": "ev_demo_007",
+            "data_mode": "DEMO",
+            "claim_id": "clm_demo_04",
+            "article_id": "art_demo_ev_04",
+            "url": "https://screen-animators.example/survey-2026",
+            "publisher": "Guild of Screen Animators (fictional)",
+            "publication_date": "2026-03-04",
+            "excerpt": null,
+            "excerpt_is_verbatim": false,
+            "quote_verification": "paraphrase",
+            "excerpt_span": null,
+            "summary": "Union survey attributes hour losses to AI (self-reported).",
+            "evidence_kind": "primary_statement",
+            "independence_group_id": "grp_demo_union_survey",
+            "retrieval_method": "generated_demo",
+            "accessed_at": "2026-11-12T15:01:00+08:00"
+          }
+        ],
+        "contradicting_evidence": [
+          {
+            "schema_version": "1.2.0",
+            "id": "ev_demo_008",
+            "data_mode": "DEMO",
+            "claim_id": "clm_demo_04",
+            "article_id": "art_demo_ev_01",
+            "url": "https://labor-stats.example/bulletins/animation-q1-2026",
+            "publisher": "Office of Labor Statistics (fictional)",
+            "publication_date": "2026-04-15",
+            "excerpt": "Animation employment declined 6% year over year; average crew size declined 9%.",
+            "excerpt_is_verbatim": true,
+            "quote_verification": "verified_substring",
+            "excerpt_span": {
+              "start": 0,
+              "end": 79
+            },
+            "summary": "Official data show decline but do not attribute cause; bulletin lists production volume as a factor (fictional).",
+            "evidence_kind": "dataset",
+            "independence_group_id": "grp_demo_labor_stats",
+            "retrieval_method": "generated_demo",
+            "accessed_at": "2026-11-12T15:01:00+08:00"
+          }
+        ],
+        "original_source_url": null,
+        "explanation": "DEMO: Decline is documented, but causation is contested: the union attributes it to AI, official data do not attribute a cause.",
+        "confidence": {
+          "level": "low",
+          "rationale": "Causal claim with no causal analysis."
+        },
+        "confidence_limitations": [
+          "No controlled comparison."
+        ],
+        "additional_research_needed": [
+          "Seek causal analysis separating AI adoption from production volume."
+        ],
+        "independent_source_count": {
+          "supporting": 1,
+          "contradicting": 1
+        },
+        "unverifiable_evidence_ids": [],
+        "audited_at": "2026-11-12T15:02:00+08:00",
+        "missing_fields": [
+          {
+            "field": "original_source_url",
+            "unknown_reason": "not_found",
+            "note": null
+          }
+        ]
+      },
+      {
+        "schema_version": "1.2.0",
+        "id": "aud_demo_05",
+        "data_mode": "DEMO",
+        "claim_id": "clm_demo_05",
+        "claim_text": "Independent animation output will double by 2028.",
+        "audited_proposition": null,
+        "status": "Unverified",
+        "supporting_evidence": [],
+        "contradicting_evidence": [],
+        "original_source_url": null,
+        "explanation": "DEMO: A prediction about 2028; it cannot be verified now and no supporting projection is cited.",
+        "confidence": {
+          "level": "low",
+          "rationale": "Forecast without supporting model."
+        },
+        "confidence_limitations": [
+          "Future event."
+        ],
+        "additional_research_needed": [
+          "Track independent output annually."
+        ],
+        "independent_source_count": {
+          "supporting": 0,
+          "contradicting": 0
+        },
+        "unverifiable_evidence_ids": [],
+        "audited_at": "2026-11-12T15:02:00+08:00",
+        "missing_fields": [
+          {
+            "field": "original_source_url",
+            "unknown_reason": "not_published",
+            "note": null
+          }
+        ]
+      },
+      {
+        "schema_version": "1.2.0",
+        "id": "aud_demo_06",
+        "data_mode": "DEMO",
+        "claim_id": "clm_demo_07",
+        "claim_text": "Animation crews in the region have shrunk by about a fifth.",
+        "audited_proposition": null,
+        "status": "Partially Supported",
+        "supporting_evidence": [
+          {
+            "schema_version": "1.2.0",
+            "id": "ev_demo_009",
+            "data_mode": "DEMO",
+            "claim_id": "clm_demo_07",
+            "article_id": "art_demo_ev_01",
+            "url": "https://labor-stats.example/bulletins/animation-q1-2026",
+            "publisher": "Office of Labor Statistics (fictional)",
+            "publication_date": "2026-04-15",
+            "excerpt": "Animation employment declined 6% year over year; average crew size declined 9%.",
+            "excerpt_is_verbatim": true,
+            "quote_verification": "verified_substring",
+            "excerpt_span": {
+              "start": 0,
+              "end": 79
+            },
+            "summary": "Official data confirm crews shrank, but by 9%, not about 20%.",
+            "evidence_kind": "dataset",
+            "independence_group_id": "grp_demo_labor_stats",
+            "retrieval_method": "generated_demo",
+            "accessed_at": "2026-11-12T15:01:00+08:00"
+          }
+        ],
+        "contradicting_evidence": [],
+        "original_source_url": "https://labor-stats.example/bulletins/animation-q1-2026",
+        "explanation": "DEMO: The direction (smaller crews) is supported by official data; the magnitude ('about a fifth') is overstated — the bulletin reports 9%.",
+        "confidence": {
+          "level": "medium",
+          "rationale": "Official dataset, but regional aggregate and one quarter only."
+        },
+        "confidence_limitations": [
+          "Single quarter; regional aggregate."
+        ],
+        "additional_research_needed": [
+          "Check subsequent quarterly bulletins."
+        ],
+        "independent_source_count": {
+          "supporting": 1,
+          "contradicting": 0
+        },
+        "unverifiable_evidence_ids": [],
+        "audited_at": "2026-11-12T15:02:00+08:00",
+        "missing_fields": []
+      }
+    ],
+    "independence_groups": [
+      {
+        "id": "grp_demo_studio_release",
+        "description": "Plumvale Toonworks release (fictional)",
+        "origin_url": "https://plumvale-toonworks.example/press/ai-pipeline"
+      },
+      {
+        "id": "grp_demo_wire_story",
+        "description": "Metro Wire story and syndicated copies (fictional)",
+        "origin_url": "https://wire.example/stories/animators-warn"
+      },
+      {
+        "id": "grp_demo_union_survey",
+        "description": "Guild of Screen Animators survey (fictional)",
+        "origin_url": "https://screen-animators.example/survey-2026"
+      },
+      {
+        "id": "grp_demo_labor_stats",
+        "description": "Office of Labor Statistics bulletin (fictional)",
+        "origin_url": "https://labor-stats.example/bulletins/animation-q1-2026"
+      },
+      {
+        "id": "grp_demo_history_archive",
+        "description": "Animation History Archive (fictional)",
+        "origin_url": "https://animation-archive.example/fernvale-2024"
+      },
+      {
+        "id": "grp_demo_opinion",
+        "description": "Quillowick Review column (fictional)",
+        "origin_url": null
+      }
+    ],
+    "provenance": {
+      "data_mode": "DEMO",
+      "retrieval_method": "generated_demo",
+      "retrieved_at": "2026-11-12T15:01:00+08:00",
+      "retrieved_by": "openframe-analyst (demo fixture)",
+      "notes": "Fictional demonstration record. Not a real source."
+    },
+    "missing_fields": []
+  },
+  "research_report": {
+    "schema_version": "1.2.0",
+    "id": "rep_demo_ai_animation",
+    "analysis_generation": "PRECOMPUTED",
+    "analysis_metadata": {
+      "generated_at": "2026-11-12T15:02:00+08:00",
+      "model_name": null,
+      "prompt_template_id": null,
+      "prompt_version": null
+    },
+    "metadata": {
+      "topic": "Is AI-generated Animation Disrupting the Traditional Film and Television Industry?",
+      "research_question": "Is AI-generated Animation Disrupting the Traditional Film and Television Industry?",
+      "data_mode": "DEMO",
+      "generated_at": "2026-11-12T15:02:00+08:00",
+      "version": "1.0.0",
+      "generator": "openframe-analyst (demo fixture)",
+      "coverage_window": {
+        "from": "2026-03-01",
+        "to": "2026-04-15"
+      },
+      "warnings": [
+        {
+          "code": "DEMO_DATA",
+          "message": "DEMONSTRATION DATA — all sources, people, figures and URLs are fictional. Do not present as real."
+        },
+        {
+          "code": "SHARED_ORIGINAL_SOURCE",
+          "message": "art_demo_03 is a syndicated copy of art_demo_02."
+        },
+        {
+          "code": "SMALL_SAMPLE",
+          "message": "4 fictional articles."
+        }
+      ],
+      "correction_log": []
+    },
+    "executive_summary": {
+      "text": "[DEMO] Fictional coverage shows a studio claiming large AI cost savings (Unverified/Partially Supported), a union survey reporting fewer hours (Verified as reported), a 'first studio' claim that is Contradicted, a causal claim that is Disputed, and an Unverified prediction.",
+      "bottom_line": "[DEMO] Illustrative only — demonstrates every verification status and syndication handling.",
+      "confidence": {
+        "level": "low",
+        "rationale": "Fictional data for UI and integration testing."
+      },
+      "finding_ids": [
+        "fnd_demo_01",
+        "fnd_demo_02",
+        "fnd_demo_03"
+      ]
+    },
+    "key_findings": [
+      {
+        "id": "fnd_demo_01",
+        "statement": "[DEMO] The fictional union survey reported that 58% of responding members had fewer paid hours since AI tools arrived (Verified as a report of the survey result, not of the size of the loss).",
+        "strength": "established",
+        "claim_ids": [
+          "clm_demo_03"
+        ],
+        "audit_ids": [
+          "aud_demo_03"
+        ],
+        "basis_note": "Demo finding (fictional data)."
+      },
+      {
+        "id": "fnd_demo_02",
+        "statement": "[DEMO] Regional crews shrank, but by 9% rather than 'about a fifth' (Partially Supported); whether AI is the main cause of falling employment is Disputed.",
+        "strength": "contested",
+        "claim_ids": [
+          "clm_demo_07",
+          "clm_demo_04"
+        ],
+        "audit_ids": [
+          "aud_demo_06",
+          "aud_demo_04"
+        ],
+        "basis_note": "Demo finding (fictional data)."
+      },
+      {
+        "id": "fnd_demo_03",
+        "statement": "[DEMO] The fictional studio's 40% cost-saving claim and the columnist's 2028 forecast are Unverified, and the studio's 'first' claim is Contradicted by an archive record.",
+        "strength": "not_established",
+        "claim_ids": [
+          "clm_demo_01",
+          "clm_demo_05",
+          "clm_demo_02"
+        ],
+        "audit_ids": [
+          "aud_demo_01",
+          "aud_demo_05",
+          "aud_demo_02"
+        ],
+        "basis_note": "Demo finding (fictional data)."
+      }
+    ],
+    "topic_background": {
+      "text": "[DEMO] Fictional background for testing.",
+      "timeline": [
+        {
+          "date": "2026-03-01",
+          "event": "Fictional Plumvale release.",
+          "source_ids": [
+            "src_demo_ev_03"
+          ]
+        },
+        {
+          "date": "2026-03-05",
+          "event": "Fictional wire story and syndicated copy.",
+          "source_ids": [
+            "src_demo_02",
+            "src_demo_03"
+          ]
+        }
+      ]
+    },
+    "article_comparison": {
+      "narrative_comparison_id": "nar_demo_ai_animation",
+      "summary": "[DEMO] Innovation vs. displacement framing; one syndicated duplicate.",
+      "rows": [
+        {
+          "article_id": "art_demo_01",
+          "publisher": "Harbor Trade Daily (fictional)",
+          "content_type": "news_report",
+          "main_argument_short": "A studio's AI pipeline delivers large cost savings and an industry first.",
+          "primary_frame": "innovation / first-mover",
+          "independence_group_id": "grp_demo_studio_release"
+        },
+        {
+          "article_id": "art_demo_02",
+          "publisher": "Metro Wire Service (fictional)",
+          "content_type": "news_report",
+          "main_argument_short": "AI tools are reducing animators' hours, according to a union survey.",
+          "primary_frame": "labour displacement",
+          "independence_group_id": "grp_demo_wire_story"
+        },
+        {
+          "article_id": "art_demo_03",
+          "publisher": "Brackenmoor Courier (fictional)",
+          "content_type": "news_report",
+          "main_argument_short": "Same as art_demo_02 (syndicated copy).",
+          "primary_frame": "labour displacement",
+          "independence_group_id": "grp_demo_wire_story"
+        },
+        {
+          "article_id": "art_demo_04",
+          "publisher": "The Quillowick Review (fictional)",
+          "content_type": "opinion",
+          "main_argument_short": "AI tools democratise animation for small studios.",
+          "primary_frame": "democratisation",
+          "independence_group_id": "grp_demo_opinion"
+        }
+      ]
+    },
+    "narrative_analysis": {
+      "text": "[DEMO] Company and columnist frame AI as opportunity; union frames displacement.",
+      "key_patterns": [
+        "Syndication inflates apparent coverage."
+      ],
+      "dimension_summaries": {
+        "main_argument": "[DEMO] Opportunity vs. displacement.",
+        "causal_attribution": "[DEMO] AI credited with savings and blamed for hour losses.",
+        "responsibility_attribution": "[DEMO] Union blames studios.",
+        "language_framing": "[DEMO] 'first', 'gift' vs. 'shrinking crews'.",
+        "source_selection": "[DEMO] One executive, one union, one columnist.",
+        "underrepresented_perspectives": "[DEMO] Rank-and-file animators; audiences."
+      }
+    },
+    "key_claim_verification": [
+      {
+        "claim_id": "clm_demo_01",
+        "audit_id": "aud_demo_01",
+        "article_id": "art_demo_01",
+        "claim_text": "Plumvale Toonworks' AI pipeline cut per-episode costs by 40%.",
+        "status": "Unverified",
+        "confidence_level": "low",
+        "one_line_explanation": "DEMO: Both items trace to the studio's own release (one independence group); no cost breakdown or independent data."
+      },
+      {
+        "claim_id": "clm_demo_02",
+        "audit_id": "aud_demo_02",
+        "article_id": "art_demo_01",
+        "claim_text": "Plumvale is the first studio to deliver a full season using AI in-betweening.",
+        "status": "Contradicted",
+        "confidence_level": "high",
+        "one_line_explanation": "DEMO: The archive records Fernvale Pictures delivering a full AI in-betweened season in 2024, two years earlier, directly refuting the 'first' claim.."
+      },
+      {
+        "claim_id": "clm_demo_03",
+        "audit_id": "aud_demo_03",
+        "article_id": "art_demo_02",
+        "claim_text": "In the survey, 58% of members said their hours had fallen since AI tools were introduced.",
+        "status": "Verified",
+        "confidence_level": "high",
+        "one_line_explanation": "DEMO: Confirmed against the primary survey."
+      },
+      {
+        "claim_id": "clm_demo_04",
+        "audit_id": "aud_demo_04",
+        "article_id": "art_demo_02",
+        "claim_text": "AI tools are the main cause of falling animation employment in the region.",
+        "status": "Disputed",
+        "confidence_level": "low",
+        "one_line_explanation": "DEMO: Decline is documented, but causation is contested: the union attributes it to AI, official data do not attribute a cause.."
+      },
+      {
+        "claim_id": "clm_demo_05",
+        "audit_id": "aud_demo_05",
+        "article_id": "art_demo_04",
+        "claim_text": "Independent animation output will double by 2028.",
+        "status": "Unverified",
+        "confidence_level": "low",
+        "one_line_explanation": "DEMO: A prediction about 2028; it cannot be verified now and no supporting projection is cited.."
+      },
+      {
+        "claim_id": "clm_demo_07",
+        "audit_id": "aud_demo_06",
+        "article_id": "art_demo_02",
+        "claim_text": "Animation crews in the region have shrunk by about a fifth.",
+        "status": "Partially Supported",
+        "confidence_level": "medium",
+        "one_line_explanation": "DEMO: The direction (smaller crews) is supported by official data; the magnitude ('about a fifth') is overstated — the bulletin reports 9%.."
+      }
+    ],
+    "evidence_limitations": [
+      "[DEMO] Fictional evidence."
+    ],
+    "information_gaps": [
+      {
+        "gap": "[DEMO] Studio budgets.",
+        "why_it_matters": "Tests cost claims.",
+        "absence_interpretation": "Non-disclosure is not evidence of concealment or censorship."
+      }
+    ],
+    "further_research_questions": [
+      "[DEMO] What share of hour losses is attributable to AI?"
+    ],
+    "source_list": [
+      {
+        "id": "src_demo_01",
+        "article_id": "art_demo_01",
+        "title": "[DEMO — fictional] Plumvale Toonworks says AI pipeline cut episode costs by 40%",
+        "publisher": "Harbor Trade Daily (fictional)",
+        "url": "https://harbor-trade.example/news/plumvale-ai-pipeline",
+        "publication_date": "2026-03-02",
+        "author": "Avery Quill",
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "access_note": "Fictional.",
+        "used_for": [
+          "article_analysed"
+        ]
+      },
+      {
+        "id": "src_demo_02",
+        "article_id": "art_demo_02",
+        "title": "[DEMO — fictional] Animators warn AI tools are shrinking crews",
+        "publisher": "Metro Wire Service (fictional)",
+        "url": "https://wire.example/stories/animators-warn",
+        "publication_date": "2026-03-05",
+        "author": "Jordan Pell",
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "access_note": "Fictional.",
+        "used_for": [
+          "article_analysed"
+        ]
+      },
+      {
+        "id": "src_demo_03",
+        "article_id": "art_demo_03",
+        "title": "[DEMO — fictional] Animators warn AI tools are shrinking crews",
+        "publisher": "Brackenmoor Courier (fictional)",
+        "url": "https://brackenmoor-courier.test/wire/animators-warn",
+        "publication_date": "2026-03-05",
+        "author": null,
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "access_note": "Fictional.",
+        "used_for": [
+          "article_analysed"
+        ]
+      },
+      {
+        "id": "src_demo_04",
+        "article_id": "art_demo_04",
+        "title": "[DEMO — fictional] Opinion: AI animation is a gift to small studios",
+        "publisher": "The Quillowick Review (fictional)",
+        "url": "https://quillowick-review.example/opinion/ai-gift",
+        "publication_date": "2026-03-09",
+        "author": "Sam Okafor",
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "access_note": "Fictional.",
+        "used_for": [
+          "article_analysed"
+        ]
+      },
+      {
+        "id": "src_demo_ev_01",
+        "article_id": "art_demo_ev_01",
+        "title": "[DEMO — fictional] Regional Animation Employment Bulletin Q1 2026",
+        "publisher": "Office of Labor Statistics (fictional)",
+        "url": "https://labor-stats.example/bulletins/animation-q1-2026",
+        "publication_date": "2026-04-15",
+        "author": null,
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "access_note": "Fictional.",
+        "used_for": [
+          "evidence"
+        ]
+      },
+      {
+        "id": "src_demo_ev_02",
+        "article_id": "art_demo_ev_02",
+        "title": "[DEMO — fictional] Studio history: AI in-betweening at Fernvale Pictures (2024)",
+        "publisher": "Animation History Archive (fictional)",
+        "url": "https://animation-archive.example/fernvale-2024",
+        "publication_date": "2025-06-01",
+        "author": null,
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "access_note": "Fictional.",
+        "used_for": [
+          "evidence"
+        ]
+      },
+      {
+        "id": "src_demo_ev_03",
+        "article_id": "art_demo_ev_03",
+        "title": "[DEMO — fictional] Plumvale Toonworks press release: AI pipeline results",
+        "publisher": "Plumvale Toonworks (fictional)",
+        "url": "https://plumvale-toonworks.example/press/ai-pipeline",
+        "publication_date": "2026-03-01",
+        "author": null,
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "access_note": "Fictional.",
+        "used_for": [
+          "evidence"
+        ]
+      },
+      {
+        "id": "src_demo_ev_04",
+        "article_id": "art_demo_ev_04",
+        "title": "[DEMO — fictional] Guild of Screen Animators 2026 member survey",
+        "publisher": "Guild of Screen Animators (fictional)",
+        "url": "https://screen-animators.example/survey-2026",
+        "publication_date": "2026-03-04",
+        "author": null,
+        "data_mode": "DEMO",
+        "retrieval_method": "generated_demo",
+        "access_note": "Fictional.",
+        "used_for": [
+          "evidence"
+        ]
+      }
+    ],
+    "missing_fields": []
+  }
+}
