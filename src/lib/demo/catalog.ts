@@ -3,6 +3,7 @@ import path from "node:path";
 import { AnalysisBundleSchema, type AnalysisBundle } from "@/lib/openframe/openframe";
 import { sealPrecomputedBundle } from "@/lib/guards/prompts";
 import type { Language } from "@/lib/i18n/languages";
+import { matchPreparedTopic } from "@/lib/demo/topic-match";
 
 const DATA_DIR = path.join(process.cwd(), "spec", "data");
 
@@ -61,28 +62,7 @@ export function buildDemoBundle(query: string, language: Language): AnalysisBund
 }
 
 function selectFixture(query: string): "sample" | "demo" | "generic" {
-  const normalized = query.toLowerCase().normalize("NFKC");
-  if (
-    normalized.includes("plumvale") ||
-    normalized.includes("northlight") ||
-    normalized.includes("harbor trade") ||
-    normalized.includes("fictional demonstration")
-  ) {
-    return "demo";
-  }
-  if (
-    normalized.includes("ai-generated animation") ||
-    normalized.includes("ai generated animation") ||
-    normalized.includes("traditional film") ||
-    normalized.includes("critterz") ||
-    normalized.includes("人工智能生成") ||
-    normalized.includes("animación generada") ||
-    normalized.includes("animation générée") ||
-    normalized.includes("animation generee")
-  ) {
-    return "sample";
-  }
-  return "generic";
+  return matchPreparedTopic(query) ?? "generic";
 }
 
 /** Unmatched topics reuse the fictional fixture and say so. The official file is not edited. */
