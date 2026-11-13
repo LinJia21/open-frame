@@ -89,7 +89,7 @@ export function RunPanel({ jobId, language }: { jobId: string; language: Languag
 
   return (
     <section className="mx-auto w-full max-w-3xl space-y-4">
-      <p className="text-xs tracking-[0.18em] text-[#8d4324] uppercase">{copy.model}</p>
+      <p className="text-xs tracking-[0.18em] text-[#5c564c] uppercase">{copy.model}</p>
       <h1 className="font-serif text-4xl">Cursor</h1>
       <Alert>
         <AlertTitle>{busy ? copy.processing : job?.status === "ready" ? copy.open : copy.failed}</AlertTitle>

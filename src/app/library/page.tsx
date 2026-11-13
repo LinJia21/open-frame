@@ -15,7 +15,7 @@ export default function LibraryPage() {
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
       <p className="text-sm text-[#5c564c]">
-        <Link href="/" className="underline decoration-[#1c1915]/30 underline-offset-4">OpenFrame</Link>
+        <Link href="/" className="paper-link wordmark text-[1.35rem]">OpenFrame</Link>
         <span> / 已保存的历史资料</span>
       </p>
       <p className="mt-4 max-w-3xl text-[1.02rem] leading-7 text-[#3f3a33]">

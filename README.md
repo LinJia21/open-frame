@@ -1,5 +1,7 @@
 # OpenFrame AI
 
+协作步骤、给 Agent 的阅读顺序，以及可复制的启动提示在 [CONTRIBUTING.md](CONTRIBUTING.md)。不能让步的规则仍以 [AGENTS.md](AGENTS.md) 为准。
+
 ## 中文使用指南
 
 这是本地原型。默认只看准备好的演示数据，不调用模型。下面的命令和变量以仓库里的 `package.json`、`.env.example` 和源码为准。
@@ -63,7 +65,7 @@ npm run validate:demo
 - `http://127.0.0.1:4317/analysis/bnd_ai_animation_2026/perspectives`
 - `http://127.0.0.1:4317/analysis/bnd_demo_ai_animation/perspectives`
 
-第三张是虚构布局样例，没有来源、日期和分析链接。底部三个图标没有名称，也不能点。只有「设置」是入口。
+第三张是虚构布局样例，没有来源、日期和分析链接。底部三个图标没有名称，也不能点。「首页」和「设置」可以点。说明文字里有资料库链接。导入、检索和分析仍在 `/library`。
 
 ### 导入已保存的历史资料
 
@@ -139,7 +141,7 @@ CURSOR_ANALYSIS_ALLOW_NETWORK=
 
 完成后开 Pull Request。说明里写范围、测试结果、390 和 1440 的真实页面截图，以及已知缺口。设计由 figma bro 和 Critiquito 复核，PM 汇总后由用户决定。没有明确验收通过，不得合并。不要使用 auto-merge、force-push，或绕过分支保护。
 
-完整规则在 `AGENTS.md`。用户原图如果还不可读，不要猜图里的内容并当成已经按图完成。
+给 Agent 的步骤和 PR 模板见 [CONTRIBUTING.md](CONTRIBUTING.md)。完整硬性规则在 `AGENTS.md`。用户原图如果还不可读，不要猜图里的内容并当成已经按图完成。
 
 ## English
 
@@ -193,7 +195,7 @@ Copy `.env.example` to `.env.local` for local settings. The app runs with no key
 
 ## What you can do
 
-1. **Home.** Logo, then a search box that only filters the cards on this page, then All, For You, and Locate. Cards are labeled samples. One uses fixture source links, one is a fictional demonstration, and one is a fictional layout sample with no source, date, or analysis page. Heat says there is no data. Verification does not judge the whole event. Fixture counts and the provider note are on Settings. For You and Locate are not enabled. Three bottom icons have no name. Settings is the real entry, and import, search, and Analyze stay on `/library`.
+1. **Home.** Logo, then a search box that only filters the cards on this page, then All, For You, and Locate. Cards are labeled samples. One uses fixture source links, one is a fictional demonstration, and one is a fictional layout sample with no source, date, or analysis page. Heat says there is no data. Verification does not judge the whole event. Fixture counts and the provider note are on Settings. For You and Locate are not enabled. Three bottom icons have no name and cannot be used. Home and Settings are real controls. The note under them links to the library. Import, search, and Analyze stay on `/library`.
 2. **Perspectives.** Article cards and a side-by-side reading of how those articles frame the topic. Each analysed article is read on six dimensions. There is no outlet-leaning tag on an article.
 3. **Evidence audit.** Claims with one of five labels: Verified, Partially Supported, Disputed, Unverified, Contradicted. Each claim points at an article id. Each evidence item points at a claim id and an article id.
 4. **Research report.** Summary, perspectives, claim table, methodology, limitations, and sources. Download Markdown or JSON, or use Print / Save as PDF.
