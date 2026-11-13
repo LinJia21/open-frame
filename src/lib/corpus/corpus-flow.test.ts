@@ -237,6 +237,122 @@ test("invented links, external-check claims, bad quotes, and secrets are rejecte
   }, FIXTURE_NOW, [KEY]), /sensitive_material/);
 });
 
+test("the server computes quote spans so a real Verified audit is accepted", () => {
+  const selected = harborSelection();
+  const material = selected.material;
+  const excerpt = material.excerpt!.slice(0, 200);
+  const bundle = citingBundle(material, QUERY);
+  withVerifiedAudit(bundle, evidenceFor(material, { excerpt, excerpt_span: null }));
+  const voice = firstVoice(bundle, material);
+  voice.quote_mode = "verbatim";
+  voice.verbatim_quote = excerpt.slice(0, 40);
+  voice.paraphrase = null;
+  voice.quote_verification = "verified_substring";
+  voice.quote_span = null;
+
+  const accepted = accept(selected, JSON.stringify(bundle));
+  const audit = accepted.evidence_audit.audits[0]!;
+  assert.equal(audit.status, "Verified");
+  const item = audit.supporting_evidence[0]!;
+  assert.equal(item.quote_verification, "verified_substring");
+  assert.equal(item.excerpt_is_verbatim, true);
+  assert.ok(item.excerpt_span);
+  assert.equal(accepted.articles[0]!.accessible_text!.slice(item.excerpt_span!.start, item.excerpt_span!.end), excerpt);
+
+  const quoted = accepted.narrative_comparison.article_analyses[0]!.source_selection.quoted_voices[0]!;
+  assert.equal(quoted.quote_verification, "verified_substring");
+  assert.ok(quoted.quote_span);
+  assert.equal(accepted.articles[0]!.accessible_text!.slice(quoted.quote_span!.start, quoted.quote_span!.end), voice.verbatim_quote);
+});
+
+test("verbatim text from a saved summary or missing from the text is downgraded, not trusted", () => {
+  const summary = normalizeImport({
+    items: [{
+      event: "weekday-ferries",
+      outlet: "Test Fixture Desk",
+      title: "Summary only ferry note",
+      publishedAt: "2026-11-01",
+      originalUrl: FIXTURE_OUTLET_URL,
+      summary: "Only this summary was saved.",
+      completeness: "summary_only",
+      fixture: "test",
+    }],
+  }, FIXTURE_NOW);
+  const summarySelection = prepareSelection(summary, [summary[0]!.id]);
+  const summaryMaterial = summarySelection.items[0]!;
+  const fromSummary = citingBundle(summaryMaterial, QUERY);
+  withVerifiedAudit(fromSummary, evidenceFor(summaryMaterial, {
+    excerpt: summaryMaterial.excerpt,
+    excerpt_span: null,
+    evidence_kind: "primary_document",
+  }));
+  const acceptedSummary = accept({ items: summary, resolved: summarySelection, material: summaryMaterial }, JSON.stringify(fromSummary));
+  const summaryItem = acceptedSummary.evidence_audit.audits[0]!.supporting_evidence[0]!;
+  assert.equal(summaryItem.quote_verification, "paraphrase");
+  assert.equal(summaryItem.excerpt_is_verbatim, false);
+  assert.equal(summaryItem.excerpt_span, null);
+
+  const selected = harborSelection();
+  const missing = citingBundle(selected.material, QUERY);
+  withVerifiedAudit(missing, evidenceFor(selected.material, {
+    excerpt: "A sentence that was never saved in the material.",
+    excerpt_span: null,
+  }));
+  const acceptedMissing = accept(selected, JSON.stringify(missing));
+  const missingItem = acceptedMissing.evidence_audit.audits[0]!.supporting_evidence[0]!;
+  assert.equal(missingItem.quote_verification, "paraphrase");
+  assert.equal(missingItem.excerpt_span, null);
+});
+
+function evidenceFor(material: ReturnType<typeof harborSelection>["material"], overrides: Record<string, unknown>) {
+  return {
+    schema_version: "1.2.0",
+    id: "ev_mockcursor01",
+    data_mode: "LIVE",
+    claim_id: "clm_mockcursor01",
+    article_id: material.id,
+    url: material.originalUrl,
+    publisher: material.outlet,
+    publication_date: "2026-11-01",
+    excerpt: material.excerpt,
+    excerpt_is_verbatim: true,
+    quote_verification: "verified_substring",
+    excerpt_span: null,
+    summary: "The saved material supports the proposition.",
+    evidence_kind: "primary_document",
+    independence_group_id: material.independenceGroupId,
+    retrieval_method: "manual_entry",
+    accessed_at: "2026-11-13T04:00:00.000Z",
+    ...overrides,
+  };
+}
+
+function withVerifiedAudit(bundle: Record<string, unknown>, evidence: Record<string, unknown>): void {
+  const audit = (bundle.evidence_audit as { audits: Array<Record<string, unknown>> }).audits[0]!;
+  audit.supporting_evidence = [evidence];
+  audit.status = "Verified";
+  audit.confidence = { level: "medium", rationale: "A checkable saved document supports the proposition." };
+  const row = (bundle.research_report as { key_claim_verification: Array<Record<string, unknown>> }).key_claim_verification[0]!;
+  row.status = "Verified";
+  row.confidence_level = "medium";
+}
+
+function firstVoice(bundle: Record<string, unknown>, material: ReturnType<typeof harborSelection>["material"]): Record<string, unknown> {
+  const analysis = (bundle.narrative_comparison as { article_analyses: Array<{ article_id: string; source_selection: { quoted_voices: Array<Record<string, unknown>> } }> }).article_analyses[0]!;
+  analysis.article_id = material.id;
+  const voice = {
+    speaker: "Fixture Desk reporter",
+    speaker_role: "reporter",
+    quote_mode: "verbatim",
+    verbatim_quote: material.excerpt!.slice(0, 40),
+    paraphrase: null,
+    quote_verification: "verified_substring",
+    quote_span: null,
+  };
+  analysis.source_selection.quoted_voices.push(voice);
+  return voice;
+}
+
 test("saved-material analysis is not replaced by a demonstration, and corpus source does not fetch", async () => {
   const demo = await handleCreateAnalysis(new Request("http://local/api/analyses", {
     method: "POST",

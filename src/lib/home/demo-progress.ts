@@ -7,6 +7,8 @@ export const DEMO_STEP_COUNT = 4;
 export interface DemoProgressSnapshot {
   query: string;
   sourceIds: string[];
+  /** Outlet names of matched saved-library items, shown when sourceIds are library ids, not catalog ids. */
+  outlets?: string[];
   startedAt: number;
 }
 
@@ -29,9 +31,14 @@ export function parseDemoProgress(raw: string | null): DemoProgressSnapshot | nu
   try {
     const parsed: unknown = JSON.parse(raw);
     if (!isSnapshot(parsed)) return null;
+    const rawOutlets = (parsed as { outlets?: unknown }).outlets;
+    const outlets = Array.isArray(rawOutlets)
+      ? [...new Set(rawOutlets.filter((name): name is string => typeof name === "string" && name.trim().length > 0))].slice(0, 12)
+      : [];
     return {
       query: parsed.query.slice(0, 200),
       sourceIds: [...new Set(parsed.sourceIds.filter((id): id is string => typeof id === "string" && KNOWN_SOURCE_IDS.has(id)))],
+      ...(outlets.length > 0 ? { outlets } : {}),
       startedAt: parsed.startedAt,
     };
   } catch {

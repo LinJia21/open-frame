@@ -34,5 +34,9 @@ export function useDemoProgress() {
     writeDemoProgress(window.localStorage, next);
     window.dispatchEvent(new Event(CHANGE_EVENT));
   }, []);
-  return { progress, setProgress };
+  const clearProgress = useCallback(() => {
+    window.localStorage.removeItem(DEMO_PROGRESS_STORAGE_KEY);
+    window.dispatchEvent(new Event(CHANGE_EVENT));
+  }, []);
+  return { progress, setProgress, clearProgress };
 }

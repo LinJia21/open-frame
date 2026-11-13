@@ -1,5 +1,6 @@
 import { AnalysisBundleSchema, countIndependentSources, isReservedDemoUrl, type AnalysisBundle } from "@/lib/openframe/openframe";
 import { PROMPT_TEMPLATE_VERSION } from "@/lib/openframe/prompts";
+import { stampRawQuotes } from "@/lib/guards/prompts";
 import { PINNED_MODEL_ID, redactSecrets } from "@/lib/analysis/cursor-config";
 import type { Language } from "@/lib/i18n/languages";
 import { languageOption } from "@/lib/i18n/languages";
@@ -216,7 +217,8 @@ export function acceptSavedMaterialOutput(input: AcceptSavedMaterialInput): Anal
   }
   for (const article of modelArticles) {
     if (!article || typeof article !== "object") throw new OutputRejected("incomplete_sources", ["articles"]);
-    const url = (article as { original_url?: unknown }).original_url;
+    const record = article as { original_url?: unknown; originalUrl?: unknown };
+    const url = record.original_url ?? record.originalUrl;
     if (typeof url !== "string" || !allowedCanonical.has(canonicalUrl(new URL(url)))) {
       throw new OutputRejected("invented_source", ["original_url"]);
     }
@@ -234,7 +236,8 @@ export function acceptSavedMaterialOutput(input: AcceptSavedMaterialInput): Anal
     libraryOutlets: input.library.outletCount,
   });
   stampSavedFields(record, input);
-  const result = AnalysisBundleSchema.safeParse(record);
+  const stamped = stampRawQuotes(record);
+  const result = AnalysisBundleSchema.safeParse(stamped);
   if (!result.success) {
     throw new OutputRejected(
       "validation_failed",

@@ -12,8 +12,10 @@ type Script = "zh" | "zh-Hant" | "en";
 
 interface ProgressCopy {
   badge: string;
+  liveBadge: string;
   title: (query: string) => string;
   estimate: string;
+  liveEstimate: string;
   foundSources: (count: number) => string;
   noSourcesYet: string;
   steps: Array<{ title: string; body: string }>;
@@ -21,6 +23,8 @@ interface ProgressCopy {
   statusActive: string;
   statusPending: string;
   demoNote: string;
+  liveNote: string;
+  liveDoneNote: string;
   completed: string;
   completedNote: string;
   openSample: string;
@@ -30,8 +34,10 @@ interface ProgressCopy {
 const COPY: Record<Script, ProgressCopy> = {
   zh: {
     badge: "演示进度",
+    liveBadge: "真实分析",
     title: (query) => `正在整理「${query}」`,
     estimate: "预计约 10 分钟生成报告",
+    liveEstimate: "已提交真实分析，通常需要几分钟",
     foundSources: (count) => `已找到 ${count} 个来源`,
     noSourcesYet: "正在确认来源…",
     steps: [
@@ -44,6 +50,8 @@ const COPY: Record<Script, ProgressCopy> = {
     statusActive: "进行中",
     statusPending: "等待中",
     demoNote: "这是界面演示，不会调用 AI。真实分析预计约 10 分钟；示例关键词会直接打开已有报告。",
+    liveNote: "真实分析已在后台发起。四步分别是一次调用里生成的四个部分，这里的进度按时间估算，不是服务器回报的阶段。",
+    liveDoneNote: "估算时间已过，分析仍在后台运行。完成后会自动打开结果页，也可以稍后从分析记录里打开。",
     completed: "演示完成",
     completedNote: "真实分析完成后，这里会变成可打开的事件卡片。",
     openSample: "查看示例报告",
@@ -51,8 +59,10 @@ const COPY: Record<Script, ProgressCopy> = {
   },
   "zh-Hant": {
     badge: "演示進度",
+    liveBadge: "真實分析",
     title: (query) => `正在整理「${query}」`,
     estimate: "預計約 10 分鐘生成報告",
+    liveEstimate: "已提交真實分析，通常需要幾分鐘",
     foundSources: (count) => `已找到 ${count} 個來源`,
     noSourcesYet: "正在確認來源…",
     steps: [
@@ -65,6 +75,8 @@ const COPY: Record<Script, ProgressCopy> = {
     statusActive: "進行中",
     statusPending: "等待中",
     demoNote: "這是介面演示，不會呼叫 AI。真實分析預計約 10 分鐘；示例關鍵詞會直接打開已有報告。",
+    liveNote: "真實分析已在背景發起。四步是一次呼叫裡生成的四個部分，這裡的進度按時間估算，不是伺服器回報的階段。",
+    liveDoneNote: "估算時間已過，分析仍在背景執行。完成後會自動打開結果頁，也可以稍後從分析記錄裡打開。",
     completed: "演示完成",
     completedNote: "真實分析完成後，這裡會變成可打開的事件卡片。",
     openSample: "查看示例報告",
@@ -72,8 +84,10 @@ const COPY: Record<Script, ProgressCopy> = {
   },
   en: {
     badge: "Demo progress",
+    liveBadge: "Live analysis",
     title: (query) => `Organising “${query}”`,
     estimate: "Estimated report time: about 10 minutes",
+    liveEstimate: "Live analysis submitted. It usually takes a few minutes.",
     foundSources: (count) => `${count} source${count === 1 ? "" : "s"} found`,
     noSourcesYet: "Confirming sources…",
     steps: [
@@ -86,6 +100,8 @@ const COPY: Record<Script, ProgressCopy> = {
     statusActive: "Running",
     statusPending: "Waiting",
     demoNote: "This is an interface demo and does not call AI. A real analysis is estimated at about 10 minutes; sample keywords open an existing report directly.",
+    liveNote: "The live analysis has started in the background. The four steps are sections produced by one model call; this progress is a time estimate, not a server-reported stage.",
+    liveDoneNote: "The estimate has elapsed and the analysis is still running. The result page opens automatically when it is ready, or you can open it later from the analysis history.",
     completed: "Demo complete",
     completedNote: "When a real analysis finishes, this becomes a card you can open.",
     openSample: "Open the sample report",
@@ -98,7 +114,7 @@ function scriptOf(language: UiLanguage): Script {
   return "en";
 }
 
-export function SearchProgressCard({ progress, language }: { progress: DemoProgressSnapshot; language: UiLanguage }) {
+export function SearchProgressCard({ progress, language, live = false }: { progress: DemoProgressSnapshot; language: UiLanguage; live?: boolean }) {
   const copy = COPY[scriptOf(language)];
   const [now, setNow] = useState(() => Date.now());
   const { step, done } = demoProgressPhase(progress, now);
@@ -110,23 +126,37 @@ export function SearchProgressCard({ progress, language }: { progress: DemoProgr
   }, [done]);
 
   const sources = NEWS_SOURCES.filter((source) => progress.sourceIds.includes(source.id));
+  const libraryOutlets = progress.outlets ?? [];
+  const shownDone = live ? false : done;
   const active = done ? -1 : Math.min(step, DEMO_STEP_COUNT - 1);
   const withinStep = done ? 1 : Math.min(1, (Math.max(0, now - progress.startedAt) - step * DEMO_STEP_MS) / DEMO_STEP_MS);
+  const sourceLabel =
+    libraryOutlets.length > 0
+      ? copy.foundSources(libraryOutlets.length)
+      : sources.length > 0
+        ? copy.foundSources(sources.length)
+        : copy.noSourcesYet;
 
   return (
     <article className="topic-card">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-xs tracking-[0.16em] text-of-accent">AI BRIEF</p>
-        <span className="lav-badge">{done ? copy.completed : copy.badge}</span>
+        <span className="lav-badge" data-tone={live ? "live" : undefined}>{live ? copy.liveBadge : done ? copy.completed : copy.badge}</span>
       </div>
-      <h2 className="mt-2 text-[1.35rem] font-bold leading-[1.35] text-foreground">{done ? copy.completed : copy.title(progress.query)}</h2>
-      {done ? null : <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">{copy.estimate}</p>}
+      <h2 className="mt-2 text-[1.35rem] font-bold leading-[1.35] text-foreground">{live || !done ? copy.title(progress.query) : copy.completed}</h2>
+      {live || !done ? <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">{live ? copy.liveEstimate : copy.estimate}</p> : null}
 
       <div className="mt-3 rounded-xl border border-of-cream-border bg-of-cream/30 p-2.5">
-        <p className="text-xs text-muted-foreground">
-          {sources.length > 0 ? copy.foundSources(sources.length) : copy.noSourcesYet}
-        </p>
-        {sources.length > 0 ? (
+        <p className="text-xs text-muted-foreground">{sourceLabel}</p>
+        {libraryOutlets.length > 0 ? (
+          <ul className="mt-2 flex flex-wrap gap-1.5">
+            {libraryOutlets.map((name) => (
+              <li key={name} className="rounded-full border border-of-cream-border bg-white px-2 py-1 text-xs text-foreground">
+                <span className="inline-block max-w-[12rem] truncate align-bottom">{name}</span>
+              </li>
+            ))}
+          </ul>
+        ) : sources.length > 0 ? (
           <ul className="mt-2 flex flex-wrap gap-1.5">
             {sources.map((source) => (
               <li key={source.id} className="flex items-center gap-1.5 rounded-full border border-of-cream-border bg-white px-1.5 py-1">
@@ -140,7 +170,7 @@ export function SearchProgressCard({ progress, language }: { progress: DemoProgr
 
       <ol className="mt-4 space-y-3">
         {copy.steps.map((item, index) => {
-          const state = done || index < step ? "done" : index === active ? "active" : "pending";
+          const state = shownDone || index < step ? "done" : index === active ? "active" : "pending";
           return (
             <li key={item.title} className="flex gap-3">
               <span
@@ -178,14 +208,16 @@ export function SearchProgressCard({ progress, language }: { progress: DemoProgr
         })}
       </ol>
 
-      <p className="mt-4 text-[13px] leading-[1.6] text-muted-foreground">{done ? copy.completedNote : copy.demoNote}</p>
-      {done ? (
+      <p className="mt-4 text-[13px] leading-[1.6] text-muted-foreground">
+        {live ? (done ? copy.liveDoneNote : copy.liveNote) : done ? copy.completedNote : copy.demoNote}
+      </p>
+      {!live && done ? (
         <Link href={PREPARED_REPORT_HREF.sample} className="evidence-pill mt-3">
           {copy.openSample}
         </Link>
       ) : null}
       <p className="sr-only" aria-live="polite">
-        {done ? copy.completed : copy.liveSummary(step + 1)}
+        {!live && done ? copy.completed : copy.liveSummary(Math.min(step + 1, DEMO_STEP_COUNT))}
       </p>
     </article>
   );

@@ -1,4 +1,4 @@
-import { VERBATIM_ORIGINS, type AnalysisBundle, type EvidenceItem, type NewsArticle } from "@/lib/openframe/openframe";
+import { VERBATIM_ORIGINS, type AnalysisBundle } from "@/lib/openframe/openframe";
 import { buildStagePrompt, type PipelineStage, type PromptVariable } from "@/lib/openframe/prompts";
 
 /**
@@ -18,99 +18,161 @@ const SERVER_META = {
   prompt_version: null,
 } as const;
 
-/**
- * analysis_generation and analysis_metadata are written here.
- * Values on the incoming object are not trusted.
- */
-function textIsCheckable(article: NewsArticle | undefined): article is NewsArticle & { accessible_text: string } {
-  return Boolean(
-    article?.accessible_text &&
-      article.accessible_text_origin &&
-      (VERBATIM_ORIGINS as readonly string[]).includes(article.accessible_text_origin) &&
-      article.paywalled !== true,
-  );
+type RawRecord = Record<string, unknown>;
+
+function asRecord(value: unknown): RawRecord | null {
+  return value && typeof value === "object" && !Array.isArray(value) ? (value as RawRecord) : null;
 }
 
-function stampEvidenceItem(item: EvidenceItem, article: NewsArticle | undefined): EvidenceItem {
-  if (item.quote_verification === "unverifiable") {
-    return { ...item, excerpt_is_verbatim: false, excerpt_span: null };
-  }
-  if (item.quote_verification === "verified_substring" || item.excerpt_is_verbatim) {
-    if (item.excerpt && textIsCheckable(article)) {
-      const start = article.accessible_text.indexOf(item.excerpt);
-      if (start >= 0) {
-        return {
-          ...item,
-          excerpt_is_verbatim: true,
-          quote_verification: "verified_substring",
-          excerpt_span: { start, end: start + item.excerpt.length },
-        };
-      }
-    }
-    if (!textIsCheckable(article)) return { ...item, excerpt_is_verbatim: false, quote_verification: "unverifiable", excerpt_span: null };
+function asArray(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
+}
+
+type VerbatimSource = { kind: "text"; text: string } | { kind: "summary" } | { kind: "none" };
+
+/**
+ * Where a verbatim quote may come from. A saved summary is our own paraphrase,
+ * not the publisher's words (spec §13), so it is never quoted verbatim.
+ */
+function verbatimSource(source: unknown): VerbatimSource {
+  const record = asRecord(source);
+  if (!record) return { kind: "none" };
+  const text = record.accessible_text;
+  const origin = record.accessible_text_origin;
+  if (typeof text !== "string" || text.length === 0) return { kind: "none" };
+  if (typeof origin !== "string" || !(VERBATIM_ORIGINS as readonly string[]).includes(origin)) return { kind: "none" };
+  if (record.paywalled === true) return { kind: "none" };
+  if (record.access_basis === "publisher_summary") return { kind: "summary" };
+  return { kind: "text", text };
+}
+
+function spanIn(text: string, quote: string): { start: number; end: number } | null {
+  const start = text.indexOf(quote);
+  return start >= 0 ? { start, end: start + quote.length } : null;
+}
+
+function stampEvidenceItem(value: unknown, articles: Map<string, RawRecord>): unknown {
+  const item = asRecord(value);
+  if (!item) return value;
+  const source = verbatimSource(typeof item.article_id === "string" ? articles.get(item.article_id) : undefined);
+  const excerpt = typeof item.excerpt === "string" && item.excerpt ? item.excerpt : null;
+  const wantsVerbatim = item.quote_verification === "verified_substring" || item.excerpt_is_verbatim === true;
+  if (wantsVerbatim) {
+    const span = source.kind === "text" && excerpt ? spanIn(source.text, excerpt) : null;
+    if (span) return { ...item, excerpt_is_verbatim: true, quote_verification: "verified_substring", excerpt_span: span };
+    if (source.kind === "none" && excerpt) return { ...item, excerpt_is_verbatim: false, quote_verification: "unverifiable", excerpt_span: null };
     return { ...item, excerpt_is_verbatim: false, quote_verification: "paraphrase", excerpt_span: null };
+  }
+  if (item.quote_verification === "unverifiable" && excerpt) {
+    return { ...item, excerpt_is_verbatim: false, quote_verification: "unverifiable", excerpt_span: null };
   }
   return { ...item, excerpt_is_verbatim: false, quote_verification: "paraphrase", excerpt_span: null };
 }
 
+function stampVoice(value: unknown, article: RawRecord | undefined): unknown {
+  const voice = asRecord(value);
+  if (!voice) return value;
+  const source = verbatimSource(article);
+  const verbatim = typeof voice.verbatim_quote === "string" && voice.verbatim_quote ? voice.verbatim_quote : null;
+  const claimsVerbatim = voice.quote_mode === "verbatim" || voice.quote_verification === "verified_substring";
+  if (claimsVerbatim && verbatim) {
+    const span = source.kind === "text" ? spanIn(source.text, verbatim) : null;
+    if (span) return { ...voice, quote_mode: "verbatim", quote_verification: "verified_substring", quote_span: span };
+    if (source.kind === "none") return { ...voice, quote_mode: "verbatim", quote_verification: "unverifiable", quote_span: null };
+    return paraphraseVoice(voice, verbatim);
+  }
+  if (voice.quote_verification === "unverifiable" && verbatim) {
+    return { ...voice, quote_mode: "verbatim", quote_verification: "unverifiable", quote_span: null };
+  }
+  return paraphraseVoice(voice, verbatim);
+}
+
+function paraphraseVoice(voice: RawRecord, verbatim: string | null): RawRecord {
+  const paraphrase = typeof voice.paraphrase === "string" && voice.paraphrase ? voice.paraphrase : verbatim;
+  return {
+    ...voice,
+    quote_mode: "paraphrase",
+    verbatim_quote: null,
+    paraphrase: paraphrase ?? null,
+    quote_verification: "paraphrase",
+    quote_span: null,
+  };
+}
+
+function stampNarrative(narrative: RawRecord, articles: Map<string, RawRecord>): RawRecord {
+  return {
+    ...narrative,
+    article_analyses: asArray(narrative.article_analyses).map((value) => {
+      const analysis = asRecord(value);
+      const source = asRecord(analysis?.source_selection);
+      if (!analysis || !source) return value;
+      const article = typeof analysis.article_id === "string" ? articles.get(analysis.article_id) : undefined;
+      return {
+        ...analysis,
+        source_selection: {
+          ...source,
+          quoted_voices: asArray(source.quoted_voices).map((voice) => stampVoice(voice, article)),
+        },
+      };
+    }),
+  };
+}
+
+function distinctGroups(items: unknown[]): number {
+  const groups = new Set<string>();
+  for (const value of items) {
+    const item = asRecord(value);
+    if (item && typeof item.independence_group_id === "string") groups.add(item.independence_group_id);
+  }
+  return groups.size;
+}
+
+function stampAuditPart(evidence: RawRecord, articles: Map<string, RawRecord>): RawRecord {
+  return {
+    ...evidence,
+    audits: asArray(evidence.audits).map((value) => {
+      const audit = asRecord(value);
+      if (!audit) return value;
+      const supporting = asArray(audit.supporting_evidence).map((item) => stampEvidenceItem(item, articles));
+      const contradicting = asArray(audit.contradicting_evidence).map((item) => stampEvidenceItem(item, articles));
+      const unverifiableIds = [...supporting, ...contradicting]
+        .map((item) => asRecord(item))
+        .filter((item): item is RawRecord => item !== null && item.quote_verification === "unverifiable")
+        .map((item) => item.id)
+        .filter((id): id is string => typeof id === "string");
+      const independent_source_count = {
+        supporting: distinctGroups(supporting),
+        contradicting: distinctGroups(contradicting),
+      };
+      return { ...audit, supporting_evidence: supporting, contradicting_evidence: contradicting, unverifiable_evidence_ids: unverifiableIds, independent_source_count };
+    }),
+  };
+}
+
+/**
+ * Compute quote spans, quote verification and unverifiable ids server-side.
+ * Works on unvalidated model JSON so the live path never trusts model-computed
+ * indices; text that cannot be found is downgraded, never silently kept.
+ */
+export function stampRawQuotes<T>(raw: T): T {
+  const root = asRecord(raw);
+  if (!root) return raw;
+  const articles = new Map<string, RawRecord>();
+  for (const value of asArray(root.articles)) {
+    const article = asRecord(value);
+    if (article && typeof article.id === "string") articles.set(article.id, article);
+  }
+  const narrative = asRecord(root.narrative_comparison);
+  const evidence = asRecord(root.evidence_audit);
+  const next: RawRecord = { ...root };
+  if (narrative) next.narrative_comparison = stampNarrative(narrative, articles);
+  if (evidence) next.evidence_audit = stampAuditPart(evidence, articles);
+  return next as T;
+}
+
 /** Spans, quote verification, and unverifiable ids are written before the bundle is validated. */
 export function stampRecordedQuotes(bundle: AnalysisBundle): AnalysisBundle {
-  const articles = new Map(bundle.articles.map((article) => [article.id, article]));
-  return {
-    ...bundle,
-    narrative_comparison: {
-      ...bundle.narrative_comparison,
-      article_analyses: bundle.narrative_comparison.article_analyses.map((analysis) => {
-        const article = articles.get(analysis.article_id);
-        return {
-          ...analysis,
-          source_selection: {
-            ...analysis.source_selection,
-            quoted_voices: analysis.source_selection.quoted_voices.map((voice) => {
-              if (voice.quote_verification === "unverifiable") return { ...voice, quote_span: null };
-              if ((voice.quote_verification === "verified_substring" || voice.quote_mode === "verbatim") && voice.verbatim_quote && textIsCheckable(article)) {
-                const start = article.accessible_text.indexOf(voice.verbatim_quote);
-                if (start >= 0) {
-                  return {
-                    ...voice,
-                    quote_mode: "verbatim" as const,
-                    quote_verification: "verified_substring" as const,
-                    quote_span: { start, end: start + voice.verbatim_quote.length },
-                  };
-                }
-              }
-              if (voice.quote_verification === "verified_substring" && !textIsCheckable(article)) {
-                return { ...voice, quote_verification: "unverifiable" as const, quote_span: null };
-              }
-              return {
-                ...voice,
-                quote_mode: "paraphrase" as const,
-                verbatim_quote: null,
-                paraphrase: voice.paraphrase ?? voice.verbatim_quote,
-                quote_verification: "paraphrase" as const,
-                quote_span: null,
-              };
-            }),
-          },
-        };
-      }),
-    },
-    evidence_audit: {
-      ...bundle.evidence_audit,
-      audits: bundle.evidence_audit.audits.map((audit) => {
-        const supporting_evidence = audit.supporting_evidence.map((item) => stampEvidenceItem(item, articles.get(item.article_id)));
-        const contradicting_evidence = audit.contradicting_evidence.map((item) => stampEvidenceItem(item, articles.get(item.article_id)));
-        return {
-          ...audit,
-          supporting_evidence,
-          contradicting_evidence,
-          unverifiable_evidence_ids: [...supporting_evidence, ...contradicting_evidence]
-            .filter((item) => item.quote_verification === "unverifiable")
-            .map((item) => item.id),
-        };
-      }),
-    },
-  };
+  return stampRawQuotes(bundle);
 }
 
 export function sealPrecomputedBundle(bundle: AnalysisBundle, generatedAt: string): AnalysisBundle {
