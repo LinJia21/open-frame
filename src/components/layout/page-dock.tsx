@@ -6,7 +6,7 @@ import type { Language } from "@/lib/i18n/languages";
 
 /**
  * Bottom bar for the paper layout.
- * The pale-yellow pill is only the page you are actually on.
+ * The accent pill is only the page you are actually on.
  * The three icons stay unnamed and are not links: the repo has not named them.
  * Follow and Me are not pages here. Settings and the library link are the real entries.
  */

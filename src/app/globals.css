@@ -221,7 +221,7 @@
 }
 .news-home {
   width: 100%;
-  background: var(--of-page);
+  background: var(--background);
   color: var(--foreground);
   font-family: "Noto Sans SC", var(--font-source), "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
   font-size: 16px;
@@ -233,6 +233,19 @@
   font-family: "Noto Sans SC", var(--font-source), "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
   font-weight: 700;
   letter-spacing: -0.02em;
+}
+.app-ink-bar {
+  background: var(--of-ink);
+  color: var(--of-ink-foreground);
+}
+.app-ink-bar .search-pill {
+  border-color: transparent;
+  background: #fff;
+  color: var(--foreground);
+}
+.app-cream-note {
+  background: var(--of-cream);
+  color: var(--of-cream-foreground);
 }
 .news-home .wordmark,
 .spectrax-aside .wordmark {
@@ -273,6 +286,13 @@
   right: 0;
   bottom: 0;
   left: 0;
+  background: var(--background);
+  box-shadow: none;
+}
+.news-dock .dock-pill[aria-current="page"] {
+  border-color: var(--of-accent);
+  background: var(--of-accent);
+  color: var(--of-accent-foreground);
 }
 .viewport-dock {
   display: none;
@@ -385,6 +405,11 @@
   outline: 2px solid var(--foreground);
   outline-offset: 3px;
 }
+.app-ink-bar .search-pill:focus-within,
+.news-home .app-ink-bar :focus-visible {
+  outline: 2px solid var(--of-ink-foreground);
+  outline-offset: 3px;
+}
 .search-pill input::placeholder {
   color: var(--muted-foreground);
 }
@@ -402,7 +427,7 @@
   border: 1px solid var(--border);
   border-radius: 1.45rem;
   background: var(--card);
-  box-shadow: 0 12px 30px color-mix(in oklch, var(--foreground) 6%, transparent);
+  box-shadow: none;
   padding: 1.15rem 1.15rem 1rem;
 }
 .topic-card h2 {
@@ -456,7 +481,7 @@
 }
 @media (max-width: 1099px) {
   body:has(.news-home) {
-    background: var(--of-page);
+    background: var(--background);
     color: var(--foreground);
   }
   body:has(.news-home) > footer,
