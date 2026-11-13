@@ -5,15 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { HomeCardView } from "@/lib/home/feed";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
+import { toAnalysisLanguage } from "@/lib/i18n/ui-language";
 import { LanguageSwitch } from "@/components/layout/language-switch";
 import { PageDock } from "@/components/layout/page-dock";
-import { NEWS_SOURCES, sourceTitle } from "@/lib/sources/catalog";
-import { useSourceIds } from "@/lib/sources/use-source-ids";
-import type { NewsDiscoveryResult } from "@/lib/sources/types";
 import { SearchProgressCard } from "@/components/home/search-progress-card";
 import { PREPARED_REPORT_HREF, matchPreparedTopic } from "@/lib/demo/topic-match";
-import { readDemoProgress } from "@/lib/home/demo-progress";
 import { useDemoProgress } from "@/lib/home/use-demo-progress";
+import { postAnalysis } from "@/components/home/post-analysis";
 
 const TABS = [
   { id: "all", label: "All" },
@@ -22,6 +20,21 @@ const TABS = [
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
+
+type SearchError = "none" | "failed" | "demo" | null;
+
+interface SavedHit {
+  id: string;
+  outlet: string;
+  title: string;
+  publishedAt: string | null;
+  originalUrl: string;
+}
+
+interface CorpusSearchPayload {
+  ok?: boolean;
+  data?: { items?: SavedHit[] };
+}
 
 const SOURCE_SWATCHES = [
   "var(--of-cream)",
@@ -44,14 +57,13 @@ export function NewsHome({
 }) {
   const copy = copyFor(language);
   const router = useRouter();
-  const { ids: sourceIds } = useSourceIds();
   const [tab, setTab] = useState<TabId>(initialTab);
   const [query, setQuery] = useState(initialQuery);
   const [pending, setPending] = useState(false);
   const [searched, setSearched] = useState(false);
-  const [result, setResult] = useState<NewsDiscoveryResult | null>(null);
-  const [searchError, setSearchError] = useState<"none" | "failed" | null>(null);
-  const { progress, setProgress } = useDemoProgress();
+  const [hits, setHits] = useState<SavedHit[]>([]);
+  const [searchError, setSearchError] = useState<SearchError>(null);
+  const { progress, setProgress, clearProgress } = useDemoProgress();
 
   function onTabsKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     const index = TABS.findIndex((item) => item.id === tab);
@@ -68,41 +80,79 @@ export function NewsHome({
     setTab("all");
     if (!q) {
       setSearched(false);
-      setResult(null);
+      setHits([]);
       setSearchError(null);
+      clearProgress();
       return;
     }
     const prepared = matchPreparedTopic(q);
     if (prepared) {
+      clearProgress();
       router.push(PREPARED_REPORT_HREF[prepared]);
       return;
     }
     setSearched(true);
-    setResult(null);
-    if (sourceIds.length === 0) {
-      setSearchError("none");
-      return;
-    }
-    const started = { query: q, sourceIds: [...sourceIds], startedAt: Date.now() };
-    setProgress(started);
-    setPending(true);
+    setHits([]);
     setSearchError(null);
+    setPending(true);
+    const startedAt = Date.now();
+    setProgress({ query: q, sourceIds: [], startedAt });
     try {
-      const response = await fetch(`/api/news?q=${encodeURIComponent(q)}&sources=${encodeURIComponent(sourceIds.join(","))}`);
-      const payload = (await response.json()) as { ok?: boolean; data?: NewsDiscoveryResult };
-      if (!response.ok || !payload.ok || !payload.data) {
-        setResult(null);
+      const corpus = await fetch(`/api/corpus?q=${encodeURIComponent(q)}`);
+      const payload = (await corpus.json()) as CorpusSearchPayload;
+      const items = corpus.ok && payload.ok && payload.data?.items ? payload.data.items : null;
+      if (!items) {
+        clearProgress();
         setSearchError("failed");
         return;
       }
-      setResult(payload.data);
-      const found = [...new Set(payload.data.items.map((item) => item.sourceId))];
-      const current = readDemoProgress(window.localStorage);
-      if (found.length > 0 && current?.query === q) {
-        setProgress({ ...current, sourceIds: found });
+      if (items.length === 0) {
+        clearProgress();
+        setSearchError("none");
+        return;
       }
+      const picked = items.slice(0, 8);
+      setHits(picked);
+      const outlets = [...new Set(picked.map((item) => item.outlet))].slice(0, 12);
+      setProgress({ query: q, sourceIds: [], outlets, startedAt });
+
+      let live = false;
+      try {
+        const status = await fetch("/api/provider", { cache: "no-store" });
+        const statusPayload = (await status.json()) as {
+          ok?: boolean;
+          data?: { provider?: string; keyPresent?: boolean; networkEnabled?: boolean };
+        };
+        live =
+          status.ok &&
+          statusPayload.ok === true &&
+          statusPayload.data?.provider === "cursor" &&
+          statusPayload.data.keyPresent === true &&
+          statusPayload.data.networkEnabled === true;
+      } catch {
+        live = false;
+      }
+      if (!live) {
+        clearProgress();
+        setSearchError("demo");
+        return;
+      }
+
+      const posted = await postAnalysis({
+        query: q,
+        language: toAnalysisLanguage(language),
+        intent: "saved",
+        sourceIds: picked.map((item) => item.id),
+      });
+      if (!posted.ok) {
+        clearProgress();
+        const token = posted.reason === "http" ? posted.token : undefined;
+        setSearchError(token === "saved_analysis_needs_cursor" || token === "config_not_ready" || token === "network_disabled" ? "demo" : "failed");
+        return;
+      }
+      router.push(posted.href);
     } catch {
-      setResult(null);
+      clearProgress();
       setSearchError("failed");
     } finally {
       setPending(false);
@@ -151,8 +201,9 @@ export function NewsHome({
                     setQuery(next);
                     if (!next.trim()) {
                       setSearched(false);
-                      setResult(null);
+                      setHits([]);
                       setSearchError(null);
+                      clearProgress();
                     }
                   }}
                   placeholder={copy.searchPlaceholder}
@@ -192,19 +243,13 @@ export function NewsHome({
             <p className="mt-1 text-[13px] leading-[1.65] text-muted-foreground">{copy.globalMark}</p>
 
             <div id="panel-all" role="tabpanel" aria-labelledby="tab-all" hidden={tab !== "all"} className="mt-4">
-              {progress ? (
+              {progress && pending ? (
                 <div className="mb-4">
-                  <SearchProgressCard progress={progress} language={language} />
+                  <SearchProgressCard progress={progress} language={language} live={hits.length > 0} />
                 </div>
               ) : null}
               {tab === "all" && searched ? (
-                <SearchResults
-                  copy={copy}
-                  language={language}
-                  pending={pending}
-                  error={searchError}
-                  result={result}
-                />
+                <SearchResults copy={copy} pending={pending} error={searchError} hits={hits} />
               ) : null}
               {tab === "all" && !searched ? (
                 <ol className="space-y-4">
@@ -302,28 +347,25 @@ function Unavailable({ title, body }: { title: string; body: string }) {
 
 function SearchResults({
   copy,
-  language,
   pending,
   error,
-  result,
+  hits,
 }: {
   copy: HomeCopy;
-  language: UiLanguage;
   pending: boolean;
-  error: "none" | "failed" | null;
-  result: NewsDiscoveryResult | null;
+  error: SearchError;
+  hits: SavedHit[];
 }) {
-  const message = pending ? copy.searching : error === "none" ? copy.noSources : error === "failed" ? copy.searchFailed : result && result.items.length === 0 ? copy.noLeads : null;
+  const message = pending ? copy.searching : error === "none" ? copy.noHits : error === "failed" ? copy.searchFailed : error === "demo" ? copy.demoNotice : null;
   return (
     <div aria-busy={pending}>
       {message ? <p className="topic-card text-[16px] leading-[1.65] text-foreground">{message}</p> : null}
-      {result && result.items.length > 0 ? (
-        <ol className="space-y-4">
-          {result.items.map((item) => {
-            const href = safeHref(item.url);
-            const named = sourceTitleById(item.sourceId, item.publisher, language);
+      {hits.length > 0 ? (
+        <ol className={`space-y-4 ${message ? "mt-4" : ""}`}>
+          {hits.map((item) => {
+            const href = safeHref(item.originalUrl);
             return (
-              <li key={`${item.sourceId}:${item.id}`}>
+              <li key={item.id}>
                 <article className="topic-card">
                   <h2 className="text-[1.35rem] font-bold leading-[1.35] text-foreground">
                     {href ? (
@@ -334,7 +376,10 @@ function SearchResults({
                       item.title || copy.untitled
                     )}
                   </h2>
-                  <p className="mt-3 text-[15px] leading-[1.7] text-foreground">{named}{leadDate(item.publishedAt) ? ` · ${leadDate(item.publishedAt)}` : ""}</p>
+                  <p className="mt-3 text-[15px] leading-[1.7] text-foreground">
+                    {item.outlet}
+                    {leadDate(item.publishedAt) ? ` · ${leadDate(item.publishedAt)}` : ""}
+                  </p>
                 </article>
               </li>
             );
@@ -343,12 +388,6 @@ function SearchResults({
       ) : null}
     </div>
   );
-}
-
-function sourceTitleById(sourceId: string, publisher: string, language: UiLanguage): string {
-  const source = NEWS_SOURCES.find((item) => item.id === sourceId);
-  if (source) return sourceTitle(source, language);
-  return publisher || sourceId;
 }
 
 function leadDate(value: string | null): string | null {
@@ -381,9 +420,9 @@ interface HomeCopy {
   searchPlaceholder: string;
   searchHint: string;
   searching: string;
-  noSources: string;
+  noHits: string;
+  demoNotice: string;
   searchFailed: string;
-  noLeads: string;
   untitled: string;
   tabsLabel: string;
   scopeNote: string;
@@ -410,13 +449,13 @@ interface HomeCopy {
 function copyFor(language: UiLanguage): HomeCopy {
   if (language === "zh-Hant") {
     return {
-      searchLabel: "搜索已關注來源",
-      searchPlaceholder: "搜索標題",
-      searchHint: "提交後只搜索訂閱裡選中的來源，不搜資料庫，也不抓正文。",
-      searching: "正在搜索已關注的來源…",
-      noSources: "還沒有選中來源。請先到訂閱頁的來源關注裡選擇。",
-      searchFailed: "這次沒有取到結果。請稍後再搜索。",
-      noLeads: "這次沒有匹配的標題。",
+      searchLabel: "搜尋資料庫",
+      searchPlaceholder: "搜尋已保存的資料",
+      searchHint: "搜尋已保存的資料庫。命中後會立刻用真實 AI 分析並跳到執行頁；每次搜尋會產生一次分析。",
+      searching: "正在搜尋資料庫…",
+      noHits: "資料庫裡沒有匹配的資料。先到資料庫導入或保存相關文章。",
+      demoNotice: "資料庫裡有匹配，但目前沒有可用的 Cursor 金鑰，無法發起真實分析。以下是命中的資料。",
+      searchFailed: "這次沒有取到結果。請稍後再搜尋。",
       untitled: "無標題",
       tabsLabel: "內容範圍",
       scopeNote: "For You 和 Locate 尚未開通。點開會看到說明，不會出現推薦或地點結果。",
@@ -438,7 +477,7 @@ function copyFor(language: UiLanguage): HomeCopy {
       locateBody: "沒有當地檢索，也不會請求定位。這裡不展示預警。",
       asideLead: "桌面把現有首頁收在一張紙色卡片裡。窄屏則鋪滿寬度。卡片仍是倉庫裡的示例，不是新的話題。",
       asidePoints: [
-        "字標仍是 SpectraX。搜索讀訂閱裡選中的來源。",
+        "字標仍是 SpectraX。搜尋讀取已保存的資料庫。",
         "All 展示現有卡片。For You 和 Locate 尚未開通。",
         "底部選單是首頁、資料庫、訂閱、我的。訂閱和我的尚未開通。熱度寫「暫無數據」。",
       ],
@@ -446,13 +485,13 @@ function copyFor(language: UiLanguage): HomeCopy {
   }
   if (language === "zh") {
     return {
-      searchLabel: "搜索已关注来源",
-      searchPlaceholder: "搜索标题",
-      searchHint: "提交后只搜索订阅里选中的来源，不搜资料库，也不抓正文。",
-      searching: "正在搜索已关注的来源…",
-      noSources: "还没有选中来源。请先到订阅页的来源关注里选择。",
+      searchLabel: "搜索资料库",
+      searchPlaceholder: "搜索已保存的资料",
+      searchHint: "搜索已保存的资料库。命中后会立刻用真实 AI 分析并跳到运行页；每次搜索会产生一次分析。",
+      searching: "正在搜索资料库…",
+      noHits: "资料库里没有匹配的资料。先到资料库导入或保存相关文章。",
+      demoNotice: "资料库里有匹配，但当前没有可用的 Cursor 密钥，无法发起真实分析。下面是命中的资料。",
       searchFailed: "这次没有取到结果。请稍后再搜索。",
-      noLeads: "这次没有匹配的标题。",
       untitled: "无标题",
       tabsLabel: "内容范围",
       scopeNote: "For You 和 Locate 尚未开通。点开会看到说明，不会出现推荐或地点结果。",
@@ -474,20 +513,20 @@ function copyFor(language: UiLanguage): HomeCopy {
       locateBody: "没有当地检索，也不会请求定位。这里不展示预警。",
       asideLead: "桌面把现有首页收在一张纸色卡片里。窄屏则铺满宽度。卡片仍是仓库里的示例，不是新的话题。",
       asidePoints: [
-        "字标仍是 SpectraX。搜索读订阅里选中的来源。",
+        "字标仍是 SpectraX。搜索读取已保存的资料库。",
         "All 展示现有卡片。For You 和 Locate 尚未开通。",
         "底部菜单是首页、资料库、订阅、我的。订阅和我的尚未开通。热度写「暂无数据」。",
       ],
     };
   }
   return {
-    searchLabel: "Search followed sources",
-    searchPlaceholder: "Search titles",
-    searchHint: "Submit to search only the sources selected on Subscribe. It does not search the library or fetch articles.",
-    searching: "Searching followed sources…",
-    noSources: "No sources selected. Choose some under Followed sources on Subscribe.",
+    searchLabel: "Search the saved library",
+    searchPlaceholder: "Search saved materials",
+    searchHint: "Search the saved library. When something matches, a live AI analysis starts immediately and opens its run page. Each search starts one analysis.",
+    searching: "Searching the saved library…",
+    noHits: "No saved material matches. Import or save articles in the library first.",
+    demoNotice: "The library has matches, but no Cursor key is available, so a live analysis cannot start. The matches are listed below.",
     searchFailed: "This search did not return a result. Try again later.",
-    noLeads: "No matching titles this time.",
     untitled: "Untitled",
     tabsLabel: "Scope",
     scopeNote: "For You and Locate are not open. Choosing one shows this notice only. There is no recommendation list and no location result.",
@@ -509,7 +548,7 @@ function copyFor(language: UiLanguage): HomeCopy {
     locateBody: "There is no local search and this page does not ask for your location. There is no alert list.",
     asideLead: "On a wide screen the existing home sits in a paper card. On a narrow screen it uses the full width. The cards are still the repository samples.",
     asidePoints: [
-      "The wordmark stays SpectraX. Search reads the sources selected on Subscribe.",
+      "The wordmark stays SpectraX. Search reads the saved library.",
       "All shows those cards. For You and Locate are not open.",
       "The bottom menu is Home, Library, Subscribe, and Me. Subscribe and Me are not open. Heat says there is no data.",
     ],

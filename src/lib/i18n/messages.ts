@@ -54,6 +54,7 @@ export interface Messages {
     yourTopic: string;
     preparedMatch: string;
     genericMatch: string;
+    liveMatch: string;
     created: string;
     placeholderLink: string;
     narrativeTitle: string;
@@ -177,6 +178,7 @@ const en: Messages = {
     yourTopic: "Your topic",
     preparedMatch: "Prepared demonstration",
     genericMatch: "Generic demonstration template",
+    liveMatch: "Generated for this request",
     created: "Created",
     placeholderLink: "Original article",
     narrativeTitle: "How the sample outlets frame it",
@@ -313,6 +315,7 @@ const zh: Messages = {
     yourTopic: "你输入的议题",
     preparedMatch: "预备演示",
     genericMatch: "通用演示模板",
+    liveMatch: "按本次请求生成",
     created: "创建时间",
     placeholderLink: "原文",
     narrativeTitle: "示例媒体如何框定这个故事",
@@ -449,6 +452,7 @@ const es: Messages = {
     yourTopic: "Tu tema",
     preparedMatch: "Demostración preparada",
     genericMatch: "Plantilla de demostración genérica",
+    liveMatch: "Generada para esta solicitud",
     created: "Creado",
     placeholderLink: "Artículo original",
     narrativeTitle: "Cómo lo enmarcan los medios de muestra",
@@ -591,6 +595,7 @@ const fr: Messages = {
     yourTopic: "Votre sujet",
     preparedMatch: "Démonstration préparée",
     genericMatch: "Modèle de démonstration générique",
+    liveMatch: "Générée pour cette demande",
     created: "Créé",
     placeholderLink: "Article original",
     narrativeTitle: "Comment les médias d’exemple cadrent le sujet",

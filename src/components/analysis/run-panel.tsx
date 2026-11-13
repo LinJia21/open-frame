@@ -7,10 +7,13 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { providerCopy, providerErrorText } from "@/lib/i18n/provider-copy";
 import type { PublicAnalysisJob } from "@/lib/analysis/cursor-service";
+import { SearchProgressCard } from "@/components/home/search-progress-card";
+import { useDemoProgress } from "@/lib/home/use-demo-progress";
 
 export function RunPanel({ jobId, language }: { jobId: string; language: UiLanguage }) {
   const router = useRouter();
   const copy = providerCopy(language);
+  const { progress } = useDemoProgress();
   const [job, setJob] = useState<PublicAnalysisJob | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [acting, setActing] = useState(false);
@@ -86,9 +89,11 @@ export function RunPanel({ jobId, language }: { jobId: string; language: UiLangu
 
   const failure = job?.errorCode ? providerErrorText(job.errorCode, language) : null;
   const busy = job?.status === "queued" || job?.status === "running";
+  const showProgress = busy && progress !== null && progress.query === job?.query;
 
   return (
     <section className="mx-auto w-full max-w-3xl space-y-4">
+      {showProgress && progress ? <SearchProgressCard progress={progress} language={language} live /> : null}
       <p className="text-sm font-bold text-of-accent">{copy.model}</p>
       <Alert>
         <AlertTitle>{busy ? copy.processing : job?.status === "ready" ? copy.open : copy.failed}</AlertTitle>

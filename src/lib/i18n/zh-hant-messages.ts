@@ -52,6 +52,7 @@ export const zhHant: Messages = {
     yourTopic: "你輸入的議題",
     preparedMatch: "預備演示",
     genericMatch: "通用演示模板",
+    liveMatch: "按本次請求生成",
     created: "建立時間",
     placeholderLink: "原文",
     narrativeTitle: "示例媒體如何框定這個故事",

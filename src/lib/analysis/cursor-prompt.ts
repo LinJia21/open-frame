@@ -1,6 +1,7 @@
 import { fillTemplate, RETRY_USER_TEMPLATE } from "@/lib/openframe/prompts";
 import type { Language } from "@/lib/i18n/languages";
 import { redactSecrets } from "@/lib/analysis/cursor-config";
+import { bundleSchemaForPrompt, bundleShapeForPrompt } from "@/lib/analysis/bundle-schema";
 import type { LibrarySnapshot, SavedMaterial } from "@/lib/corpus/types";
 
 const RULES = [
@@ -18,9 +19,19 @@ const RULES = [
   "A reprint shares the given independenceGroupId. Do not treat that reprint as an independent outlet.",
   "If syndication is unknown, leave it unknown. Do not infer a stance or an owner from a country.",
   "If completeness is summary_only or title_only, do not write the missing article text.",
+  "Audit every check-worthy claim. status is exactly one of: Verified, Partially Supported, Disputed, Unverified, Contradicted.",
+  "Verified requires a checkable primary item or at least two independent source groups, no credible contradicting evidence, and medium or high confidence. Otherwise use Partially Supported, Disputed, or Unverified.",
+  "Copy a verbatim quote character-for-character from the excerpt given for that article id. If completeness is summary_only, the text is a saved summary, not the publisher's words: paraphrase only, never a verbatim quote.",
+  "Set excerpt_span and quote_span to null. The server computes them and downgrades any text it cannot find in the saved excerpt.",
   "Audit labels describe only the saved texts. Prefer Unverified when the saved text is thin.",
   "Do not say you searched the web, fetched a page, or externally verified a fact.",
-  "The server overwrites article text, generation metadata, the topic, and the notice.",
+  "In articles, list every selected material as {\"id\": \"...\", \"original_url\": \"...\"} using the exact values given. The server replaces the remaining article fields.",
+  "Use only the keys shown in the output shape and defined by the schema. Do not rename, merge, or invent sections or fields.",
+  "research_report.key_findings: id fnd_..., and strength is exactly one of established, partially_established, contested, not_established. It may not exceed the weakest linked audit (Verified -> established, Partially Supported -> partially_established, Disputed -> contested, Unverified or Contradicted -> not_established).",
+  "research_report.key_claim_verification rows copy audit status and confidence_level exactly, and audit_id, claim_id and article_id must match the audit and its claim.",
+  "research_report.source_list: one entry per cited article, id \"src_<article id without the art_ prefix>\", url equal to that article's original_url. used_for items are exactly: article_analysed, evidence, background, primary_source.",
+  "research_report.metadata.warnings[].code is exactly one of: DEMO_DATA, MIXED_DATA, PAYWALL_LIMITED, SNIPPET_ONLY_SOURCES, SMALL_SAMPLE, SHARED_ORIGINAL_SOURCE, STALE_DATA, TITLE_OR_FACT_DISCREPANCY, OTHER. Add SNIPPET_ONLY_SOURCES and SMALL_SAMPLE when they apply; never use DEMO_DATA or MIXED_DATA here.",
+  "The server overwrites article text, generation metadata, the topic, the notice, quote spans, and unverifiable evidence ids.",
 ].join("\n");
 
 export interface PromptMaterials {
@@ -44,6 +55,10 @@ export function buildCursorBundlePrompt(input: PromptMaterials): string {
     "<<<UNTRUSTED_DOCUMENTS",
     JSON.stringify(input.materials.map(documentView)),
     "UNTRUSTED_DOCUMENTS>>>",
+    "OUTPUT JSON SCHEMA (draft 2020-12, every $ref is local):",
+    bundleSchemaForPrompt(),
+    "OUTPUT SHAPE (keys of one 1.2.0 bundle; every <string> and 0 is a placeholder you replace with real analysis, not demo text):",
+    bundleShapeForPrompt(),
   ].join("\n");
 }
 

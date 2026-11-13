@@ -25,6 +25,9 @@ export function proxy(request: NextRequest) {
     if (!decoded.ok) return invalidApiId(decoded.status, decoded.code);
     return NextResponse.next();
   }
+  if (request.nextUrl.pathname === "/analysis/runs" || request.nextUrl.pathname.startsWith("/analysis/runs/")) {
+    return NextResponse.next();
+  }
   const match = request.nextUrl.pathname.match(/^\/analysis\/([^/]+)/);
   if (!match) return NextResponse.next();
   const decoded = decodeAnalysisIdParam(match[1]);

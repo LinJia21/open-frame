@@ -38,7 +38,9 @@ export function BriefingIntro({
   return (
     <header className="space-y-4">
       <AnalysisNav id={view.bundleId} current={current} labels={nav} />
-      <p className="text-sm text-muted-foreground">{view.generic ? copy.briefing.genericMatch : copy.briefing.preparedMatch}</p>
+      <p className="text-sm text-muted-foreground">
+        {view.generation === "LIVE_AI" ? copy.briefing.liveMatch : view.generic ? copy.briefing.genericMatch : copy.briefing.preparedMatch}
+      </p>
       <h1 className="text-2xl font-bold leading-tight">{view.subject}</h1>
       <p className="text-sm">
         <span className="text-muted-foreground">{copy.briefing.yourTopic}: </span>
