@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { NEWS_SOURCES, SOURCE_CATEGORIES, type SourceCategory } from "@/lib/sources/catalog";
+import { NEWS_SOURCES, SOURCE_CATEGORIES, sourceTitle, type SourceCategory } from "@/lib/sources/catalog";
 import { defaultSourceIds } from "@/lib/sources/subscriptions";
 import { useSourceIds } from "@/lib/sources/use-source-ids";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
@@ -145,7 +145,7 @@ export function SourceSubscriptions({ language }: { language: UiLanguage }) {
                           <Image src={source.logo} alt="" width={32} height={32} className="size-8 object-contain" />
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className={`block text-sm font-medium ${active ? "" : "text-muted-foreground"}`}>{source.name}</span>
+                          <span className={`block text-sm font-medium ${active ? "" : "text-muted-foreground"}`}>{sourceTitle(source, language)}</span>
                           <span className="mt-0.5 block truncate text-xs text-muted-foreground">{source.domain} · {source.access === "official_rss" ? copy.officialRss : copy.googleRss}</span>
                         </span>
                         <span aria-hidden="true" className={`grid size-6 shrink-0 place-items-center rounded-full border text-xs ${active ? "border-of-accent bg-of-accent text-of-accent-foreground" : "border-border text-transparent"}`}>

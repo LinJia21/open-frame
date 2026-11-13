@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { NEWS_SOURCES, SOURCE_CATEGORIES } from "./catalog";
+import { NEWS_SOURCES, SOURCE_CATEGORIES, sourceTitle } from "./catalog";
 import {
   SUBSCRIPTION_STORAGE_KEY,
   defaultSourceIds,
@@ -28,6 +28,17 @@ test("every source has a logo and belongs to exactly one visible category", () =
   }
   const grouped = SOURCE_CATEGORIES.flatMap((category) => NEWS_SOURCES.filter((source) => source.category === category.id));
   assert.equal(grouped.length, NEWS_SOURCES.length);
+});
+
+test("source titles follow the interface language", () => {
+  const ap = NEWS_SOURCES.find((source) => source.id === "ap");
+  const bbc = NEWS_SOURCES.find((source) => source.id === "bbc");
+  assert.ok(ap && bbc);
+  assert.equal(sourceTitle(ap, "zh"), "AP 美联社");
+  assert.equal(sourceTitle(ap, "zh-Hant"), "AP 美聯社");
+  assert.equal(sourceTitle(ap, "en"), "AP");
+  assert.equal(sourceTitle(bbc, "zh-Hant"), "BBC");
+  assert.equal(sourceTitle(bbc, "en"), "BBC");
 });
 
 test("no stored choice means every source is subscribed", () => {

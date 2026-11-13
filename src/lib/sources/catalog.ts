@@ -1,3 +1,5 @@
+import type { UiLanguage } from "@/lib/i18n/ui-language";
+
 export type SourceCategory =
   | "wire"
   | "anglophone"
@@ -51,6 +53,42 @@ export const NEWS_SOURCES: readonly NewsSource[] = [
   { id: "un", name: "UN News 联合国新闻", domain: "news.un.org", kind: "institution", access: "official_rss", category: "institution", feedUrl: "https://news.un.org/feed/subscribe/en/news/all/rss.xml", focus: "联合国声明、人道与冲突信息", logo: "/sources/un.png" },
   { id: "who", name: "WHO 世界卫生组织", domain: "who.int", kind: "institution", access: "google_rss", category: "institution", focus: "公共卫生、疫情与健康数据", logo: "/sources/who.png" },
 ];
+
+const TRADITIONAL_NAMES: Record<string, string> = {
+  ap: "AP 美聯社",
+  ft: "Financial Times 金融時報",
+  guardian: "The Guardian 衛報",
+  dw: "DW 德國之聲",
+  aljazeera: "Al Jazeera 半島電視台",
+  scmp: "South China Morning Post 南華早報",
+  nikkei: "Nikkei Asia 日經亞洲",
+  haaretz: "Haaretz 國土報",
+  iaea: "IAEA 國際原子能機構",
+  un: "UN News 聯合國新聞",
+  who: "WHO 世界衛生組織",
+};
+
+const ENGLISH_NAMES: Record<string, string> = {
+  reuters: "Reuters",
+  ap: "AP",
+  bloomberg: "Bloomberg",
+  ft: "Financial Times",
+  guardian: "The Guardian",
+  dw: "DW",
+  aljazeera: "Al Jazeera",
+  scmp: "South China Morning Post",
+  nikkei: "Nikkei Asia",
+  haaretz: "Haaretz",
+  iaea: "IAEA",
+  un: "UN News",
+  who: "WHO",
+};
+
+export function sourceTitle(source: NewsSource, language: UiLanguage): string {
+  if (language === "zh-Hant") return TRADITIONAL_NAMES[source.id] ?? source.name;
+  if (language === "zh") return source.name;
+  return ENGLISH_NAMES[source.id] ?? source.name.replace(/\s+[\u4e00-\u9fff].*$/u, "");
+}
 
 export function buildFeedUrl(source: NewsSource, query: string): string {
   if (source.access === "official_rss") return source.feedUrl!;

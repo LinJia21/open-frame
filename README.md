@@ -59,7 +59,7 @@ npm run validate:demo
 - `/` 首页。顺序是 Logo、搜索、All / For You / Locate。搜索只筛选本页示例，不搜索互联网，也不搜索资料库。
 - `/settings` 设置。这里有「已保存的历史资料」入口、提供方说明，以及首页没写在卡片上的夹具范围。
 - `/library` 资料库。上方是 20 源新闻发现，下方保留已存资料的导入、检索和分析；两者不自动互通。
-- `/subscribe` 订阅。按 7 个分类列出同样的 20 个固定来源，显示各自的 logo 和名称；点击卡片选中或取消，未选中的来源整体变灰。选择只写入当前浏览器的 `localStorage`（键 `openframe_source_subscriptions`），不上传，也不会与来源建立正式订阅。资料库的新闻发现默认读取这份选择；没有保存过选择时默认全选。
+- `/subscribe` 订阅。方案尚未开通。页面下方是「来源关注」：按 7 个分类列出同样的 20 个固定来源，显示各自的 logo 和名称；点击卡片选中或取消，未选中的来源整体变灰。选择只写入当前浏览器的 `localStorage`（键 `openframe_source_subscriptions`），不上传，也不会与来源建立正式订阅。资料库的新闻发现默认读取这份选择；没有保存过选择时默认全选。
 
 新闻发现通过 `GET /api/news?q=关键词&sources=bbc,reuters` 手动请求；省略 `sources` 使用全部 20 源，省略关键词浏览列表。来源配置在 `src/lib/sources/catalog.ts`：16 家媒体、1 个调查机构、3 个国际组织，分为 12 个官方 RSS 和 8 个 Google RSS，无需 Key。官方源仅匹配返回列表的标题；Google 使用限定域名查询，关键词会发送给 Google，并过滤有明确日期且早于 3 天的结果。日期未知保持未知，每源最多展示 20 条。
 
@@ -238,7 +238,7 @@ Two spec fields, shown with the labels from `PROVENANCE_BADGES`:
 - `src/lib/demo/catalog.ts` — loads the official JSON files and the generic fallback.
 - `src/app/api/analyses/` — create and read a briefing.
 - `src/app/api/corpus/` — import and search saved historical materials. It does not fetch URLs.
-- `src/app/library` — the import, search, and analyze form. The app menu also links here. Subscribe (`/subscribe`) lists the 20 fixed sources with local-only selection; Me (`/me`) is named and not open. `src/app/settings` is still the settings page.
+- `src/app/library` — the import, search, and analyze form. The app menu also links here. Subscribe (`/subscribe`) keeps the closed plans and lists the 20 fixed sources with local-only selection; Me (`/me`) is named and not open. `src/app/settings` is still the settings page.
 - `data/store/analyses.json` — created when you analyze a topic. It stays on this machine.
 - `data/corpus/items.json` — saved articles you import. It starts empty and is not committed.
 
