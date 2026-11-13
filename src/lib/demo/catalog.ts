@@ -36,7 +36,7 @@ export const preparedTopics = [
   },
   {
     id: "demo",
-    title: "Northlight Studios fictional demonstration",
+    title: "Plumvale Toonworks fictional demonstration",
     blurb: "The same question, with fictional outlets on reserved domains.",
   },
 ] as const;
@@ -62,7 +62,12 @@ export function buildDemoBundle(query: string, language: Language): AnalysisBund
 
 function selectFixture(query: string): "sample" | "demo" | "generic" {
   const normalized = query.toLowerCase().normalize("NFKC");
-  if (normalized.includes("northlight") || normalized.includes("harbor trade") || normalized.includes("fictional demonstration")) {
+  if (
+    normalized.includes("plumvale") ||
+    normalized.includes("northlight") ||
+    normalized.includes("harbor trade") ||
+    normalized.includes("fictional demonstration")
+  ) {
     return "demo";
   }
   if (

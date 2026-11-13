@@ -18,7 +18,7 @@ const QUERY = "Harbor ferries and weekday crowds";
 
 test("demo creation stays precomputed and retired or unconfigured providers do not pretend to succeed", async () => {
   const saved: AnalysisBundle[] = [];
-  const demo = await handleCreateAnalysis(post({ query: "Northlight Studios fictional demonstration", language: "en" }), deps({
+  const demo = await handleCreateAnalysis(post({ query: "Plumvale Toonworks fictional demonstration", language: "en" }), deps({
     provider: "demo",
     createDemo: async (input) => buildDemoBundle(input.query, input.language),
     saveBundle: async (bundle) => {
@@ -28,8 +28,27 @@ test("demo creation stays precomputed and retired or unconfigured providers do n
   assert.equal(demo.status, 201);
   const demoBody = (await demo.json()) as { data: AnalysisBundle };
   assert.equal(demoBody.data.analysis_generation, "PRECOMPUTED");
+  assert.equal(demoBody.data.data_mode, "DEMO");
+  assert.equal(
+    demoBody.data.research_report.metadata.topic,
+    "Is AI-generated Animation Disrupting the Traditional Film and Television Industry?",
+  );
   assert.equal(saved.length, 1);
   assert.equal(saved[0]?.analysis_generation, "PRECOMPUTED");
+
+  const legacy = await handleCreateAnalysis(post({ query: "Northlight Studios fictional demonstration", language: "en" }), deps({
+    provider: "demo",
+    createDemo: async (input) => buildDemoBundle(input.query, input.language),
+    saveBundle: async () => undefined,
+  }));
+  assert.equal(legacy.status, 201);
+  const legacyBody = (await legacy.json()) as { data: AnalysisBundle };
+  assert.equal(legacyBody.data.data_mode, "DEMO");
+  assert.equal(legacyBody.data.analysis_generation, "PRECOMPUTED");
+  assert.equal(
+    legacyBody.data.research_report.metadata.topic,
+    "Is AI-generated Animation Disrupting the Traditional Film and Television Industry?",
+  );
 
   const retired = await handleCreateAnalysis(post({ query: QUERY, language: "zh" }), deps({ provider: "retired" }));
   assert.equal(retired.status, 501);

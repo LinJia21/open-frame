@@ -200,7 +200,7 @@ Copy `.env.example` to `.env.local` for local settings. The app runs with no key
 3. **Evidence audit.** Claims with one of five labels: Verified, Partially Supported, Disputed, Unverified, Contradicted. Each claim points at an article id. Each evidence item points at a claim id and an article id.
 4. **Research report.** Summary, perspectives, claim table, methodology, limitations, and sources. Download Markdown or JSON, or use Print / Save as PDF.
 
-The first suggested topic is **Is AI-generated Animation Disrupting the Traditional Film and Television Industry?** That opens `spec/data/sample-analysis-ai-animation.json` (real sources, pre-generated analysis). The second suggestion, **Northlight Studios fictional demonstration**, opens `spec/data/demo-dataset.json`. Any other topic returns that fictional file again, with a notice that it is a template and not an analysis of what you typed.
+The first suggested topic is **Is AI-generated Animation Disrupting the Traditional Film and Television Industry?** That opens `spec/data/sample-analysis-ai-animation.json` (real sources, pre-generated analysis). The second suggestion, **Plumvale Toonworks fictional demonstration**, opens `spec/data/demo-dataset.json`. Any other topic returns that fictional file again, with a notice that it is a template and not an analysis of what you typed.
 
 Fixture text is English. The interface follows the language you pick.
 
