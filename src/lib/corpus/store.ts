@@ -49,7 +49,9 @@ export function createCorpusStore(storePath: string): CorpusStore {
       if (!parsed || typeof parsed !== "object" || !Array.isArray((parsed as { items?: unknown }).items)) {
         throw new CorpusError("store_failed");
       }
-      return (parsed as StoreFile).items;
+      const items = (parsed as StoreFile).items;
+      if (!items.every(isStoredItem)) throw new CorpusError("store_failed");
+      return items;
     } catch (error) {
       if (error instanceof Error && "code" in error && (error as NodeJS.ErrnoException).code === "ENOENT") return [];
       if (error instanceof CorpusError) throw error;
@@ -113,4 +115,25 @@ export function createCorpusStore(storePath: string): CorpusStore {
       return withLock(async () => prepareSelection(await readItems(), ids));
     },
   };
+}
+
+function isStoredItem(value: unknown): value is CorpusItem {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const item = value as Partial<CorpusItem>;
+  return typeof item.id === "string"
+    && typeof item.event === "string"
+    && typeof item.outlet === "string"
+    && typeof item.title === "string"
+    && typeof item.originalUrl === "string"
+    && typeof item.savedAt === "string"
+    && typeof item.language === "string"
+    && typeof item.contentHash === "string"
+    && typeof item.truncated === "boolean"
+    && (item.publishedAt === null || typeof item.publishedAt === "string")
+    && (item.body === null || typeof item.body === "string")
+    && (item.summary === null || typeof item.summary === "string")
+    && (item.reprintOfUrl === null || typeof item.reprintOfUrl === "string")
+    && (item.completeness === "full_text" || item.completeness === "summary_only" || item.completeness === "title_only")
+    && (item.syndication === "original" || item.syndication === "reprint" || item.syndication === "unknown")
+    && (item.fixture === null || item.fixture === "test");
 }

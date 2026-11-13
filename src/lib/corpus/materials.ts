@@ -21,14 +21,21 @@ export function normalizeImport(input: unknown, nowIso: string, secrets: Array<s
   if (!input || typeof input !== "object" || Array.isArray(input)) throw new CorpusError("invalid_item");
   const items = (input as { items?: unknown }).items;
   if (!Array.isArray(items) || items.length === 0 || items.length > 40) throw new CorpusError("invalid_item");
-  return items.map((item, index) => normalizeOne(item, nowIso, secrets, index));
+  const normalized = items.map((item, index) => normalizeOne(item, nowIso, secrets, index));
+  const seen = new Set<string>();
+  for (let index = 0; index < normalized.length; index += 1) {
+    const url = normalized[index]!.originalUrl;
+    if (seen.has(url)) throw new CorpusError("invalid_item", index);
+    seen.add(url);
+  }
+  return normalized;
 }
 
 export function librarySnapshot(items: CorpusItem[]): LibrarySnapshot {
   return {
     itemCount: items.length,
     outletCount: new Set(items.map((item) => item.outlet)).size,
-    cutoff: items.reduce<string | null>((latest, item) => (latest === null || item.savedAt > latest ? item.savedAt : latest), null),
+    cutoff: items.reduce<string | null>((latest, item) => laterTimestamp(latest, item.savedAt), null),
   };
 }
 
@@ -256,18 +263,22 @@ function normalizeOne(value: unknown, nowIso: string, secrets: Array<string | nu
   if (completeness === "summary_only" && (!summary || body)) throw new CorpusError("inconsistent_text", index);
   if (completeness === "title_only" && (body || summary)) throw new CorpusError("inconsistent_text", index);
   const syndication = syndicationOf(record.syndication, index);
-  const reprintOfUrl = record.reprintOfUrl == null || record.reprintOfUrl === ""
+  const reprintRaw = typeof record.reprintOfUrl === "string" ? record.reprintOfUrl.trim() : record.reprintOfUrl;
+  const reprintOfUrl = reprintRaw == null || reprintRaw === ""
     ? null
-    : assertPublicArticleUrl(requiredString(record.reprintOfUrl, index), index);
+    : assertPublicArticleUrl(requiredString(reprintRaw, index), index);
   if (syndication !== "reprint" && reprintOfUrl) throw new CorpusError("inconsistent_text", index);
   const originalUrl = assertPublicArticleUrl(requiredString(record.originalUrl, index), index);
   const publishedAt = publishedField(record.publishedAt, index);
-  const language = record.language == null || record.language === "" ? "en" : requiredString(record.language, index);
+  const languageInput = typeof record.language === "string" ? record.language.trim() : record.language;
+  const language = languageInput == null || languageInput === "" ? "en" : requiredString(languageInput, index);
   if (!/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/.test(language)) throw new CorpusError("invalid_item", index);
-  const fixture = record.fixture == null || record.fixture === "" ? null : record.fixture;
-  if (fixture !== null && fixture !== "test") throw new CorpusError("invalid_item", index);
-  const savedAt = record.savedAt == null || record.savedAt === "" ? nowIso : requiredString(record.savedAt, index);
-  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(savedAt)) throw new CorpusError("invalid_item", index);
+  const fixtureInput = typeof record.fixture === "string" ? record.fixture.trim() : record.fixture;
+  if (fixtureInput != null && fixtureInput !== "" && fixtureInput !== "test") throw new CorpusError("invalid_item", index);
+  const fixture: "test" | null = fixtureInput === "test" ? "test" : null;
+  const savedRaw = typeof record.savedAt === "string" ? record.savedAt.trim() : record.savedAt;
+  const savedAt = savedRaw == null || savedRaw === "" ? nowIso : requiredString(savedRaw, index);
+  if (!isRealUtcDateTime(savedAt)) throw new CorpusError("invalid_item", index);
   const item: CorpusItem = {
     id: `art_${createHash("sha256").update(originalUrl).digest("hex").slice(0, 12)}`,
     event,
@@ -321,7 +332,8 @@ function textField(value: unknown, max: number, index: number, code: string): st
 }
 
 function optionalText(value: unknown, max: number, index: number): string | null {
-  if (value == null || value === "") return null;
+  if (value == null) return null;
+  if (typeof value === "string" && value.trim() === "") return null;
   const text = requiredString(value, index);
   if (text.length > max) throw new CorpusError("invalid_item", index);
   return text;
@@ -333,20 +345,52 @@ function requiredString(value: unknown, index: number): string {
 }
 
 function completenessOf(value: unknown, index: number): Completeness {
-  if (value === "full_text" || value === "summary_only" || value === "title_only") return value;
+  const text = typeof value === "string" ? value.trim() : value;
+  if (text === "full_text" || text === "summary_only" || text === "title_only") return text;
   throw new CorpusError("invalid_item", index);
 }
 
 function syndicationOf(value: unknown, index: number): Syndication {
-  if (value == null || value === "") return "unknown";
-  if (value === "original" || value === "reprint" || value === "unknown") return value;
+  const text = typeof value === "string" ? value.trim() : value;
+  if (text == null || text === "") return "unknown";
+  if (text === "original" || text === "reprint" || text === "unknown") return text;
   throw new CorpusError("invalid_item", index);
 }
 
 function publishedField(value: unknown, index: number): string | null {
-  if (value == null || value === "") return null;
-  const text = requiredString(value, index);
-  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
-  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(text)) return text;
+  if (value == null) return null;
+  if (typeof value !== "string") throw new CorpusError("invalid_item", index);
+  const text = value.trim();
+  if (text === "") return null;
+  if (isRealCalendarDay(text) || isRealUtcDateTime(text)) return text;
   throw new CorpusError("invalid_item", index);
+}
+
+function laterTimestamp(latest: string | null, candidate: string): string {
+  if (latest === null) return candidate;
+  const latestMs = Date.parse(latest);
+  const candidateMs = Date.parse(candidate);
+  if (Number.isNaN(candidateMs)) return latest;
+  if (Number.isNaN(latestMs)) return candidate;
+  return candidateMs > latestMs ? candidate : latest;
+}
+
+function isRealCalendarDate(year: number, month: number, day: number): boolean {
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+}
+
+function isRealCalendarDay(value: string): boolean {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return false;
+  return isRealCalendarDate(Number(match[1]), Number(match[2]), Number(match[3]));
+}
+
+function isRealUtcDateTime(value: string): boolean {
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?Z$/.exec(value);
+  if (!match) return false;
+  const hour = Number(match[4]);
+  const minute = Number(match[5]);
+  const second = Number(match[6]);
+  return isRealCalendarDate(Number(match[1]), Number(match[2]), Number(match[3])) && hour <= 23 && minute <= 59 && second <= 59;
 }
