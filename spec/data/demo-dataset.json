@@ -1436,7 +1436,7 @@
       "version": "1.0.0",
       "generator": "openframe-analyst (demo fixture)",
       "coverage_window": {
-        "from": "2026-03-01",
+        "from": "2025-06-01",
         "to": "2026-04-15"
       },
       "warnings": [

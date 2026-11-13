@@ -289,7 +289,7 @@
         "shared_original_sources": [
           {
             "description": "Amazon GenAI Creators' Fund announcement, 27 May 2026",
-            "url": "http://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-",
+            "url": "https://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-",
             "independence_group_id": "grp_amazon_genai_fund_announcement"
           },
           {
@@ -346,7 +346,7 @@
         "shared_original_sources": [
           {
             "description": "Amazon GenAI Creators' Fund press release",
-            "url": "http://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-",
+            "url": "https://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-",
             "independence_group_id": "grp_amazon_genai_fund_announcement"
           }
         ],
@@ -834,7 +834,7 @@
         "fictional_demo_publisher": false
       },
       "publication_date": "2026-05-27",
-      "original_url": "http://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-",
+      "original_url": "https://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-",
       "author": null,
       "summary": "Primary press release announcing the fund, Project Nara and three greenlit animated series. Direct fetch returned empty; text seen in search result.",
       "accessible_text": "Amazon MGM Studios revealed three greenlit animation projects originating from the fund",
@@ -2210,7 +2210,7 @@
         },
         "original_source_hint": {
           "description": "Amazon MGM Studios press release, 27 May 2026",
-          "url": "http://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-"
+          "url": "https://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-"
         },
         "check_worthy": true,
         "missing_fields": []
@@ -3006,7 +3006,7 @@
             "data_mode": "LIVE",
             "claim_id": "clm_live_08",
             "article_id": "art_ev_amazon_pr",
-            "url": "http://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-",
+            "url": "https://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-",
             "publisher": "Amazon MGM Studios",
             "publication_date": "2026-05-27",
             "excerpt": "Amazon MGM Studios revealed three greenlit animation projects originating from the fund",
@@ -3065,7 +3065,7 @@
           }
         ],
         "contradicting_evidence": [],
-        "original_source_url": "http://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-",
+        "original_source_url": "https://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-",
         "explanation": "Variety and Deadline, both read directly, report the greenlight of three animated series through the GenAI Creators' Fund. They repeat one announcement (one independence group). The company's own press release would be authoritative, but it was seen only as search-result text (unverifiable), so under the 1.2.0 rule the audit cannot be Verified. 'AI animation series' is a fair summary of how Amazon presents them (GenAI-fund projects on its Project Nara AI platform), though Variety notes human actors and voice actors are used and the degree of AI use is not quantified.",
         "confidence": {
           "level": "medium",
@@ -3414,7 +3414,7 @@
             "data_mode": "LIVE",
             "claim_id": "clm_live_12",
             "article_id": "art_ev_amazon_pr",
-            "url": "http://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-",
+            "url": "https://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-",
             "publisher": "Amazon MGM Studios",
             "publication_date": "2026-05-27",
             "excerpt": "said Albert Cheng, Head of AI Studios, Amazon MGM Studios",
@@ -3563,7 +3563,7 @@
       {
         "id": "grp_amazon_genai_fund_announcement",
         "description": "Amazon MGM Studios / AWS GenAI Creators' Fund announcement at AI on the Lot, 27 May 2026. Also reported by The Hollywood Reporter and AWN (seen in search results; not analysed).",
-        "origin_url": "http://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-"
+        "origin_url": "https://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-"
       },
       {
         "id": "grp_variety_cheng_interview",
@@ -4292,7 +4292,7 @@
         "article_id": "art_ev_amazon_pr",
         "title": "Prime Video Orders Three New Animated Series from GenAI Creators’ Fund, Backed by Amazon MGM Studios and AWS",
         "publisher": "Amazon MGM Studios",
-        "url": "http://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-",
+        "url": "https://press.amazonmgmstudios.com/us/en/press-release/prime-video-orders-three-new-animated-series-from-",
         "publication_date": "2026-05-27",
         "author": null,
         "data_mode": "LIVE",
