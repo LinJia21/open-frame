@@ -18,7 +18,7 @@ export function PageDock({
   language: Language;
 }) {
   const pathname = usePathname();
-  const onHome = pathname === "/";
+  const onHome = pathname === "/" || pathname === "/app";
   const onSettings = pathname.startsWith("/settings");
   const onLibrary = pathname.startsWith("/library");
   const copy = language === "zh" ? zhCopy : enCopy;

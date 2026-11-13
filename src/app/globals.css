@@ -7,9 +7,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-source), "Noto Sans CJK SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-source: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  --font-newsreader: Georgia, "Songti SC", "Times New Roman", serif;
+  --font-sans: var(--font-source);
   --font-mono: var(--font-geist-mono);
-  --font-serif: var(--font-newsreader), "Noto Serif CJK SC", "Songti SC", serif;
+  --font-serif: var(--font-newsreader);
   --font-heading: var(--font-serif);
   --color-of-ink: var(--of-ink);
   --color-of-ink-foreground: var(--of-ink-foreground);
@@ -140,21 +142,6 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-@font-face {
-  font-family: "Noto Sans SC";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/noto-sans-sc-sc-400.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Noto Sans SC";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("/fonts/noto-sans-sc-sc-500.woff2") format("woff2");
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -223,14 +210,14 @@
   width: 100%;
   background: var(--background);
   color: var(--foreground);
-  font-family: "Noto Sans SC", var(--font-source), "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
+  font-family: var(--font-source);
   font-size: 16px;
   line-height: 1.65;
 }
 .news-home h1,
 .news-home h2,
 .news-home h3 {
-  font-family: "Noto Sans SC", var(--font-source), "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
+  font-family: var(--font-source);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
@@ -249,7 +236,7 @@
 }
 .news-home .wordmark,
 .spectrax-aside .wordmark {
-  font-family: var(--font-newsreader), "WenQuanYi Micro Hei", "Droid Sans Fallback", serif;
+  font-family: var(--font-newsreader);
   font-style: italic;
   font-weight: 500;
   letter-spacing: -0.03em;
@@ -528,6 +515,28 @@
   .news-dock {
     position: absolute;
     border-radius: 0 0 2rem 2rem;
+  }
+  .app-frame {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 1rem 2rem;
+    background: var(--background);
+  }
+  .app-frame .spectrax-stage {
+    display: flex;
+    justify-content: center;
+    width: min(27.5rem, 100%);
+    min-height: 0;
+    gap: 0;
+    padding: 0;
+    background: transparent;
+  }
+  .app-frame .spectrax-aside {
+    display: none;
+  }
+  .app-frame .news-home {
+    width: 100%;
+    background: var(--background);
   }
 }
 

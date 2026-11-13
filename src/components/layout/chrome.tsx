@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PublicProviderStatus } from "@/lib/analysis/provider-status";
 import type { Language } from "@/lib/i18n/languages";
+import { AppEntry } from "@/components/layout/app-entry";
 import { HeaderTopic } from "@/components/layout/header-topic";
 import { LanguageMenu } from "@/components/layout/language-menu";
 
@@ -33,7 +34,7 @@ export function SiteHeader({ language, provider }: { language: Language; provide
             设置<span className="sr-only"> Settings</span>
           </Link>
           <LanguageMenu language={language} />
-          <span>AI</span>
+          <AppEntry />
         </nav>
       </div>
     </header>

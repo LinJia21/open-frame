@@ -60,7 +60,7 @@ function missingAnalysisHtml(): string {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Briefing not found · OpenFrame AI</title>
   <style>
-    body { margin: 0; font-family: "Source Sans 3", "Segoe UI", sans-serif; background: #f6f1e7; color: #1c1915; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif; background: #f6f1e7; color: #1c1915; }
     main { max-width: 36rem; margin: 4rem auto; padding: 0 1.25rem; }
     h1 { font-family: Georgia, serif; font-size: 2rem; font-weight: 500; }
     a { color: #8d4324; }
@@ -86,7 +86,7 @@ function unsupportedSchemaHtml(found: string): string {
   <meta name="robots" content="noindex" />
   <title>Unsupported schema · OpenFrame AI</title>
   <style>
-    body { margin: 0; font-family: "Source Sans 3", "Segoe UI", sans-serif; background: #f6f1e7; color: #1c1915; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif; background: #f6f1e7; color: #1c1915; }
     main { max-width: 36rem; margin: 4rem auto; padding: 0 1.25rem; }
     h1 { font-family: Georgia, serif; font-size: 2rem; font-weight: 500; }
     a { color: #8d4324; }
