@@ -1,0 +1,465 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openframe.example/schemas/common.schema.json",
+  "title": "OpenFrame common definitions",
+  "description": "Shared ids, enums, provenance, confidence, missing-data and error objects. schema_version 1.2.0.",
+  "$defs": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.2.0",
+      "description": "Contract version. Semver; see README §Versioning. 1.2.0 tightened validation and added required fields; 1.1.0 documents must be migrated (see MIGRATION-1.1.0-to-1.2.0.md)."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z]{2,4}_[A-Za-z0-9_-]{1,64}$",
+      "description": "Prefixed unique id: art_ article/source document, nar_ narrative comparison, cx_ claim set, clm_ claim, ea_ audit set, aud_ audit, ev_ evidence item, grp_ independence group, rep_ report, src_ source-list entry, bnd_ bundle."
+    },
+    "data_mode": {
+      "type": "string",
+      "enum": [
+        "LIVE",
+        "DEMO"
+      ],
+      "description": "Source reality ONLY (unchanged from 1.0.0): LIVE = real, retrievable public source; DEMO = fictional/illustrative source. Says nothing about when/how the analysis was generated (see analysis_generation)."
+    },
+    "analysis_generation": {
+      "type": "string",
+      "enum": [
+        "PRECOMPUTED",
+        "LIVE_AI"
+      ],
+      "description": "Added in 1.1.0. PRECOMPUTED = analysis produced in advance and stored as a fixture (never label as live). LIVE_AI = produced at request time by the app's AI call."
+    },
+    "analysis_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "generated_at",
+        "model_name",
+        "prompt_template_id",
+        "prompt_version"
+      ],
+      "description": "Added in 1.1.0. Optional companion to analysis_generation; required when analysis_generation is LIVE_AI.",
+      "properties": {
+        "generated_at": {
+          "$ref": "#/$defs/iso_datetime"
+        },
+        "model_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prompt_template_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prompt_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "bundle_data_mode": {
+      "type": "string",
+      "enum": [
+        "LIVE",
+        "DEMO",
+        "MIXED"
+      ]
+    },
+    "iso_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 date-time with offset; must be a real calendar date-time (validate with format assertion enabled, e.g. ajv-formats)."
+    },
+    "nullable_date": {
+      "description": "ISO 8601 calendar date (YYYY-MM-DD, real date: 2026-02-31 is invalid) or date-time, or null when unknown (list in missing_fields). Validators MUST enable format assertion.",
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "format": "date"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ]
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://"
+    },
+    "nullable_url": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/url"
+        }
+      ]
+    },
+    "language": {
+      "type": "string",
+      "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+      "description": "BCP 47 tag."
+    },
+    "access_basis": {
+      "type": "string",
+      "enum": [
+        "publisher_summary",
+        "open_license",
+        "excerpt_fair_use",
+        "public_domain",
+        "own_summary_only",
+        "none"
+      ]
+    },
+    "retrieval_method": {
+      "type": "string",
+      "enum": [
+        "web_fetch",
+        "pdf_download",
+        "web_search_snippet",
+        "api",
+        "rss",
+        "manual_entry",
+        "generated_demo"
+      ],
+      "description": "generated_demo is allowed only with data_mode DEMO."
+    },
+    "accessible_text_origin": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "page_capture",
+        "pdf_text",
+        "search_snippet",
+        "api_response",
+        "rss_item",
+        "user_supplied",
+        "generated_demo",
+        null
+      ],
+      "description": "Added in 1.2.0. Where accessible_text came from; null iff accessible_text is null. Verbatim quotes/excerpts may only be taken from accessible_text whose origin is NOT search_snippet, and must be exact substrings of it (cross-object rule, enforced by checkBundleIntegrity)."
+    },
+    "quote_verification": {
+      "type": "string",
+      "enum": [
+        "verified_substring",
+        "unverifiable",
+        "paraphrase"
+      ],
+      "description": "Added in 1.2.0. verified_substring = exact substring of the cited article's accessible_text at the stored span; unverifiable = presented as the source's words but the source text could not be checked (snippet-only, paywalled, fetch failed, no accessible_text) - never counts toward Verified; paraphrase = own wording."
+    },
+    "text_span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "description": "Added in 1.2.0. accessible_text.slice(start, end) in JavaScript (UTF-16 code unit) indices, end exclusive."
+    },
+    "nullable_text_span": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/text_span"
+        }
+      ]
+    },
+    "finding_strength": {
+      "type": "string",
+      "enum": [
+        "established",
+        "partially_established",
+        "contested",
+        "not_established"
+      ],
+      "description": "Added in 1.2.0. Max allowed by the weakest linked audit: Verified->established, Partially Supported->partially_established, Disputed->contested, Unverified/Contradicted->not_established (rule RPT-004)."
+    },
+    "reserved_demo_url_pattern": {
+      "type": "string",
+      "pattern": "^https?://([^/?#:]*\\.)?(example\\.(com|org|net)|[A-Za-z0-9-]+\\.(example|test|invalid)|example|test|invalid|localhost)(:[0-9]+)?([/?#]|$)",
+      "description": "URL on a host reserved for documentation/testing (RFC 2606/6761). Required for DEMO records, forbidden for LIVE records."
+    },
+    "confidence_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "confidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "level",
+        "rationale"
+      ],
+      "properties": {
+        "level": {
+          "$ref": "#/$defs/confidence_level"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 10
+        }
+      },
+      "description": "Qualitative confidence only. Numeric credibility scores are prohibited."
+    },
+    "unknown_reason": {
+      "type": "string",
+      "enum": [
+        "not_published",
+        "not_found",
+        "paywalled",
+        "fetch_failed",
+        "not_applicable",
+        "withheld_for_copyright",
+        "ambiguous_in_source",
+        "demo_placeholder",
+        "other"
+      ]
+    },
+    "missing_field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "unknown_reason"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": "JSON path relative to the record."
+        },
+        "unknown_reason": {
+          "$ref": "#/$defs/unknown_reason"
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "missing_fields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/missing_field"
+      },
+      "description": "Every field that is null because information is unavailable must be listed. [] when nothing is missing."
+    },
+    "error_code": {
+      "type": "string",
+      "enum": [
+        "MISSING_REQUIRED_FIELD",
+        "INVALID_FORMAT",
+        "SOURCE_UNREACHABLE",
+        "PAYWALLED",
+        "RATE_LIMITED",
+        "PARSE_FAILED",
+        "VALIDATION_FAILED",
+        "INSUFFICIENT_EVIDENCE",
+        "COPYRIGHT_RESTRICTED",
+        "DUPLICATE_RECORD",
+        "UNKNOWN_REFERENCE",
+        "UNKNOWN"
+      ]
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "message",
+        "field",
+        "recoverable"
+      ],
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/error_code"
+        },
+        "message": {
+          "type": "string"
+        },
+        "field": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "recoverable": {
+          "type": "boolean"
+        },
+        "details": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      }
+    },
+    "api_error_response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok",
+        "errors"
+      ],
+      "properties": {
+        "ok": {
+          "const": false
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/error"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data_mode",
+        "retrieval_method",
+        "retrieved_at",
+        "retrieved_by"
+      ],
+      "properties": {
+        "data_mode": {
+          "$ref": "#/$defs/data_mode"
+        },
+        "retrieval_method": {
+          "$ref": "#/$defs/retrieval_method"
+        },
+        "retrieved_at": {
+          "$ref": "#/$defs/iso_datetime"
+        },
+        "retrieved_by": {
+          "type": "string"
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "claim_type": {
+      "type": "string",
+      "enum": [
+        "quantitative",
+        "historical",
+        "institutional",
+        "scientific_technical",
+        "economic",
+        "causal"
+      ]
+    },
+    "assertion_kind": {
+      "type": "string",
+      "enum": [
+        "factual_assertion",
+        "opinion",
+        "interpretation",
+        "prediction",
+        "speculation"
+      ]
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": [
+        "Verified",
+        "Partially Supported",
+        "Disputed",
+        "Unverified",
+        "Contradicted"
+      ],
+      "description": "Exact display/storage strings. No snake_case variants."
+    },
+    "evidence_kind": {
+      "type": "string",
+      "enum": [
+        "primary_document",
+        "primary_statement",
+        "dataset",
+        "original_reporting",
+        "secondary_reporting",
+        "expert_analysis"
+      ]
+    },
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "news_report",
+        "analysis",
+        "opinion",
+        "press_release",
+        "interview",
+        "research_report",
+        "union_statement",
+        "official_notice",
+        "job_posting",
+        "other"
+      ]
+    },
+    "publisher_type": {
+      "type": "string",
+      "enum": [
+        "trade_press",
+        "mainstream_news",
+        "specialist_outlet",
+        "wire_service",
+        "union_or_guild",
+        "company",
+        "research_org",
+        "government",
+        "blog_or_newsletter",
+        "other"
+      ]
+    },
+    "narrative_dimension": {
+      "type": "string",
+      "enum": [
+        "main_argument",
+        "causal_attribution",
+        "responsibility_attribution",
+        "language_framing",
+        "source_selection",
+        "underrepresented_perspectives"
+      ]
+    }
+  }
+}

@@ -1,0 +1,671 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openframe.example/schemas/narrative-comparison.schema.json",
+  "title": "NarrativeComparison",
+  "description": "Per-article analysis across exactly six dimensions (main_argument, causal_attribution, responsibility_attribution, language_framing, source_selection, underrepresented_perspectives) plus cross-article comparison. No political stance labels.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "data_mode",
+    "analysis_generation",
+    "topic",
+    "article_ids",
+    "article_analyses",
+    "cross_article_comparison",
+    "outlet_level_observations",
+    "method_notes",
+    "missing_fields"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "common.schema.json#/$defs/schema_version"
+    },
+    "id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "data_mode": {
+      "$ref": "common.schema.json#/$defs/data_mode"
+    },
+    "analysis_generation": {
+      "$ref": "common.schema.json#/$defs/analysis_generation"
+    },
+    "analysis_metadata": {
+      "$ref": "common.schema.json#/$defs/analysis_metadata"
+    },
+    "topic": {
+      "type": "string"
+    },
+    "article_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/id"
+      },
+      "minItems": 1
+    },
+    "article_analyses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/article_analysis"
+      },
+      "minItems": 1
+    },
+    "cross_article_comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shared_facts",
+        "divergences",
+        "framing_differences",
+        "voice_distribution",
+        "coverage_gaps"
+      ],
+      "properties": {
+        "shared_facts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "fact",
+              "article_ids",
+              "independence_note"
+            ],
+            "properties": {
+              "fact": {
+                "type": "string"
+              },
+              "article_ids": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/id"
+                }
+              },
+              "independence_note": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "divergences": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "dimension",
+              "description",
+              "article_ids"
+            ],
+            "properties": {
+              "dimension": {
+                "$ref": "common.schema.json#/$defs/narrative_dimension"
+              },
+              "description": {
+                "type": "string"
+              },
+              "article_ids": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "minItems": 1
+              }
+            }
+          }
+        },
+        "framing_differences": {
+          "type": "string"
+        },
+        "voice_distribution": {
+          "type": "string"
+        },
+        "coverage_gaps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "outlet_level_observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "publisher",
+          "observation",
+          "evidence",
+          "sample_size_note",
+          "caveat"
+        ],
+        "properties": {
+          "publisher": {
+            "type": "string"
+          },
+          "observation": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "description",
+                "url"
+              ],
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "url": {
+                  "$ref": "common.schema.json#/$defs/nullable_url"
+                }
+              }
+            },
+            "minItems": 1
+          },
+          "sample_size_note": {
+            "type": "string"
+          },
+          "caveat": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Optional outlet-level generalisations; each needs evidence + caveat and must never be applied to an individual article's analysis."
+    },
+    "method_notes": {
+      "type": "string"
+    },
+    "provenance": {
+      "$ref": "common.schema.json#/$defs/provenance"
+    },
+    "missing_fields": {
+      "$ref": "common.schema.json#/$defs/missing_fields"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/error"
+      }
+    }
+  },
+  "$defs": {
+    "quoted_voice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "speaker",
+        "speaker_role",
+        "quote_mode",
+        "verbatim_quote",
+        "paraphrase",
+        "quote_verification",
+        "quote_span"
+      ],
+      "properties": {
+        "speaker": {
+          "type": "string"
+        },
+        "speaker_role": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "speaker_category": {
+          "type": "string",
+          "enum": [
+            "executive",
+            "creator_or_artist",
+            "union_or_guild",
+            "worker",
+            "analyst_or_researcher",
+            "journalist",
+            "official",
+            "audience",
+            "anonymous",
+            "other"
+          ]
+        },
+        "quote_mode": {
+          "type": "string",
+          "enum": [
+            "verbatim",
+            "paraphrase"
+          ]
+        },
+        "verbatim_quote": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 400,
+          "description": "Exact characters from the source; null for paraphrase."
+        },
+        "paraphrase": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "quote_verification": {
+          "$ref": "common.schema.json#/$defs/quote_verification"
+        },
+        "quote_span": {
+          "$ref": "common.schema.json#/$defs/nullable_text_span"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "quote_mode": {
+                "const": "verbatim"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "quote_verification": {
+                "enum": [
+                  "verified_substring",
+                  "unverifiable"
+                ]
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "quote_verification": {
+                "const": "paraphrase"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "quote_verification": {
+                "const": "verified_substring"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "quote_span": {
+                "type": "object"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "quote_span": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "quote_mode": {
+                "const": "verbatim"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "verbatim_quote": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "quote_mode": {
+                "const": "paraphrase"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "verbatim_quote": {
+                "type": "null"
+              },
+              "paraphrase": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "article_analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "article_id",
+        "main_argument",
+        "causal_attribution",
+        "responsibility_attribution",
+        "language_framing",
+        "source_selection",
+        "underrepresented_perspectives",
+        "article_level_note"
+      ],
+      "properties": {
+        "schema_version": {
+          "$ref": "common.schema.json#/$defs/schema_version"
+        },
+        "article_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "main_argument": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "summary",
+            "key_actors"
+          ],
+          "properties": {
+            "summary": {
+              "type": "string"
+            },
+            "key_actors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "actor_type",
+                  "role_in_article"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "actor_type": {
+                    "type": "string",
+                    "enum": [
+                      "person",
+                      "company",
+                      "union_or_guild",
+                      "government",
+                      "research_org",
+                      "industry_body",
+                      "technology",
+                      "group",
+                      "other"
+                    ]
+                  },
+                  "role_in_article": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "description": "Main Argument"
+        },
+        "causal_attribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "summary",
+            "explanations"
+          ],
+          "properties": {
+            "summary": {
+              "type": "string"
+            },
+            "explanations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "cause",
+                  "effect",
+                  "asserted_by",
+                  "evidence_offered_in_article"
+                ],
+                "properties": {
+                  "cause": {
+                    "type": "string"
+                  },
+                  "effect": {
+                    "type": "string"
+                  },
+                  "asserted_by": {
+                    "type": "string"
+                  },
+                  "evidence_offered_in_article": {
+                    "type": "string",
+                    "enum": [
+                      "data",
+                      "named_source",
+                      "anonymous_source",
+                      "none",
+                      "unclear"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "description": "Causal Attribution"
+        },
+        "responsibility_attribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "summary",
+            "attributions"
+          ],
+          "properties": {
+            "summary": {
+              "type": "string"
+            },
+            "attributions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "actor",
+                  "responsible_for",
+                  "attributed_by"
+                ],
+                "properties": {
+                  "actor": {
+                    "type": "string"
+                  },
+                  "responsible_for": {
+                    "type": "string"
+                  },
+                  "attributed_by": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "description": "Responsibility Attribution"
+        },
+        "language_framing": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "summary",
+            "frames",
+            "notable_terms",
+            "tone_notes"
+          ],
+          "properties": {
+            "summary": {
+              "type": "string"
+            },
+            "frames": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "not": {
+                  "pattern": "\\b(?:[fF][aA][rR]|[hH][aA][rR][dD]|[cC][eE][nN][tT][rR][eE]|[cC][eE][nN][tT][eE][rR]|[aA][lL][tT]|[eE][xX][tT][rR][eE][mM][eE]|[uU][lL][tT][rR][aA])[- ]?(?:[lL][eE][fF][tT]|[rR][iI][gG][hH][tT])\\b|\\b(?:[lL][eE][fF][tT]|[rR][iI][gG][hH][tT])[- ](?:[wW][iI][nN][gG](?:[eE][rR][sS]?)?|[lL][eE][aA][nN](?:[iI][nN][gG]|[sS])?|[oO][fF][- ][cC][eE][nN][tT](?:[eE][rR]|[rR][eE])|[bB][iI][aA][sS](?:[eE][dD])?|[sS][lL][aA][nN][tT](?:[eE][dD])?)\\b|\\b(?:[lL][eE][fF][tT]|[rR][iI][gG][hH][tT])[iI][sS][tT][sS]?\\b|\\b[pP][aA][rR][tT][iI][sS][aA][nN](?:[sS][hH][iI][pP])?\\b|\\b(?:[lL][iI][bB][eE][rR][aA][lL]|[cC][oO][nN][sS][eE][rR][vV][aA][tT][iI][vV][eE]|[pP][rR][oO][gG][rR][eE][sS][sS][iI][vV][eE]|[lL][eE][fF][tT][iI][sS][tT]|[rR][iI][gG][hH][tT][iI][sS][tT]|[rR][eE][aA][cC][tT][iI][oO][nN][aA][rR][yY])[- ](?:[bB][iI][aA][sS](?:[eE][dD])?|[mM][eE][dD][iI][aA]|[oO][uU][tT][lL][eE][tT][sS]?|[sS][lL][aA][nN][tT](?:[eE][dD])?|[lL][eE][aA][nN](?:[iI][nN][gG])?|[aA][gG][eE][nN][dD][aA]|[pP][rR][eE][sS][sS]|[nN][eE][wW][sS][pP][aA][pP][eE][rR][sS]?|[sS][tT][aA][nN][cC][eE])\\b|\\b[pP][oO][lL][iI][tT][iI][cC][aA][lL](?:[lL][yY])?[- ](?:[bB][iI][aA][sS](?:[eE][dD])?|[sS][lL][aA][nN][tT](?:[eE][dD])?|[lL][eE][aA][nN](?:[iI][nN][gG])?|[sS][tT][aA][nN][cC][eE]|[aA][lL][iI][gG][nN][mM][eE][nN][tT]|[aA][lL][iI][gG][nN][eE][dD])\\b|\\b[iI][dD][eE][oO][lL][oO][gG][iI][cC][aA][lL][lL][yY][- ](?:[dD][rR][iI][vV][eE][nN]|[bB][iI][aA][sS][eE][dD]|[sS][lL][aA][nN][tT][eE][dD]|[aA][lL][iI][gG][nN][eE][dD])\\b"
+                },
+                "description": "Stance-term denylist (OF-QA-106): no political/ideological stance labels such as left-leaning, right-wing, partisan, liberal bias."
+              },
+              "description": "Descriptive frames, never political/ideological labels."
+            },
+            "notable_terms": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "term",
+                  "usage_note"
+                ],
+                "properties": {
+                  "term": {
+                    "type": "string",
+                    "not": {
+                      "pattern": "\\b(?:[fF][aA][rR]|[hH][aA][rR][dD]|[cC][eE][nN][tT][rR][eE]|[cC][eE][nN][tT][eE][rR]|[aA][lL][tT]|[eE][xX][tT][rR][eE][mM][eE]|[uU][lL][tT][rR][aA])[- ]?(?:[lL][eE][fF][tT]|[rR][iI][gG][hH][tT])\\b|\\b(?:[lL][eE][fF][tT]|[rR][iI][gG][hH][tT])[- ](?:[wW][iI][nN][gG](?:[eE][rR][sS]?)?|[lL][eE][aA][nN](?:[iI][nN][gG]|[sS])?|[oO][fF][- ][cC][eE][nN][tT](?:[eE][rR]|[rR][eE])|[bB][iI][aA][sS](?:[eE][dD])?|[sS][lL][aA][nN][tT](?:[eE][dD])?)\\b|\\b(?:[lL][eE][fF][tT]|[rR][iI][gG][hH][tT])[iI][sS][tT][sS]?\\b|\\b[pP][aA][rR][tT][iI][sS][aA][nN](?:[sS][hH][iI][pP])?\\b|\\b(?:[lL][iI][bB][eE][rR][aA][lL]|[cC][oO][nN][sS][eE][rR][vV][aA][tT][iI][vV][eE]|[pP][rR][oO][gG][rR][eE][sS][sS][iI][vV][eE]|[lL][eE][fF][tT][iI][sS][tT]|[rR][iI][gG][hH][tT][iI][sS][tT]|[rR][eE][aA][cC][tT][iI][oO][nN][aA][rR][yY])[- ](?:[bB][iI][aA][sS](?:[eE][dD])?|[mM][eE][dD][iI][aA]|[oO][uU][tT][lL][eE][tT][sS]?|[sS][lL][aA][nN][tT](?:[eE][dD])?|[lL][eE][aA][nN](?:[iI][nN][gG])?|[aA][gG][eE][nN][dD][aA]|[pP][rR][eE][sS][sS]|[nN][eE][wW][sS][pP][aA][pP][eE][rR][sS]?|[sS][tT][aA][nN][cC][eE])\\b|\\b[pP][oO][lL][iI][tT][iI][cC][aA][lL](?:[lL][yY])?[- ](?:[bB][iI][aA][sS](?:[eE][dD])?|[sS][lL][aA][nN][tT](?:[eE][dD])?|[lL][eE][aA][nN](?:[iI][nN][gG])?|[sS][tT][aA][nN][cC][eE]|[aA][lL][iI][gG][nN][mM][eE][nN][tT]|[aA][lL][iI][gG][nN][eE][dD])\\b|\\b[iI][dD][eE][oO][lL][oO][gG][iI][cC][aA][lL][lL][yY][- ](?:[dD][rR][iI][vV][eE][nN]|[bB][iI][aA][sS][eE][dD]|[sS][lL][aA][nN][tT][eE][dD]|[aA][lL][iI][gG][nN][eE][dD])\\b"
+                    },
+                    "description": "Stance-term denylist (OF-QA-106): no political/ideological stance labels such as left-leaning, right-wing, partisan, liberal bias."
+                  },
+                  "usage_note": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "tone_notes": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "description": "Language Framing"
+        },
+        "source_selection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "summary",
+            "selected_facts",
+            "quoted_voices",
+            "source_mix_note"
+          ],
+          "properties": {
+            "summary": {
+              "type": "string"
+            },
+            "selected_facts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "fact",
+                  "linked_claim_ids"
+                ],
+                "properties": {
+                  "fact": {
+                    "type": "string"
+                  },
+                  "linked_claim_ids": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "common.schema.json#/$defs/id"
+                    }
+                  }
+                }
+              }
+            },
+            "quoted_voices": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/quoted_voice"
+              }
+            },
+            "source_mix_note": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "description": "Source Selection"
+        },
+        "underrepresented_perspectives": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "summary",
+            "items"
+          ],
+          "properties": {
+            "summary": {
+              "type": "string"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "perspective",
+                  "note"
+                ],
+                "properties": {
+                  "perspective": {
+                    "type": "string"
+                  },
+                  "note": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "description": "Underrepresented Perspectives"
+        },
+        "article_level_note": {
+          "type": "string",
+          "description": "States that observations describe this article only."
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "analysis_generation": {
+            "const": "LIVE_AI"
+          }
+        },
+        "required": [
+          "analysis_generation"
+        ]
+      },
+      "then": {
+        "required": [
+          "analysis_metadata"
+        ]
+      }
+    }
+  ]
+}

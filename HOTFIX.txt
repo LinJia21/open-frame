@@ -1,0 +1,1 @@
+1c844bf + local hotfix 2026-11-12 20:10 Asia/Macau: vendored QA fixture bnd_schema_999; API serves prepared fixtures; malformed API ids return 400 JSON.

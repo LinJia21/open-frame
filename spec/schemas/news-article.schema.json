@@ -1,0 +1,378 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openframe.example/schemas/news-article.schema.json",
+  "title": "NewsArticle",
+  "description": "One retrieved source document (news article, report, press release, notice) with provenance, legal-access and dedup metadata.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "data_mode",
+    "analysis_role",
+    "title",
+    "publisher",
+    "publication_date",
+    "original_url",
+    "author",
+    "summary",
+    "accessible_text",
+    "accessible_text_origin",
+    "access_basis",
+    "retrieval_timestamp",
+    "retrieval_method",
+    "language",
+    "content_type",
+    "dedup",
+    "missing_fields"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "common.schema.json#/$defs/schema_version"
+    },
+    "id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "data_mode": {
+      "$ref": "common.schema.json#/$defs/data_mode"
+    },
+    "analysis_role": {
+      "type": "string",
+      "enum": [
+        "analysed",
+        "evidence_only"
+      ],
+      "description": "analysed = included in narrative comparison and claim extraction; evidence_only = retrieved source document used only as audit evidence."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "publisher": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "domain",
+        "publisher_type",
+        "fictional_demo_publisher"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "domain": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "publisher_type": {
+          "$ref": "common.schema.json#/$defs/publisher_type"
+        },
+        "fictional_demo_publisher": {
+          "type": "boolean",
+          "description": "Added in 1.2.0. true exactly when data_mode is DEMO; UI shows the label 'FICTIONAL DEMO PUBLISHER'."
+        }
+      }
+    },
+    "publication_date": {
+      "$ref": "common.schema.json#/$defs/nullable_date"
+    },
+    "original_url": {
+      "$ref": "common.schema.json#/$defs/url"
+    },
+    "author": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Neutral analyst summary in own words."
+    },
+    "accessible_text": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 2000,
+      "description": "Only legally accessible text per access_basis. The ONLY text verbatim quotes/excerpts may be copied from."
+    },
+    "accessible_text_origin": {
+      "$ref": "common.schema.json#/$defs/accessible_text_origin"
+    },
+    "access_basis": {
+      "$ref": "common.schema.json#/$defs/access_basis"
+    },
+    "retrieval_timestamp": {
+      "$ref": "common.schema.json#/$defs/iso_datetime"
+    },
+    "retrieval_method": {
+      "$ref": "common.schema.json#/$defs/retrieval_method"
+    },
+    "language": {
+      "$ref": "common.schema.json#/$defs/language"
+    },
+    "content_type": {
+      "$ref": "common.schema.json#/$defs/content_type"
+    },
+    "paywalled": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "dedup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "duplicate_of",
+        "syndicated_from",
+        "shared_original_sources",
+        "independence_group_id"
+      ],
+      "properties": {
+        "duplicate_of": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "common.schema.json#/$defs/id"
+            }
+          ]
+        },
+        "syndicated_from": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "shared_original_sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "description",
+              "url",
+              "independence_group_id"
+            ],
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "url": {
+                "$ref": "common.schema.json#/$defs/nullable_url"
+              },
+              "independence_group_id": {
+                "$ref": "common.schema.json#/$defs/id"
+              }
+            }
+          }
+        },
+        "independence_group_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "dedup_notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "$ref": "common.schema.json#/$defs/provenance"
+    },
+    "missing_fields": {
+      "$ref": "common.schema.json#/$defs/missing_fields"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/error"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "access_basis": {
+            "const": "none"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "accessible_text": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "accessible_text": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "accessible_text"
+        ]
+      },
+      "then": {
+        "properties": {
+          "accessible_text_origin": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "accessible_text_origin": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "accessible_text_origin": {
+            "const": "generated_demo"
+          }
+        },
+        "required": [
+          "accessible_text_origin"
+        ]
+      },
+      "then": {
+        "properties": {
+          "data_mode": {
+            "const": "DEMO"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "data_mode": {
+            "const": "DEMO"
+          }
+        },
+        "required": [
+          "data_mode"
+        ]
+      },
+      "then": {
+        "properties": {
+          "original_url": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "pattern": "^https?://([^/?#:]*\\.)?(example\\.(com|org|net)|[A-Za-z0-9-]+\\.(example|test|invalid)|example|test|invalid|localhost)(:[0-9]+)?([/?#]|$)"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "data_mode": {
+            "const": "LIVE"
+          }
+        },
+        "required": [
+          "data_mode"
+        ]
+      },
+      "then": {
+        "properties": {
+          "original_url": {
+            "not": {
+              "type": "string",
+              "pattern": "^https?://([^/?#:]*\\.)?(example\\.(com|org|net)|[A-Za-z0-9-]+\\.(example|test|invalid)|example|test|invalid|localhost)(:[0-9]+)?([/?#]|$)"
+            }
+          },
+          "retrieval_method": {
+            "not": {
+              "const": "generated_demo"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "retrieval_method": {
+            "const": "generated_demo"
+          }
+        },
+        "required": [
+          "retrieval_method"
+        ]
+      },
+      "then": {
+        "properties": {
+          "data_mode": {
+            "const": "DEMO"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "data_mode": {
+            "const": "DEMO"
+          }
+        },
+        "required": [
+          "data_mode"
+        ]
+      },
+      "then": {
+        "properties": {
+          "publisher": {
+            "properties": {
+              "fictional_demo_publisher": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "publisher": {
+            "properties": {
+              "fictional_demo_publisher": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

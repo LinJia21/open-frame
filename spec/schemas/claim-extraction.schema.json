@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openframe.example/schemas/claim-extraction.schema.json",
+  "title": "ClaimExtraction",
+  "description": "Claims typed by subject (claim_type) and epistemic kind (assertion_kind). claim.article_id -> NewsArticle.id.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "data_mode",
+    "analysis_generation",
+    "topic",
+    "claims",
+    "missing_fields"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "common.schema.json#/$defs/schema_version"
+    },
+    "id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "data_mode": {
+      "$ref": "common.schema.json#/$defs/data_mode"
+    },
+    "analysis_generation": {
+      "$ref": "common.schema.json#/$defs/analysis_generation"
+    },
+    "analysis_metadata": {
+      "$ref": "common.schema.json#/$defs/analysis_metadata"
+    },
+    "topic": {
+      "type": "string"
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/claim"
+      }
+    },
+    "provenance": {
+      "$ref": "common.schema.json#/$defs/provenance"
+    },
+    "missing_fields": {
+      "$ref": "common.schema.json#/$defs/missing_fields"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/error"
+      }
+    }
+  },
+  "$defs": {
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "id",
+        "data_mode",
+        "article_id",
+        "claim_text",
+        "is_verbatim",
+        "claim_type",
+        "assertion_kind",
+        "location",
+        "attributed_to",
+        "check_worthy",
+        "missing_fields"
+      ],
+      "properties": {
+        "schema_version": {
+          "$ref": "common.schema.json#/$defs/schema_version"
+        },
+        "id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "data_mode": {
+          "$ref": "common.schema.json#/$defs/data_mode"
+        },
+        "article_id": {
+          "$ref": "common.schema.json#/$defs/id",
+          "description": "-> NewsArticle.id the claim was extracted from."
+        },
+        "claim_text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600
+        },
+        "is_verbatim": {
+          "type": "boolean"
+        },
+        "claim_type": {
+          "$ref": "common.schema.json#/$defs/claim_type"
+        },
+        "secondary_claim_types": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/claim_type"
+          }
+        },
+        "assertion_kind": {
+          "$ref": "common.schema.json#/$defs/assertion_kind"
+        },
+        "location": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "section",
+            "paragraph_index",
+            "context"
+          ],
+          "properties": {
+            "section": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "paragraph_index": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "context": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 400
+            }
+          }
+        },
+        "attributed_to": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "role",
+            "attribution_kind"
+          ],
+          "properties": {
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "role": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "attribution_kind": {
+              "type": "string",
+              "enum": [
+                "article_author",
+                "quoted_source",
+                "cited_document",
+                "anonymous_source",
+                "unattributed"
+              ]
+            }
+          }
+        },
+        "original_source_hint": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "description",
+                "url"
+              ],
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "url": {
+                  "$ref": "common.schema.json#/$defs/nullable_url"
+                }
+              }
+            }
+          ]
+        },
+        "check_worthy": {
+          "type": "boolean"
+        },
+        "missing_fields": {
+          "$ref": "common.schema.json#/$defs/missing_fields"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "analysis_generation": {
+            "const": "LIVE_AI"
+          }
+        },
+        "required": [
+          "analysis_generation"
+        ]
+      },
+      "then": {
+        "required": [
+          "analysis_metadata"
+        ]
+      }
+    }
+  ]
+}

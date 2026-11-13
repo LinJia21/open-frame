@@ -1,0 +1,673 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openframe.example/schemas/research-report.schema.json",
+  "title": "ResearchReport",
+  "description": "Final research report (9 sections + metadata).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "analysis_generation",
+    "metadata",
+    "executive_summary",
+    "key_findings",
+    "topic_background",
+    "article_comparison",
+    "narrative_analysis",
+    "key_claim_verification",
+    "evidence_limitations",
+    "information_gaps",
+    "further_research_questions",
+    "source_list",
+    "missing_fields"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "common.schema.json#/$defs/schema_version"
+    },
+    "id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "analysis_generation": {
+      "$ref": "common.schema.json#/$defs/analysis_generation"
+    },
+    "analysis_metadata": {
+      "$ref": "common.schema.json#/$defs/analysis_metadata"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "topic",
+        "research_question",
+        "data_mode",
+        "generated_at",
+        "version",
+        "warnings"
+      ],
+      "properties": {
+        "topic": {
+          "type": "string"
+        },
+        "research_question": {
+          "type": "string"
+        },
+        "data_mode": {
+          "$ref": "common.schema.json#/$defs/bundle_data_mode"
+        },
+        "generated_at": {
+          "$ref": "common.schema.json#/$defs/iso_datetime"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Report revision (semver), bumped on corrections."
+        },
+        "generator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "coverage_window": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "from",
+                "to"
+              ],
+              "properties": {
+                "from": {
+                  "$ref": "common.schema.json#/$defs/nullable_date"
+                },
+                "to": {
+                  "$ref": "common.schema.json#/$defs/nullable_date"
+                }
+              }
+            }
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "DEMO_DATA",
+                  "MIXED_DATA",
+                  "PAYWALL_LIMITED",
+                  "SNIPPET_ONLY_SOURCES",
+                  "SMALL_SAMPLE",
+                  "SHARED_ORIGINAL_SOURCE",
+                  "STALE_DATA",
+                  "TITLE_OR_FACT_DISCREPANCY",
+                  "OTHER"
+                ]
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "correction_log": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "version",
+              "date",
+              "change",
+              "reason"
+            ],
+            "properties": {
+              "version": {
+                "type": "string"
+              },
+              "date": {
+                "$ref": "common.schema.json#/$defs/iso_datetime"
+              },
+              "change": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "executive_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "bottom_line",
+        "confidence",
+        "finding_ids"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "bottom_line": {
+          "type": "string"
+        },
+        "confidence": {
+          "$ref": "common.schema.json#/$defs/confidence"
+        },
+        "finding_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "minItems": 1,
+          "description": "Added in 1.2.0. -> key_findings[].id (rule RPT-006)."
+        }
+      }
+    },
+    "key_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "statement",
+          "strength",
+          "claim_ids",
+          "audit_ids"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 10
+          },
+          "strength": {
+            "$ref": "common.schema.json#/$defs/finding_strength"
+          },
+          "claim_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "minItems": 1
+          },
+          "audit_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "minItems": 1
+          },
+          "basis_note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "minItems": 1,
+      "description": "Added in 1.2.0. Every report-level conclusion with its claims and audits. Rules RPT-003..RPT-005 (cross-object, checkBundleIntegrity): audit_ids are exactly the audits of claim_ids; strength not stronger than the weakest linked audit; statement names no status the linked audits lack."
+    },
+    "topic_background": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "timeline"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "timeline": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "date",
+              "event",
+              "source_ids"
+            ],
+            "properties": {
+              "date": {
+                "$ref": "common.schema.json#/$defs/nullable_date"
+              },
+              "event": {
+                "type": "string"
+              },
+              "source_ids": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "description": "-> research_report.source_list[].id (src_...). Cross-object rule enforced by checkBundleIntegrity."
+              }
+            }
+          }
+        }
+      }
+    },
+    "article_comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "narrative_comparison_id",
+        "summary",
+        "rows"
+      ],
+      "properties": {
+        "narrative_comparison_id": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "common.schema.json#/$defs/id"
+            }
+          ]
+        },
+        "summary": {
+          "type": "string"
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "article_id",
+              "publisher",
+              "content_type",
+              "main_argument_short",
+              "primary_frame",
+              "independence_group_id"
+            ],
+            "properties": {
+              "article_id": {
+                "$ref": "common.schema.json#/$defs/id"
+              },
+              "publisher": {
+                "type": "string"
+              },
+              "content_type": {
+                "$ref": "common.schema.json#/$defs/content_type"
+              },
+              "main_argument_short": {
+                "type": "string"
+              },
+              "primary_frame": {
+                "type": "string",
+                "not": {
+                  "pattern": "\\b(?:[fF][aA][rR]|[hH][aA][rR][dD]|[cC][eE][nN][tT][rR][eE]|[cC][eE][nN][tT][eE][rR]|[aA][lL][tT]|[eE][xX][tT][rR][eE][mM][eE]|[uU][lL][tT][rR][aA])[- ]?(?:[lL][eE][fF][tT]|[rR][iI][gG][hH][tT])\\b|\\b(?:[lL][eE][fF][tT]|[rR][iI][gG][hH][tT])[- ](?:[wW][iI][nN][gG](?:[eE][rR][sS]?)?|[lL][eE][aA][nN](?:[iI][nN][gG]|[sS])?|[oO][fF][- ][cC][eE][nN][tT](?:[eE][rR]|[rR][eE])|[bB][iI][aA][sS](?:[eE][dD])?|[sS][lL][aA][nN][tT](?:[eE][dD])?)\\b|\\b(?:[lL][eE][fF][tT]|[rR][iI][gG][hH][tT])[iI][sS][tT][sS]?\\b|\\b[pP][aA][rR][tT][iI][sS][aA][nN](?:[sS][hH][iI][pP])?\\b|\\b(?:[lL][iI][bB][eE][rR][aA][lL]|[cC][oO][nN][sS][eE][rR][vV][aA][tT][iI][vV][eE]|[pP][rR][oO][gG][rR][eE][sS][sS][iI][vV][eE]|[lL][eE][fF][tT][iI][sS][tT]|[rR][iI][gG][hH][tT][iI][sS][tT]|[rR][eE][aA][cC][tT][iI][oO][nN][aA][rR][yY])[- ](?:[bB][iI][aA][sS](?:[eE][dD])?|[mM][eE][dD][iI][aA]|[oO][uU][tT][lL][eE][tT][sS]?|[sS][lL][aA][nN][tT](?:[eE][dD])?|[lL][eE][aA][nN](?:[iI][nN][gG])?|[aA][gG][eE][nN][dD][aA]|[pP][rR][eE][sS][sS]|[nN][eE][wW][sS][pP][aA][pP][eE][rR][sS]?|[sS][tT][aA][nN][cC][eE])\\b|\\b[pP][oO][lL][iI][tT][iI][cC][aA][lL](?:[lL][yY])?[- ](?:[bB][iI][aA][sS](?:[eE][dD])?|[sS][lL][aA][nN][tT](?:[eE][dD])?|[lL][eE][aA][nN](?:[iI][nN][gG])?|[sS][tT][aA][nN][cC][eE]|[aA][lL][iI][gG][nN][mM][eE][nN][tT]|[aA][lL][iI][gG][nN][eE][dD])\\b|\\b[iI][dD][eE][oO][lL][oO][gG][iI][cC][aA][lL][lL][yY][- ](?:[dD][rR][iI][vV][eE][nN]|[bB][iI][aA][sS][eE][dD]|[sS][lL][aA][nN][tT][eE][dD]|[aA][lL][iI][gG][nN][eE][dD])\\b"
+                },
+                "description": "Stance-term denylist (OF-QA-106): no political/ideological stance labels such as left-leaning, right-wing, partisan, liberal bias."
+              },
+              "independence_group_id": {
+                "$ref": "common.schema.json#/$defs/id"
+              }
+            }
+          }
+        }
+      }
+    },
+    "narrative_analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "key_patterns",
+        "dimension_summaries"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "key_patterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dimension_summaries": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "main_argument",
+            "causal_attribution",
+            "responsibility_attribution",
+            "language_framing",
+            "source_selection",
+            "underrepresented_perspectives"
+          ],
+          "properties": {
+            "main_argument": {
+              "type": "string"
+            },
+            "causal_attribution": {
+              "type": "string"
+            },
+            "responsibility_attribution": {
+              "type": "string"
+            },
+            "language_framing": {
+              "type": "string"
+            },
+            "source_selection": {
+              "type": "string"
+            },
+            "underrepresented_perspectives": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "key_claim_verification": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claim_id",
+          "audit_id",
+          "article_id",
+          "claim_text",
+          "status",
+          "confidence_level",
+          "one_line_explanation"
+        ],
+        "properties": {
+          "claim_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "audit_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "article_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "claim_text": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "common.schema.json#/$defs/verification_status"
+          },
+          "confidence_level": {
+            "$ref": "common.schema.json#/$defs/confidence_level"
+          },
+          "one_line_explanation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "evidence_limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "information_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "gap",
+          "why_it_matters",
+          "absence_interpretation"
+        ],
+        "properties": {
+          "gap": {
+            "type": "string"
+          },
+          "why_it_matters": {
+            "type": "string"
+          },
+          "absence_interpretation": {
+            "type": "string",
+            "description": "Absence of reporting is never treated as evidence of censorship/suppression."
+          }
+        }
+      }
+    },
+    "further_research_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_list": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "article_id",
+          "title",
+          "publisher",
+          "url",
+          "publication_date",
+          "author",
+          "data_mode",
+          "retrieval_method",
+          "access_note",
+          "used_for"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "article_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "title": {
+            "type": "string"
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "url": {
+            "$ref": "common.schema.json#/$defs/url"
+          },
+          "publication_date": {
+            "$ref": "common.schema.json#/$defs/nullable_date"
+          },
+          "author": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "data_mode": {
+            "$ref": "common.schema.json#/$defs/data_mode"
+          },
+          "retrieval_method": {
+            "$ref": "common.schema.json#/$defs/retrieval_method"
+          },
+          "access_note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "used_for": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "article_analysed",
+                "evidence",
+                "background",
+                "primary_source"
+              ]
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "data_mode": {
+                  "const": "DEMO"
+                }
+              },
+              "required": [
+                "data_mode"
+              ]
+            },
+            "then": {
+              "properties": {
+                "url": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^https?://([^/?#:]*\\.)?(example\\.(com|org|net)|[A-Za-z0-9-]+\\.(example|test|invalid)|example|test|invalid|localhost)(:[0-9]+)?([/?#]|$)"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "data_mode": {
+                  "const": "LIVE"
+                }
+              },
+              "required": [
+                "data_mode"
+              ]
+            },
+            "then": {
+              "properties": {
+                "url": {
+                  "not": {
+                    "type": "string",
+                    "pattern": "^https?://([^/?#:]*\\.)?(example\\.(com|org|net)|[A-Za-z0-9-]+\\.(example|test|invalid)|example|test|invalid|localhost)(:[0-9]+)?([/?#]|$)"
+                  }
+                },
+                "retrieval_method": {
+                  "not": {
+                    "const": "generated_demo"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "retrieval_method": {
+                  "const": "generated_demo"
+                }
+              },
+              "required": [
+                "retrieval_method"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data_mode": {
+                  "const": "DEMO"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "missing_fields": {
+      "$ref": "common.schema.json#/$defs/missing_fields"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/error"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "metadata": {
+            "properties": {
+              "data_mode": {
+                "enum": [
+                  "DEMO",
+                  "MIXED"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "metadata": {
+            "properties": {
+              "warnings": {
+                "minItems": 1,
+                "contains": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "DEMO_DATA",
+                        "MIXED_DATA"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "analysis_generation": {
+            "const": "LIVE_AI"
+          }
+        },
+        "required": [
+          "analysis_generation"
+        ]
+      },
+      "then": {
+        "required": [
+          "analysis_metadata"
+        ]
+      }
+    }
+  ]
+}

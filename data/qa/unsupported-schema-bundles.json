@@ -1,0 +1,8 @@
+{
+  "bundles": [
+    {
+      "bundle_id": "bnd_schema_999",
+      "schema_version": "9.9.9"
+    }
+  ]
+}

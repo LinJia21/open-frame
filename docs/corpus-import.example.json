@@ -1,0 +1,18 @@
+{
+  "note": "Format example only. This file is not loaded into the saved library. The example.com host is reserved and the importer rejects it on purpose. Replace the URL and the text with material you actually saved. Do not invent a historical article.",
+  "items": [
+    {
+      "event": "example-event-name",
+      "outlet": "Example Outlet Placeholder",
+      "title": "Replace this with a headline you saved",
+      "publishedAt": "2024-01-15",
+      "originalUrl": "https://publisher.example/not-a-saved-article",
+      "summary": "Replace this with a summary you actually have, or use null.",
+      "body": null,
+      "completeness": "summary_only",
+      "syndication": "unknown",
+      "reprintOfUrl": null,
+      "fixture": null
+    }
+  ]
+}
