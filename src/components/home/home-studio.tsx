@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { type Language } from "@/lib/i18n/languages";
-import { messageForApiError, messages } from "@/lib/i18n/messages";
+import { suggestionKind } from "@/lib/i18n/app-pages";
+import { messageForApiError, messagesForUi } from "@/lib/i18n/messages";
+import { toAnalysisLanguage, type UiLanguage } from "@/lib/i18n/ui-language";
 import { TOPIC_MAX_LENGTH } from "@/lib/analysis/validate";
 import type { PublicProviderStatus } from "@/lib/analysis/provider-status";
 import { providerCopy, providerErrorText, providerStatusText } from "@/lib/i18n/provider-copy";
@@ -36,7 +37,7 @@ export function HomeStudio({
   includeCorpus = true,
   topicInHeader = false,
 }: {
-  initialLanguage: Language;
+  initialLanguage: UiLanguage;
   recent: RecentItem[];
   recentError: boolean;
   suggestions: Array<{ id: string; title: string; blurb: string }>;
@@ -51,7 +52,7 @@ export function HomeStudio({
   const [pending, setPending] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const headerError = useSyncExternalStore(subscribeTopicDraft, getTopicError, () => null);
-  const copy = messages[language];
+  const copy = messagesForUi(language);
   const statusCopy = providerCopy(language);
   const savedCopy = corpusCopy(language);
   const error = topicInHeader ? headerError : localError;
@@ -63,7 +64,7 @@ export function HomeStudio({
   }
 
   async function submit(intent: "demo" | "saved") {
-    const reportLanguage = languageFromDocument(language);
+    const reportLanguage = languageFromDocument(toAnalysisLanguage(language));
     if (intent === "saved" && selectedIds.length === 0) {
       setLocalError(corpusCopy(reportLanguage).needSelection);
       return;
@@ -81,7 +82,7 @@ export function HomeStudio({
       router.push(result.href);
       return;
     }
-    const reportCopy = messages[reportLanguage];
+    const reportCopy = messagesForUi(reportLanguage);
     if (result.reason === "network") {
       setLocalError(reportCopy.home.errorNetwork);
       return;
@@ -162,7 +163,7 @@ export function HomeStudio({
               }}
               className="block w-full rounded-xl border border-border px-3 py-3 text-left hover:border-of-accent"
             >
-              <span className="text-xs tracking-wide text-of-accent">{index === 0 ? "Primary demo" : "Prepared demo"}</span>
+              <span className="text-xs tracking-wide text-of-accent">{suggestionKind(language, index)}</span>
               <span className="mt-1 block font-medium">{topic.title}</span>
               <span className="mt-1 block text-sm text-muted-foreground">{topic.blurb}</span>
             </button>

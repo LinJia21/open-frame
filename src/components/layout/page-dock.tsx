@@ -2,22 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { Language } from "@/lib/i18n/languages";
+import type { UiLanguage } from "@/lib/i18n/ui-language";
 
 /**
  * App tab bar: 首页, 资料库, 订阅, 我的.
- * Subscribe and Me are named entries. Those sections are not open:
- * no plans, no charges, and no account.
+ * Subscribe lists the fixed news sources and stores choices locally.
+ * Me is a named entry only: no plans, no charges, and no account.
  */
 export function PageDock({
   placement,
   language,
 }: {
   placement: "frame" | "viewport";
-  language: Language;
+  language: UiLanguage;
 }) {
   const pathname = usePathname();
-  const copy = language === "zh" ? zhCopy : enCopy;
+  const copy = language === "zh" ? zhCopy : language === "zh-Hant" ? hantCopy : enCopy;
   const items = [
     { href: "/", label: copy.home, current: pathname === "/" || pathname === "/app", icon: HomeIcon },
     { href: "/library", label: copy.library, current: pathname.startsWith("/library"), icon: LibraryIcon },
@@ -57,6 +57,14 @@ const zhCopy = {
   subscribe: "订阅",
   me: "我的",
   bottomLabel: "底部菜单",
+};
+
+const hantCopy = {
+  home: "首頁",
+  library: "資料庫",
+  subscribe: "訂閱",
+  me: "我的",
+  bottomLabel: "底部選單",
 };
 
 const enCopy = {

@@ -1,9 +1,8 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
-import { cookies } from "next/headers";
 import { NewsHome } from "@/components/home/news-home";
 import { homeCardViews } from "@/lib/home/feed";
-import { isLanguage, type Language } from "@/lib/i18n/languages";
+import { readUiLanguage } from "@/components/layout/paper-frame";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HomePage({
@@ -21,9 +20,7 @@ export default function HomePage({
 async function HomeData({ searchParams }: { searchParams: Promise<{ q?: string; tab?: string }> }) {
   await connection();
   const params = await searchParams;
-  const jar = await cookies();
-  const cookie = jar.get("openframe_lang")?.value;
-  const language: Language = isLanguage(cookie) ? cookie : "zh";
+  const language = await readUiLanguage();
   const tab = params.tab === "foryou" || params.tab === "locate" ? params.tab : "all";
   return (
     <div className="app-shell">

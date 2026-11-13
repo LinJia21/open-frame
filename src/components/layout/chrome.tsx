@@ -17,7 +17,7 @@ export function FrameMark() {
 export function SiteHeader({ language, provider }: { language: Language; provider: PublicProviderStatus }) {
   return (
     <header className="site-header no-print sticky top-0 z-40 border-b border-white/10 bg-of-ink text-of-ink-foreground">
-      <div className="header-bar mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+      <div className="header-bar mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:flex-nowrap sm:px-6">
         <Link href="/" className="header-brand flex shrink-0 items-center gap-3">
           <FrameMark />
           <span>
