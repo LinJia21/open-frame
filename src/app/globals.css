@@ -60,38 +60,38 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --background: #f4efe6;
+  --foreground: #1c1915;
+  --card: #fbf7f1;
+  --card-foreground: #1c1915;
+  --popover: #fbf7f1;
+  --popover-foreground: #1c1915;
+  --primary: #1c1915;
+  --primary-foreground: #fbf7f1;
+  --secondary: #f3eee4;
+  --secondary-foreground: #1c1915;
+  --muted: #f3eee4;
+  --muted-foreground: #5c564c;
+  --accent: #f3e6a4;
+  --accent-foreground: #1c1915;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  /* Handoff brand colors. Web chrome and the app home both read these. */
-  --of-ink: #1b2430;
-  --of-ink-foreground: #f7f3eb;
-  --of-accent: #8d4324;
-  --of-accent-foreground: #ffffff;
-  --of-cream: #f6e7cf;
-  --of-cream-border: #e7c99a;
-  --of-cream-foreground: #3f2a16;
-  --of-mark: #c46a3a;
-  --of-live: var(--color-sky-100);
-  --of-live-foreground: var(--color-sky-950);
-  --of-neutral: var(--color-slate-100);
-  --of-neutral-foreground: var(--color-slate-900);
-  --of-page: color-mix(in srgb, var(--of-cream) 68%, var(--background));
+  --border: #eadfce;
+  --input: #eadfce;
+  --ring: #1c1915;
+  --of-ink: #1c1915;
+  --of-ink-foreground: #fbf7f1;
+  --of-accent: #4d3d6b;
+  --of-accent-foreground: #fbf7f1;
+  --of-cream: #f4efe6;
+  --of-cream-border: #eadfce;
+  --of-cream-foreground: #3a342c;
+  --of-mark: #4d3d6b;
+  --of-live: #eadcf8;
+  --of-live-foreground: #4d3d6b;
+  --of-neutral: #eadcf8;
+  --of-neutral-foreground: #4d3d6b;
+  --of-page: #f4efe6;
+  --of-body: #3a342c;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -148,6 +148,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    background: #f4efe6;
+    color: #1c1915;
     overflow-x: clip;
   }
   html {
@@ -165,7 +167,7 @@
   }
 }
 
-/* Below 1100px the home is the SpectraX app frame. From 1100px up it is the handoff web page. */
+/* The app is the paper frame at every width. The old wide web shell stays unused. */
 .app-shell {
   display: block;
 }
@@ -174,29 +176,6 @@
 }
 .header-topic {
   display: none;
-}
-@media (min-width: 1100px) {
-  .app-shell {
-    display: none;
-  }
-  .web-shell {
-    display: block;
-  }
-  .header-bar:has(.header-topic) {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    column-gap: 1.25rem;
-  }
-  .header-topic {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .header-bar:has(.header-topic) .header-tagline {
-    display: none;
-  }
 }
 
 /* App home keeps the phone layout. Colors come from the handoff tokens above. */
@@ -249,13 +228,18 @@
   outline-offset: 3px;
 }
 .paper-link {
-  color: var(--of-accent);
+  color: #1c1915;
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--of-accent) 55%, transparent);
+  text-decoration-color: rgba(28, 25, 21, 0.35);
   text-underline-offset: 3px;
 }
 .paper-link:hover {
-  text-decoration-color: var(--of-accent);
+  text-decoration-color: #1c1915;
+}
+.paper-card {
+  border: 1px solid #eadfce;
+  border-radius: 1.45rem;
+  background: #fbf7f1;
 }
 .news-home-scroll {
   padding-bottom: calc(5.25rem + env(safe-area-inset-bottom));
@@ -274,7 +258,19 @@
   left: 0;
 }
 .viewport-dock {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+body:has(.news-home) .viewport-dock,
+body:has(.news-home) > footer,
+body:has(.news-home) > .site-header,
+body:has(.news-home) > .prototype-banner {
   display: none;
+}
+body:not(:has(.news-home)) {
+  padding-bottom: calc(5.25rem + env(safe-area-inset-bottom));
 }
 .dock-row {
   display: grid;
@@ -321,19 +317,19 @@
   font-size: 15px;
 }
 .scope-pill[aria-selected="true"] {
-  border-color: var(--of-accent);
-  background: var(--of-accent);
-  color: var(--of-accent-foreground);
+  border-color: #e4d48a;
+  background: #f3e6a4;
+  color: #1c1915;
 }
 .scope-pill[data-unavailable="true"] {
-  color: var(--muted-foreground);
+  color: #5c564c;
   background: transparent;
 }
 .scope-pill[data-unavailable="true"][aria-selected="true"] {
   border-style: dashed;
-  border-color: var(--of-accent);
-  background: var(--of-cream);
-  color: var(--of-cream-foreground);
+  border-color: #e4d48a;
+  background: #f3e6a4;
+  color: #1c1915;
 }
 .search-pill {
   display: flex;
@@ -395,24 +391,17 @@
 .lav-badge {
   display: inline-flex;
   align-items: center;
+  gap: 0.35rem;
   border-radius: 999px;
-  background: var(--of-neutral);
+  background: #eadcf8;
   padding: 0.15rem 0.6rem;
-  color: var(--of-neutral-foreground);
+  color: #4d3d6b;
   font-size: 12px;
   font-weight: 650;
   line-height: 1.5;
 }
-.lav-badge[data-tone="live"] {
-  background: var(--of-live);
-  color: var(--of-live-foreground);
-}
-.lav-badge[data-tone="demo"] {
-  background: var(--of-accent);
-  color: var(--of-accent-foreground);
-}
 .lav-kicker {
-  color: var(--of-accent);
+  color: #6a568c;
   font-weight: 650;
 }
 .source-mark {
@@ -438,30 +427,10 @@
   color: var(--foreground);
   font-size: 14px;
 }
-@media (max-width: 1099px) {
-  /* A cached previous home can stay in the DOM with display:none. Only the visible app frame should hide the site header and the second menu. */
-  body:has(.app-shell:not([style*="display: none"]) .news-home) {
-    background: var(--background);
-    color: var(--foreground);
-  }
-  body:has(.app-shell:not([style*="display: none"]) .news-home) > footer,
-  body:has(.app-shell:not([style*="display: none"]) .news-home) > .site-header,
-  body:has(.app-shell:not([style*="display: none"]) .news-home) > .prototype-banner,
-  body:has(.app-shell:not([style*="display: none"]) .news-home) > .viewport-dock {
-    display: none;
-  }
-  .viewport-dock {
-    display: block;
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-  }
-  body:not(:has(.app-shell:not([style*="display: none"]) .news-home)) main {
-    padding-bottom: calc(5.25rem + env(safe-area-inset-bottom));
-  }
-}
 @media (min-width: 1100px) {
+  body:has(.spectrax-stage) {
+    background: #efe8dc;
+  }
   .spectrax-stage {
     display: grid;
     grid-template-columns: minmax(16rem, 24rem) minmax(23rem, 27.5rem);
@@ -470,10 +439,7 @@
     justify-content: center;
     min-height: 100dvh;
     padding: 1.5rem 2rem;
-    background:
-      radial-gradient(920px 520px at 8% 0%, var(--of-cream) 0%, transparent 68%),
-      radial-gradient(840px 560px at 100% 8%, var(--of-live) 0%, transparent 62%),
-      var(--background);
+    background: #efe8dc;
   }
   .spectrax-aside {
     display: block;
@@ -494,33 +460,19 @@
   .news-home-scroll {
     flex: 1;
     overflow: auto;
-    padding-bottom: 5.25rem;
+    padding-bottom: 1.25rem;
   }
   .news-dock {
-    position: absolute;
+    position: relative;
+    flex: 0 0 auto;
     border-radius: 0 0 2rem 2rem;
   }
-  .app-frame {
-    display: flex;
-    justify-content: center;
-    padding: 1.5rem 1rem 2rem;
-    background: var(--background);
-  }
-  .app-frame .spectrax-stage {
-    display: flex;
-    justify-content: center;
-    width: min(27.5rem, 100%);
-    min-height: 0;
-    gap: 0;
-    padding: 0;
-    background: transparent;
-  }
-  .app-frame .spectrax-aside {
-    display: none;
-  }
-  .app-frame .news-home {
-    width: 100%;
-    background: var(--background);
+}
+@media print {
+  .news-home,
+  .news-home-scroll {
+    height: auto !important;
+    overflow: visible !important;
   }
 }
 
