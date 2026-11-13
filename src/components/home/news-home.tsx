@@ -1,11 +1,14 @@
 "use client";
 
-import { useMemo, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useState, type FormEvent, type KeyboardEvent } from "react";
 import Link from "next/link";
 import type { HomeCardView } from "@/lib/home/feed";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { LanguageSwitch } from "@/components/layout/language-switch";
 import { PageDock } from "@/components/layout/page-dock";
+import { NEWS_SOURCES, sourceTitle } from "@/lib/sources/catalog";
+import { useSourceIds } from "@/lib/sources/use-source-ids";
+import type { NewsDiscoveryResult } from "@/lib/sources/types";
 
 const TABS = [
   { id: "all", label: "All" },
@@ -35,13 +38,13 @@ export function NewsHome({
   language: UiLanguage;
 }) {
   const copy = copyFor(language);
+  const { ids: sourceIds } = useSourceIds();
   const [tab, setTab] = useState<TabId>(initialTab);
   const [query, setQuery] = useState(initialQuery);
-  const visible = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    if (!needle) return cards;
-    return cards.filter((card) => `${card.title}\n${card.sourceName ?? ""}`.toLowerCase().includes(needle));
-  }, [cards, query]);
+  const [pending, setPending] = useState(false);
+  const [searched, setSearched] = useState(false);
+  const [result, setResult] = useState<NewsDiscoveryResult | null>(null);
+  const [searchError, setSearchError] = useState<"none" | "failed" | null>(null);
 
   function onTabsKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     const index = TABS.findIndex((item) => item.id === tab);
@@ -51,6 +54,40 @@ export function NewsHome({
     const id = TABS[next]?.id ?? "all";
     setTab(id);
     document.getElementById(`tab-${id}`)?.focus();
+  }
+
+  async function runSearch() {
+    const q = query.trim();
+    setTab("all");
+    if (!q) {
+      setSearched(false);
+      setResult(null);
+      setSearchError(null);
+      return;
+    }
+    setSearched(true);
+    setResult(null);
+    if (sourceIds.length === 0) {
+      setSearchError("none");
+      return;
+    }
+    setPending(true);
+    setSearchError(null);
+    try {
+      const response = await fetch(`/api/news?q=${encodeURIComponent(q)}&sources=${encodeURIComponent(sourceIds.join(","))}`);
+      const payload = (await response.json()) as { ok?: boolean; data?: NewsDiscoveryResult };
+      if (!response.ok || !payload.ok || !payload.data) {
+        setResult(null);
+        setSearchError("failed");
+        return;
+      }
+      setResult(payload.data);
+    } catch {
+      setResult(null);
+      setSearchError("failed");
+    } finally {
+      setPending(false);
+    }
   }
 
   return (
@@ -79,7 +116,7 @@ export function NewsHome({
               className="search-row mt-3"
               onSubmit={(event: FormEvent<HTMLFormElement>) => {
                 event.preventDefault();
-                setTab("all");
+                void runSearch();
               }}
             >
               <label htmlFor="home-q" className="sr-only">
@@ -91,8 +128,13 @@ export function NewsHome({
                   name="q"
                   value={query}
                   onChange={(event) => {
-                    setQuery(event.target.value);
-                    setTab("all");
+                    const next = event.target.value;
+                    setQuery(next);
+                    if (!next.trim()) {
+                      setSearched(false);
+                      setResult(null);
+                      setSearchError(null);
+                    }
                   }}
                   placeholder={copy.searchPlaceholder}
                 />
@@ -131,18 +173,23 @@ export function NewsHome({
             <p className="mt-1 text-[13px] leading-[1.65] text-muted-foreground">{copy.globalMark}</p>
 
             <div id="panel-all" role="tabpanel" aria-labelledby="tab-all" hidden={tab !== "all"} className="mt-4">
-              {tab === "all" ? (
-                visible.length === 0 ? (
-                  <p className="topic-card text-[16px] leading-[1.65] text-foreground">{copy.noMatch}</p>
-                ) : (
-                  <ol className="space-y-4">
-                    {visible.map((card) => (
-                      <li key={card.sampleKind + (card.bundleId ?? "layout")}>
-                        <EventCard card={card} copy={copy} />
-                      </li>
-                    ))}
-                  </ol>
-                )
+              {tab === "all" && searched ? (
+                <SearchResults
+                  copy={copy}
+                  language={language}
+                  pending={pending}
+                  error={searchError}
+                  result={result}
+                />
+              ) : null}
+              {tab === "all" && !searched ? (
+                <ol className="space-y-4">
+                  {cards.map((card) => (
+                    <li key={card.sampleKind + (card.bundleId ?? "layout")}>
+                      <EventCard card={card} copy={copy} />
+                    </li>
+                  ))}
+                </ol>
               ) : null}
             </div>
             <div id="panel-foryou" role="tabpanel" aria-labelledby="tab-foryou" hidden={tab !== "foryou"} className="mt-4">
@@ -229,6 +276,73 @@ function Unavailable({ title, body }: { title: string; body: string }) {
   );
 }
 
+function SearchResults({
+  copy,
+  language,
+  pending,
+  error,
+  result,
+}: {
+  copy: HomeCopy;
+  language: UiLanguage;
+  pending: boolean;
+  error: "none" | "failed" | null;
+  result: NewsDiscoveryResult | null;
+}) {
+  const message = pending ? copy.searching : error === "none" ? copy.noSources : error === "failed" ? copy.searchFailed : result && result.items.length === 0 ? copy.noLeads : null;
+  return (
+    <div aria-busy={pending}>
+      {message ? <p className="topic-card text-[16px] leading-[1.65] text-foreground">{message}</p> : null}
+      {result && result.items.length > 0 ? (
+        <ol className="space-y-4">
+          {result.items.map((item) => {
+            const href = safeHref(item.url);
+            const named = sourceTitleById(item.sourceId, item.publisher, language);
+            return (
+              <li key={`${item.sourceId}:${item.id}`}>
+                <article className="topic-card">
+                  <h2 className="text-[1.35rem] font-bold leading-[1.35] text-foreground">
+                    {href ? (
+                      <a href={href} target="_blank" rel="noreferrer noopener" className="text-foreground">
+                        {item.title || copy.untitled}
+                      </a>
+                    ) : (
+                      item.title || copy.untitled
+                    )}
+                  </h2>
+                  <p className="mt-3 text-[15px] leading-[1.7] text-foreground">{named}{leadDate(item.publishedAt) ? ` · ${leadDate(item.publishedAt)}` : ""}</p>
+                </article>
+              </li>
+            );
+          })}
+        </ol>
+      ) : null}
+    </div>
+  );
+}
+
+function sourceTitleById(sourceId: string, publisher: string, language: UiLanguage): string {
+  const source = NEWS_SOURCES.find((item) => item.id === sourceId);
+  if (source) return sourceTitle(source, language);
+  return publisher || sourceId;
+}
+
+function leadDate(value: string | null): string | null {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toISOString().slice(0, 10);
+}
+
+function safeHref(value: string): string | null {
+  try {
+    const url = new URL(value);
+    return (url.protocol === "https:" || url.protocol === "http:") && !url.username && !url.password ? url.href : null;
+  } catch {
+    return null;
+  }
+}
+
 function SearchIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
@@ -242,6 +356,11 @@ interface HomeCopy {
   searchLabel: string;
   searchPlaceholder: string;
   searchHint: string;
+  searching: string;
+  noSources: string;
+  searchFailed: string;
+  noLeads: string;
+  untitled: string;
   tabsLabel: string;
   scopeNote: string;
   globalMark: string;
@@ -267,9 +386,14 @@ interface HomeCopy {
 function copyFor(language: UiLanguage): HomeCopy {
   if (language === "zh-Hant") {
     return {
-      searchLabel: "篩選本頁示例",
-      searchPlaceholder: "篩選標題",
-      searchHint: "只篩選本頁示例，不搜尋網路或資料庫。",
+      searchLabel: "搜索已關注來源",
+      searchPlaceholder: "搜索標題",
+      searchHint: "提交後只搜索訂閱裡選中的來源，不搜資料庫，也不抓正文。",
+      searching: "正在搜索已關注的來源…",
+      noSources: "還沒有選中來源。請先到訂閱頁的來源關注裡選擇。",
+      searchFailed: "這次沒有取到結果。請稍後再搜索。",
+      noLeads: "這次沒有匹配的標題。",
+      untitled: "無標題",
       tabsLabel: "內容範圍",
       scopeNote: "For You 和 Locate 尚未開通。點開會看到說明，不會出現推薦或地點結果。",
       globalMark: "演示示例 · 非即時",
@@ -290,7 +414,7 @@ function copyFor(language: UiLanguage): HomeCopy {
       locateBody: "沒有當地檢索，也不會請求定位。這裡不展示預警。",
       asideLead: "桌面把現有首頁收在一張紙色卡片裡。窄屏則鋪滿寬度。卡片仍是倉庫裡的示例，不是新的話題。",
       asidePoints: [
-        "字標仍是 SpectraX。介面可以在簡體、繁體和 English 之間切換。",
+        "字標仍是 SpectraX。搜索讀訂閱裡選中的來源。",
         "All 展示現有卡片。For You 和 Locate 尚未開通。",
         "底部選單是首頁、資料庫、訂閱、我的。訂閱和我的尚未開通。熱度寫「暫無數據」。",
       ],
@@ -298,9 +422,14 @@ function copyFor(language: UiLanguage): HomeCopy {
   }
   if (language === "zh") {
     return {
-      searchLabel: "筛选本页示例",
-      searchPlaceholder: "筛选标题",
-      searchHint: "只筛选本页示例，不搜索互联网或资料库。",
+      searchLabel: "搜索已关注来源",
+      searchPlaceholder: "搜索标题",
+      searchHint: "提交后只搜索订阅里选中的来源，不搜资料库，也不抓正文。",
+      searching: "正在搜索已关注的来源…",
+      noSources: "还没有选中来源。请先到订阅页的来源关注里选择。",
+      searchFailed: "这次没有取到结果。请稍后再搜索。",
+      noLeads: "这次没有匹配的标题。",
+      untitled: "无标题",
       tabsLabel: "内容范围",
       scopeNote: "For You 和 Locate 尚未开通。点开会看到说明，不会出现推荐或地点结果。",
       globalMark: "演示示例 · 非实时",
@@ -321,16 +450,21 @@ function copyFor(language: UiLanguage): HomeCopy {
       locateBody: "没有当地检索，也不会请求定位。这里不展示预警。",
       asideLead: "桌面把现有首页收在一张纸色卡片里。窄屏则铺满宽度。卡片仍是仓库里的示例，不是新的话题。",
       asidePoints: [
-        "字标仍是 SpectraX。界面可以在简体、繁體和 English 之间切换。",
+        "字标仍是 SpectraX。搜索读订阅里选中的来源。",
         "All 展示现有卡片。For You 和 Locate 尚未开通。",
         "底部菜单是首页、资料库、订阅、我的。订阅和我的尚未开通。热度写「暂无数据」。",
       ],
     };
   }
   return {
-    searchLabel: "Filter samples on this page",
-    searchPlaceholder: "Filter titles",
-    searchHint: "Filters the samples on this page only. It does not search the web or the saved library.",
+    searchLabel: "Search followed sources",
+    searchPlaceholder: "Search titles",
+    searchHint: "Submit to search only the sources selected on Subscribe. It does not search the library or fetch articles.",
+    searching: "Searching followed sources…",
+    noSources: "No sources selected. Choose some under Followed sources on Subscribe.",
+    searchFailed: "This search did not return a result. Try again later.",
+    noLeads: "No matching titles this time.",
+    untitled: "Untitled",
     tabsLabel: "Scope",
     scopeNote: "For You and Locate are not open. Choosing one shows this notice only. There is no recommendation list and no location result.",
     globalMark: "Sample · not live",
@@ -351,7 +485,7 @@ function copyFor(language: UiLanguage): HomeCopy {
     locateBody: "There is no local search and this page does not ask for your location. There is no alert list.",
     asideLead: "On a wide screen the existing home sits in a paper card. On a narrow screen it uses the full width. The cards are still the repository samples.",
     asidePoints: [
-      "The wordmark stays SpectraX. Search only filters the samples on this page.",
+      "The wordmark stays SpectraX. Search reads the sources selected on Subscribe.",
       "All shows those cards. For You and Locate are not open.",
       "The bottom menu is Home, Library, Subscribe, and Me. Subscribe and Me are not open. Heat says there is no data.",
     ],

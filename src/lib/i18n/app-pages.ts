@@ -194,26 +194,26 @@ export function meCopy(language: UiLanguage): MeCopy {
 export function libraryFrame(language: UiLanguage): FrameCopy & { title: string; intro: string } {
   if (language === "zh-Hant") {
     return {
-      lead: "資料庫分兩部分：上方只從固定來源發現新聞線索，不抓正文、不送 AI；下方導入、檢索和分析只作用在已保存的文字上。",
-      points: ["新聞線索均未核實，也不會自動保存。", "預設沒有歷史記錄，這裡不會填入假列表。", "演示模式不會假裝已經接上即時模型。"],
+      lead: "資料庫只處理已經保存的文字：導入、檢索和分析都不搜尋首頁的新聞來源。",
+      points: ["預設沒有歷史記錄，這裡不會填入假列表。", "演示模式不會假裝已經接上即時模型。", "首頁搜索讀的是訂閱裡選中的來源，不會把結果存進這裡。"],
       title: "已保存的歷史資料",
       intro: "每篇分析只納入已保存文本的前 2000 字。超出部分未納入分析。不能據此推斷完整原文缺乏證據。",
     };
   }
   if (language === "zh") {
     return {
-      lead: "资料库分两部分：上方只从固定来源发现新闻线索，不抓正文、不送 AI；下方导入、检索和分析都只作用在已保存的文字上。两者不会自动互通。",
-      points: ["新闻线索均未核实，也不会自动保存。", "默认没有历史记录，这里不会填入假列表。", "演示模式不会假装已经接上实时模型。"],
+      lead: "资料库只处理已经保存的文字：导入、检索和分析都不搜索首页的新闻来源。",
+      points: ["默认没有历史记录，这里不会填入假列表。", "演示模式不会假装已经接上实时模型。", "首页搜索读的是订阅里选中的来源，不会把结果存进这里。"],
       title: "已保存的历史资料",
       intro: "每篇分析只纳入已保存文本的前 2000 字。超出部分未纳入分析。不能据此推断完整原文缺乏证据。",
     };
   }
   return {
-    lead: "The library has two parts: news discovery reads headlines from fixed sources only, without fetching articles or calling a model; import, search, and analysis below use saved text only.",
+    lead: "The library only handles text you already saved. Import, search, and analysis do not search the sources followed on Subscribe.",
     points: [
-      "News leads stay unverified and are never saved automatically.",
       "There is no saved history until you import. Nothing here is filled in.",
       "Demo mode does not pretend a live model is connected.",
+      "Home search reads the sources selected on Subscribe and does not save those results here.",
     ],
     title: "Saved historical materials",
     intro: "Each analysis includes only the first 2000 characters of saved text. The rest is not included, and that cutoff is not evidence about the rest of the original.",
