@@ -14,7 +14,13 @@ const TABS = [
 
 type TabId = (typeof TABS)[number]["id"];
 
-const SOURCE_SWATCHES = ["#f0d0c4", "#e4d4f6", "#f3e3b0", "#d5e2d4", "#f0d0e2"];
+const SOURCE_SWATCHES = [
+  "var(--of-cream)",
+  "var(--of-live)",
+  "var(--of-neutral)",
+  "var(--of-cream-border)",
+  "var(--of-mark)",
+];
 
 export function NewsHome({
   cards,
@@ -50,9 +56,9 @@ export function NewsHome({
     <div className="spectrax-stage">
       <aside className="spectrax-aside">
         <p className="wordmark text-[3.25rem]">OpenFrame</p>
-        <p className="mt-3 text-[15px] leading-7 text-[#5c564c]">See Beyond the Headlines</p>
+        <p className="mt-3 text-[15px] leading-7 text-muted-foreground">See Beyond the Headlines</p>
         <p className="mt-6 text-[16px] leading-7">{copy.asideLead}</p>
-        <ol className="mt-5 list-decimal space-y-3 pl-5 text-[15px] leading-7 text-[#3a342c]">
+        <ol className="mt-5 list-decimal space-y-3 pl-5 text-[15px] leading-7 text-foreground">
           {copy.asidePoints.map((point) => (
             <li key={point}>{point}</li>
           ))}
@@ -62,7 +68,7 @@ export function NewsHome({
         <div className="news-home-scroll">
           <div className="mx-auto w-full max-w-[40rem] px-4 pb-6 pt-5">
             <div className="flex items-center gap-3">
-              <Link href="/" className="wordmark shrink-0 text-[1.85rem] text-[#1c1915]">
+              <Link href="/" className="wordmark shrink-0 text-[1.85rem] text-foreground">
                 OpenFrame
               </Link>
               <form
@@ -93,7 +99,7 @@ export function NewsHome({
                 </div>
               </form>
             </div>
-            <p className="mt-3 text-[13px] leading-[1.65] text-[#5c564c]">{copy.searchHint}</p>
+            <p className="mt-3 text-[13px] leading-[1.65] text-muted-foreground">{copy.searchHint}</p>
 
             <div role="tablist" aria-label={copy.tabsLabel} onKeyDown={onTabsKeyDown} className="scope-row mt-4">
               {TABS.map((item) => {
@@ -118,15 +124,15 @@ export function NewsHome({
                 );
               })}
             </div>
-            <p id="scope-unavailable" className="mt-3 text-[13px] leading-[1.65] text-[#5c564c]">
+            <p id="scope-unavailable" className="mt-3 text-[13px] leading-[1.65] text-muted-foreground">
               {copy.scopeNote}
             </p>
-            <p className="mt-1 text-[13px] leading-[1.65] text-[#5c564c]">{copy.globalMark}</p>
+            <p className="mt-1 text-[13px] leading-[1.65] text-muted-foreground">{copy.globalMark}</p>
 
             <div id="panel-all" role="tabpanel" aria-labelledby="tab-all" hidden={tab !== "all"} className="mt-4">
               {tab === "all" ? (
                 visible.length === 0 ? (
-                  <p className="topic-card text-[16px] leading-[1.65] text-[#1c1915]">{copy.noMatch}</p>
+                  <p className="topic-card text-[16px] leading-[1.65] text-foreground">{copy.noMatch}</p>
                 ) : (
                   <ol className="space-y-4">
                     {visible.map((card) => (
@@ -159,11 +165,11 @@ function EventCard({ card, copy }: { card: HomeCardView; copy: HomeCopy }) {
     card.sourceName && card.sourceDate
       ? `${card.sourceName} · ${card.sourceDate}`
       : copy.noSource;
-  const titleClass = "text-[#1c1915] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1c1915]";
+  const titleClass = "text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-foreground";
   return (
     <article className="topic-card">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <h2 className="min-w-0 flex-1 text-[1.35rem] font-bold leading-[1.35] text-[#1c1915]">
+        <h2 className="min-w-0 flex-1 text-[1.35rem] font-bold leading-[1.35] text-foreground">
           {card.perspectivesHref ? (
             <Link href={card.perspectivesHref} className={titleClass}>
               {card.title}
@@ -173,18 +179,20 @@ function EventCard({ card, copy }: { card: HomeCardView; copy: HomeCopy }) {
           )}
         </h2>
         <div className="flex flex-wrap items-center justify-end gap-2">
-          <p className="text-[13px] leading-[1.4] text-[#5c564c]">
+          <p className="text-[13px] leading-[1.4] text-muted-foreground">
             <span className="sr-only">{copy.heat} </span>
             {copy.heatMissing}
           </p>
-          <span className="lav-badge">{kicker}</span>
+          <span className="lav-badge" data-tone={card.sampleKind === "saved-fixture-links" ? "live" : card.sampleKind === "fictional-demo" ? "demo" : "neutral"}>
+            {kicker}
+          </span>
         </div>
       </div>
-      <p className="mt-3 text-[15px] leading-[1.7] text-[#3a342c]">
+      <p className="mt-3 text-[15px] leading-[1.7] text-foreground">
         <span className="lav-kicker">{kicker}</span> {source}
       </p>
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-        <p className="flex min-w-0 items-center gap-2 text-[14px] leading-[1.5] text-[#1c1915]">
+        <p className="flex min-w-0 items-center gap-2 text-[14px] leading-[1.5] text-foreground">
           <SourceMark name={card.sourceName} />
           <span className="min-w-0">{source}</span>
         </p>
@@ -194,7 +202,7 @@ function EventCard({ card, copy }: { card: HomeCardView; copy: HomeCopy }) {
           </Link>
         ) : null}
       </div>
-      <p className="mt-3 text-[13px] leading-[1.55] text-[#5c564c]">
+      <p className="mt-3 text-[13px] leading-[1.55] text-muted-foreground">
         {copy.verify}：{card.sampleKind === "layout-sample" ? copy.verifyLayout : copy.verifyOpen}
       </p>
     </article>
@@ -214,8 +222,8 @@ function SourceMark({ name }: { name: string | null }) {
 function Unavailable({ title, body }: { title: string; body: string }) {
   return (
     <section className="topic-card">
-      <h2 className="text-[1.35rem] font-bold leading-[1.35] text-[#1c1915]">{title}</h2>
-      <p className="mt-3 text-[16px] leading-[1.65] text-[#1c1915]">{body}</p>
+      <h2 className="text-[1.35rem] font-bold leading-[1.35] text-foreground">{title}</h2>
+      <p className="mt-3 text-[16px] leading-[1.65] text-foreground">{body}</p>
     </section>
   );
 }

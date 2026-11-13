@@ -23,7 +23,7 @@ export function NotFoundPanel() {
       <p className="text-sm text-muted-foreground">
         The link may be mistyped, or the demo file was cleared. Start a new analysis from the home page.
       </p>
-      <Link href="/" className="inline-flex text-sm paper-link underline-offset-2 hover:underline">
+      <Link href="/" className="inline-flex text-sm text-of-accent underline-offset-2 hover:underline">
         Back to home
       </Link>
     </div>
@@ -39,7 +39,7 @@ export function UnsupportedSchemaPanel({ found, supported }: { found: string; su
         <span className="font-mono text-foreground">{supported.join(", ")}</span>. A version without its own mapping is
         left unread. This page does not guess one.
       </p>
-      <Link href="/" className="inline-flex text-sm paper-link underline-offset-2 hover:underline">
+      <Link href="/" className="inline-flex text-sm text-of-accent underline-offset-2 hover:underline">
         Back to home
       </Link>
     </div>
@@ -52,11 +52,11 @@ export function ErrorPanel({ retry }: { retry?: () => void }) {
       <h1 className="font-serif text-3xl">The briefing could not be loaded</h1>
       <p className="text-sm text-muted-foreground">Something went wrong while reading the local demo store.</p>
       {retry ? (
-        <button type="button" onClick={retry} className="rounded-full bg-[#1c1915] px-4 py-2 text-sm text-[#fbf7f1]">
+        <button type="button" onClick={retry} className="rounded-lg bg-of-accent px-4 py-2 text-sm text-of-accent-foreground">
           Try again
         </button>
       ) : null}
-      <Link href="/" className="block text-sm paper-link">
+      <Link href="/" className="block text-sm text-of-accent underline-offset-2 hover:underline">
         Back to home
       </Link>
     </div>

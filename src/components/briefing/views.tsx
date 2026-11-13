@@ -100,7 +100,7 @@ export function PerspectivesBody({ view, copy }: { view: BriefingView; copy: Mes
               </p>
               <h3 className="font-serif text-xl leading-snug">{article.title}</h3>
               <p className="text-sm">{article.summary}</p>
-              <a href={article.url} className="text-sm paper-link underline-offset-2 hover:underline" target="_blank" rel="noopener noreferrer">
+              <a href={article.url} className="text-sm text-of-accent underline-offset-2 hover:underline" target="_blank" rel="noopener noreferrer">
                 Original article
                 <span className="mt-1 block break-all text-xs text-muted-foreground">{article.url}</span>
               </a>
@@ -138,7 +138,7 @@ export function PerspectivesBody({ view, copy }: { view: BriefingView; copy: Mes
                     <PublisherName name={article.publisher} fictional={article.fictional} />
                     {article.date ? ` · ${formatLongDate(article.date, view.language)}` : ""} · <AccessChips chips={article.accessChips} /> {article.textOrigin ?? "origin not stored"} · {article.id}
                   </p>
-                  <a href={article.url} className="break-all paper-link underline-offset-2 hover:underline" target="_blank" rel="noopener noreferrer">
+                  <a href={article.url} className="break-all text-of-accent underline-offset-2 hover:underline" target="_blank" rel="noopener noreferrer">
                     {article.url}
                   </a>
                 </li>
@@ -236,7 +236,7 @@ function EvidenceList({
               {item.groupId}
             </p>
             {item.url ? (
-              <a href={item.url} className="break-all text-xs paper-link" target="_blank" rel="noopener noreferrer">
+              <a href={item.url} className="break-all text-xs text-of-accent" target="_blank" rel="noopener noreferrer">
                 {item.url}
               </a>
             ) : null}
@@ -371,7 +371,7 @@ export function ReportBody({
         <ul className="space-y-2 text-sm">
           {view.report.sources.map((source) => (
             <li id={`source-${source.id}`} key={source.id}>
-              <a href={source.url} className="paper-link underline-offset-2 hover:underline" target="_blank" rel="noopener noreferrer">
+              <a href={source.url} className="text-of-accent underline-offset-2 hover:underline" target="_blank" rel="noopener noreferrer">
                 {source.title}
               </a>
               <span className="block text-muted-foreground">
@@ -403,13 +403,13 @@ function FindingTrace({
           const article = articles.find((item) => item.id === articleId);
           return (
             <p key={articleId}>
-              <a className="paper-link underline-offset-2 hover:underline" href={`/analysis/${bundleId}/perspectives#article-${articleId}`}>
+              <a className="text-of-accent underline-offset-2 hover:underline" href={`/analysis/${bundleId}/perspectives#article-${articleId}`}>
                 {articleId}
               </a>
               {article ? (
                 <>
                   {" → "}
-                  <a className="break-all paper-link underline-offset-2 hover:underline" href={article.url} target="_blank" rel="noopener noreferrer">
+                  <a className="break-all text-of-accent underline-offset-2 hover:underline" href={article.url} target="_blank" rel="noopener noreferrer">
                     {article.url}
                   </a>
                 </>
@@ -425,20 +425,20 @@ function FindingTrace({
       {finding.claims.map((claim) => (
         <li key={claim.claimId}>
           {claim.auditId ? (
-            <a className="paper-link underline-offset-2 hover:underline" href={`/analysis/${bundleId}/evidence#claim-${claim.claimId}`}>
+            <a className="text-of-accent underline-offset-2 hover:underline" href={`/analysis/${bundleId}/evidence#claim-${claim.claimId}`}>
               Audit {claim.auditId}
             </a>
           ) : (
             <span>not linked in data</span>
           )}
           {" → "}
-          <a className="paper-link underline-offset-2 hover:underline" href={`/analysis/${bundleId}/evidence#claim-${claim.claimId}`}>
+          <a className="text-of-accent underline-offset-2 hover:underline" href={`/analysis/${bundleId}/evidence#claim-${claim.claimId}`}>
             Claim {claim.claimId}
           </a>
           {claim.evidence.map((item) => (
             <span key={item.id}>
               {" → "}
-              <a className="paper-link underline-offset-2 hover:underline" href={`/analysis/${bundleId}/evidence#${item.id}`}>
+              <a className="text-of-accent underline-offset-2 hover:underline" href={`/analysis/${bundleId}/evidence#${item.id}`}>
                 {item.id}
               </a>
               {item.matchLabel ? ` (${item.matchLabel})` : item.quoteVerification === "unverifiable" ? " (Quote not checkable)" : " (paraphrase)"}
@@ -447,7 +447,7 @@ function FindingTrace({
           {articles.find((article) => article.id === claim.articleId) ? (
             <span>
               {" → "}
-              <a className="paper-link underline-offset-2 hover:underline" href={`/analysis/${bundleId}/perspectives#article-${claim.articleId}`}>
+              <a className="text-of-accent underline-offset-2 hover:underline" href={`/analysis/${bundleId}/perspectives#article-${claim.articleId}`}>
                 {claim.articleId}
               </a>
             </span>
@@ -469,7 +469,7 @@ function TimelineList({ events }: { events: BriefingView["report"]["timeline"] }
           {event.sourceIds.length > 0 ? (
             <span className="ml-2 font-mono text-xs">
               {event.sourceIds.map((id) => (
-                <a key={id} href={`#source-${id}`} className="mr-2 paper-link">
+                <a key={id} href={`#source-${id}`} className="mr-2 text-of-accent">
                   {id}
                 </a>
               ))}
@@ -490,12 +490,12 @@ function BottomLineLinks({ view }: { view: BriefingView }) {
   return (
     <p className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs">
       {view.report.bottomLineFindingIds.map((id) => (
-        <a key={id} href={`#finding-${id}`} className="paper-link underline-offset-2 hover:underline">
+        <a key={id} href={`#finding-${id}`} className="text-of-accent underline-offset-2 hover:underline">
           {id}
         </a>
       ))}
       {view.report.bottomLineClaimIds.map((id) => (
-        <a key={id} href={`/analysis/${view.bundleId}/evidence#claim-${id}`} className="font-mono paper-link underline-offset-2 hover:underline">
+        <a key={id} href={`/analysis/${view.bundleId}/evidence#claim-${id}`} className="font-mono text-of-accent underline-offset-2 hover:underline">
           {id}
         </a>
       ))}
@@ -539,7 +539,7 @@ function PublisherName({ name, fictional }: { name: string; fictional: boolean }
     <>
       {name}
       {fictional ? (
-        <span className="ml-2 inline-flex rounded-full bg-[#8d4324] px-2 py-0.5 text-[10px] font-semibold tracking-wide text-white">
+        <span className="ml-2 inline-flex rounded-full bg-of-accent px-2 py-0.5 text-[10px] font-semibold tracking-wide text-of-accent-foreground">
           {FICTIONAL_DEMO_PUBLISHER_LABEL}
         </span>
       ) : null}

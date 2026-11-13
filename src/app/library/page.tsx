@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import Link from "next/link";
 import { connection } from "next/server";
 import { cookies } from "next/headers";
 import { unstable_rethrow } from "next/navigation";
@@ -13,12 +12,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function LibraryPage() {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
-      <p className="text-sm text-[#5c564c]">
-        <Link href="/" className="paper-link wordmark text-[1.35rem]">OpenFrame</Link>
-        <span> / 已保存的历史资料</span>
-      </p>
-      <p className="mt-4 max-w-3xl text-[1.02rem] leading-7 text-[#3f3a33]">
+    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+      <p className="text-xs tracking-[0.18em] text-of-accent uppercase">Library</p>
+      <h1 className="mt-3 max-w-3xl font-serif text-4xl leading-tight">已保存的历史资料</h1>
+      <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
         每篇分析只纳入已保存文本的前 2000 字。超出部分未纳入分析。不能据此推断完整原文缺乏证据。
       </p>
       <Suspense fallback={<Skeleton className="mt-6 h-80 w-full" />}>

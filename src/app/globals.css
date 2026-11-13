@@ -7,10 +7,18 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Noto Sans SC", var(--font-source), "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
+  --font-sans: var(--font-source), "Noto Sans CJK SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
   --font-mono: var(--font-geist-mono);
-  --font-serif: var(--font-newsreader), "WenQuanYi Micro Hei", "Droid Sans Fallback", serif;
+  --font-serif: var(--font-newsreader), "Noto Serif CJK SC", "Songti SC", serif;
   --font-heading: var(--font-serif);
+  --color-of-ink: var(--of-ink);
+  --color-of-ink-foreground: var(--of-ink-foreground);
+  --color-of-accent: var(--of-accent);
+  --color-of-accent-foreground: var(--of-accent-foreground);
+  --color-of-cream: var(--of-cream);
+  --color-of-cream-border: var(--of-cream-border);
+  --color-of-cream-foreground: var(--of-cream-foreground);
+  --color-of-mark: var(--of-mark);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -50,30 +58,43 @@
 }
 
 :root {
-  --background: #f4efe6;
-  --foreground: #1c1915;
-  --card: #fbf7f1;
-  --card-foreground: #1c1915;
-  --popover: #fbf7f1;
-  --popover-foreground: #1c1915;
-  --primary: #1c1915;
-  --primary-foreground: #fbf7f1;
-  --secondary: #f3eee4;
-  --secondary-foreground: #1c1915;
-  --muted: #f3eee4;
-  --muted-foreground: #5c564c;
-  --accent: #f3e6a4;
-  --accent-foreground: #1c1915;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: #eadfce;
-  --input: #eadfce;
-  --ring: #1c1915;
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  /* Handoff brand colors. Web chrome and the app home both read these. */
+  --of-ink: #1b2430;
+  --of-ink-foreground: #f7f3eb;
+  --of-accent: #8d4324;
+  --of-accent-foreground: #ffffff;
+  --of-cream: #f6e7cf;
+  --of-cream-border: #e7c99a;
+  --of-cream-foreground: #3f2a16;
+  --of-mark: #c46a3a;
+  --of-live: var(--color-sky-100);
+  --of-live-foreground: var(--color-sky-950);
+  --of-neutral: var(--color-slate-100);
+  --of-neutral-foreground: var(--color-slate-900);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.9rem;
+  --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -139,19 +160,12 @@
   }
   body {
     @apply bg-background text-foreground;
-    background: #f4efe6;
-    color: #1c1915;
-    font-family: var(--font-sans);
-    font-size: 16px;
-    line-height: 1.65;
     overflow-x: clip;
   }
   html {
     @apply font-sans;
-    background: #f4efe6;
   }
   .newsroom {
-    color: #1c1915;
     min-width: 0;
     max-width: 100%;
   }
@@ -161,52 +175,25 @@
   .newsroom .font-mono {
     overflow-wrap: anywhere;
   }
-  .newsroom h1,
-  .newsroom h2,
-  .newsroom h3 {
-    font-family: var(--font-sans);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-  .wordmark {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 500;
-    letter-spacing: -0.03em;
-    line-height: 1;
-  }
-  .paper-link {
-    color: #1c1915;
-    text-decoration: underline;
-    text-decoration-color: rgba(28, 25, 21, 0.35);
-    text-underline-offset: 3px;
-  }
-  .paper-link:hover {
-    text-decoration-color: #1c1915;
-  }
-  .paper-card {
-    border: 1px solid #eadfce;
-    background: #fbf7f1;
-    border-radius: 1.35rem;
-    box-shadow: 0 10px 28px rgba(72, 52, 24, 0.06);
-  }
-  body:not(:has(.news-home)) {
-    padding-bottom: calc(11rem + env(safe-area-inset-bottom));
-  }
-  body:has(.news-home) > footer,
-  body:has(.news-home) > .site-header,
-  body:has(.news-home) > .viewport-dock {
+}
+
+/* Below 1100px the home is the SpectraX app frame. From 1100px up it is the handoff web page. */
+.app-shell {
+  display: block;
+}
+.web-shell {
+  display: none;
+}
+@media (min-width: 1100px) {
+  .app-shell {
     display: none;
   }
-  .news-home :focus-visible,
-  .viewport-dock :focus-visible,
-  .site-header :focus-visible {
-    outline: 2px solid #1c1915;
-    outline-offset: 3px;
+  .web-shell {
+    display: block;
   }
 }
 
-/* Home frame: full width on a phone, a paper card beside a short note on a wide screen. */
+/* App home keeps the phone layout. Colors come from the handoff tokens above. */
 .spectrax-stage {
   width: 100%;
 }
@@ -215,7 +202,41 @@
 }
 .news-home {
   width: 100%;
-  background: #f4efe6;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Noto Sans SC", var(--font-source), "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+}
+.news-home h1,
+.news-home h2,
+.news-home h3 {
+  font-family: "Noto Sans SC", var(--font-source), "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.news-home .wordmark,
+.spectrax-aside .wordmark {
+  font-family: var(--font-newsreader), "WenQuanYi Micro Hei", "Droid Sans Fallback", serif;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.news-home :focus-visible,
+.news-dock :focus-visible,
+.site-header :focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 3px;
+}
+.paper-link {
+  color: var(--of-accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--of-accent) 55%, transparent);
+  text-underline-offset: 3px;
+}
+.paper-link:hover {
+  text-decoration-color: var(--of-accent);
 }
 .news-home-scroll {
   padding-bottom: calc(13rem + env(safe-area-inset-bottom));
@@ -223,9 +244,9 @@
 .news-dock,
 .viewport-dock {
   z-index: 30;
-  background: #f4efe6;
-  border-top: 1px solid #eadfce;
-  box-shadow: 0 -8px 24px rgba(72, 52, 24, 0.05);
+  background: var(--background);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -8px 24px color-mix(in oklch, var(--foreground) 6%, transparent);
   padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
 }
 .news-dock {
@@ -235,10 +256,7 @@
   left: 0;
 }
 .viewport-dock {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  display: none;
 }
 .dock-row {
   display: flex;
@@ -254,17 +272,18 @@
   min-height: 44px;
   align-items: center;
   justify-content: center;
-  border: 1px solid #e4d7c4;
+  border: 1px solid var(--border);
   border-radius: 999px;
-  background: #fbf7f1;
+  background: var(--card);
   padding: 0 1.15rem;
-  color: #1c1915;
+  color: var(--foreground);
   font-size: 15px;
   line-height: 1;
 }
 .dock-pill[aria-current="page"] {
-  border-color: #e4d48a;
-  background: #f3e6a4;
+  border-color: var(--of-accent);
+  background: var(--of-cream);
+  color: var(--of-cream-foreground);
   font-weight: 650;
 }
 .dock-icons {
@@ -272,7 +291,7 @@
   flex: 1;
   align-items: center;
   justify-content: space-evenly;
-  color: #b3a89a;
+  color: var(--muted-foreground);
 }
 .dock-icons svg {
   width: 1.25rem;
@@ -281,7 +300,7 @@
 .dock-note {
   max-width: 40rem;
   margin: 0.45rem auto 0;
-  color: #5c564c;
+  color: var(--muted-foreground);
   font-size: 13px;
   line-height: 1.55;
   text-align: center;
@@ -296,27 +315,27 @@
 .scope-pill {
   min-height: 44px;
   flex: 0 0 auto;
-  border: 1px solid #e4d7c4;
+  border: 1px solid var(--border);
   border-radius: 999px;
-  background: #fbf7f1;
+  background: var(--card);
   padding: 0 1.05rem;
-  color: #1c1915;
+  color: var(--foreground);
   font-size: 15px;
 }
 .scope-pill[aria-selected="true"] {
-  border-color: #1c1915;
-  background: #1c1915;
-  color: #fbf7f1;
+  border-color: var(--of-accent);
+  background: var(--of-accent);
+  color: var(--of-accent-foreground);
 }
 .scope-pill[data-unavailable="true"] {
-  color: #5c564c;
+  color: var(--muted-foreground);
   background: transparent;
 }
 .scope-pill[data-unavailable="true"][aria-selected="true"] {
   border-style: dashed;
-  border-color: #8a8175;
-  background: #f7f1e6;
-  color: #1c1915;
+  border-color: var(--of-accent);
+  background: var(--of-cream);
+  color: var(--of-cream-foreground);
 }
 .search-pill {
   display: flex;
@@ -325,9 +344,9 @@
   align-items: center;
   max-width: 16rem;
   min-height: 44px;
-  border: 1px solid #e4d7c4;
+  border: 1px solid var(--border);
   border-radius: 999px;
-  background: #fbf7f1;
+  background: var(--card);
   padding-right: 0.35rem;
 }
 .search-pill input {
@@ -336,7 +355,7 @@
   border: 0;
   background: transparent;
   padding: 0.55rem 0.35rem 0.55rem 0.95rem;
-  color: #1c1915;
+  color: var(--foreground);
   font-size: 16px;
   line-height: 1.4;
 }
@@ -344,11 +363,11 @@
   outline: none;
 }
 .search-pill:focus-within {
-  outline: 2px solid #1c1915;
+  outline: 2px solid var(--foreground);
   outline-offset: 3px;
 }
 .search-pill input::placeholder {
-  color: #6f685e;
+  color: var(--muted-foreground);
 }
 .search-pill button {
   display: inline-flex;
@@ -358,13 +377,13 @@
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  color: #3a342c;
+  color: var(--foreground);
 }
 .topic-card {
-  border: 1px solid #eadfce;
+  border: 1px solid var(--border);
   border-radius: 1.45rem;
-  background: #fbf7f1;
-  box-shadow: 0 12px 30px rgba(72, 52, 24, 0.06);
+  background: var(--card);
+  box-shadow: 0 12px 30px color-mix(in oklch, var(--foreground) 6%, transparent);
   padding: 1.15rem 1.15rem 1rem;
 }
 .topic-card h2 {
@@ -374,15 +393,23 @@
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
-  background: #eadcf8;
+  background: var(--of-neutral);
   padding: 0.15rem 0.6rem;
-  color: #4d3d6b;
+  color: var(--of-neutral-foreground);
   font-size: 12px;
   font-weight: 650;
   line-height: 1.5;
 }
+.lav-badge[data-tone="live"] {
+  background: var(--of-live);
+  color: var(--of-live-foreground);
+}
+.lav-badge[data-tone="demo"] {
+  background: var(--of-accent);
+  color: var(--of-accent-foreground);
+}
 .lav-kicker {
-  color: #6a568c;
+  color: var(--of-accent);
   font-weight: 650;
 }
 .source-mark {
@@ -393,7 +420,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  color: #1c1915;
+  color: var(--foreground);
   font-size: 12px;
   font-weight: 650;
 }
@@ -401,20 +428,25 @@
   display: inline-flex;
   min-height: 40px;
   align-items: center;
-  border: 1px solid #e4d7c4;
+  border: 1px solid var(--border);
   border-radius: 999px;
-  background: #fbf7f1;
+  background: var(--card);
   padding: 0 0.9rem;
-  color: #1c1915;
+  color: var(--foreground);
   font-size: 14px;
 }
-@media (min-width: 1100px) {
+@media (max-width: 1099px) {
   body:has(.news-home) {
-    background:
-      radial-gradient(920px 520px at 8% 0%, #f8f3e8 0%, transparent 68%),
-      radial-gradient(840px 560px at 100% 8%, #ebe4f6 0%, transparent 62%),
-      #efe8dc;
+    background: var(--background);
+    color: var(--foreground);
   }
+  body:has(.news-home) > footer,
+  body:has(.news-home) > .site-header,
+  body:has(.news-home) > .prototype-banner {
+    display: none;
+  }
+}
+@media (min-width: 1100px) {
   .spectrax-stage {
     display: grid;
     grid-template-columns: minmax(16rem, 24rem) minmax(23rem, 27.5rem);
@@ -423,11 +455,15 @@
     justify-content: center;
     min-height: 100dvh;
     padding: 1.5rem 2rem;
+    background:
+      radial-gradient(920px 520px at 8% 0%, var(--of-cream) 0%, transparent 68%),
+      radial-gradient(840px 560px at 100% 8%, var(--of-live) 0%, transparent 62%),
+      var(--background);
   }
   .spectrax-aside {
     display: block;
     max-width: 24rem;
-    color: #1c1915;
+    color: var(--foreground);
   }
   .news-home {
     position: relative;
@@ -435,10 +471,10 @@
     height: min(920px, calc(100dvh - 3rem));
     flex-direction: column;
     overflow: hidden;
-    border: 1px solid #eadfce;
+    border: 1px solid var(--border);
     border-radius: 2rem;
-    background: #f6f1e8;
-    box-shadow: 0 28px 70px rgba(70, 48, 22, 0.1);
+    background: var(--background);
+    box-shadow: 0 28px 70px color-mix(in oklch, var(--foreground) 10%, transparent);
   }
   .news-home-scroll {
     flex: 1;
