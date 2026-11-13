@@ -17,10 +17,15 @@ export async function handleCorpusGet(request: Request, deps: CorpusHttpDeps): P
     return apiError({ code: "RATE_LIMITED", message: "rate_limited", field: null, recoverable: true }, 429);
   }
   const url = new URL(request.url);
-  const query = url.searchParams.get("q") ?? "";
-  const event = url.searchParams.get("event") ?? "";
+  const query = (url.searchParams.get("q") ?? "").trim();
+  const event = (url.searchParams.get("event") ?? "").trim();
   if (query.length > 200 || event.length > 200) {
-    return apiError({ code: "INVALID_FORMAT", message: "invalid_item", field: "q", recoverable: true }, 400);
+    return apiError({
+      code: "INVALID_FORMAT",
+      message: "invalid_item",
+      field: query.length > 200 ? "q" : "event",
+      recoverable: true,
+    }, 400);
   }
   try {
     const result = await deps.store.search(query, event);
@@ -48,7 +53,8 @@ export async function handleCorpusImport(request: Request, deps: CorpusHttpDeps)
   }
   let body: unknown;
   try {
-    const text = await request.text();
+    let text = await request.text();
+    if (text.charCodeAt(0) === 0xfeff) text = text.slice(1);
     if (text.length > MAX_CORPUS_BYTES) {
       return apiError({ code: "INVALID_FORMAT", message: "invalid_json", field: null, recoverable: true }, 400);
     }
