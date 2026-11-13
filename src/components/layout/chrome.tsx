@@ -14,6 +14,13 @@ export function FrameMark() {
   );
 }
 
+const headerLabels: Record<Language, { nav: string; library: string; settings: string }> = {
+  en: { nav: "Pages", library: "Library", settings: "Settings" },
+  zh: { nav: "页面", library: "资料库", settings: "设置" },
+  es: { nav: "Páginas", library: "Biblioteca", settings: "Ajustes" },
+  fr: { nav: "Pages", library: "Bibliothèque", settings: "Réglages" },
+};
+
 export function SiteHeader({ language, provider }: { language: Language; provider: PublicProviderStatus }) {
   return (
     <header className="site-header no-print sticky top-0 z-40 border-b border-white/10 bg-of-ink text-of-ink-foreground">
@@ -26,12 +33,12 @@ export function SiteHeader({ language, provider }: { language: Language; provide
           </span>
         </Link>
         <HeaderTopic language={language} provider={provider} />
-        <nav aria-label="页面" className="header-nav flex shrink-0 items-center gap-3 text-xs tracking-[0.14em] whitespace-nowrap text-white/70 sm:gap-4">
+        <nav aria-label={headerLabels[language].nav} className="header-nav flex shrink-0 items-center gap-3 text-xs tracking-[0.14em] whitespace-nowrap text-white/70 sm:gap-4">
           <Link href="/library" className="hover:text-white">
-            资料库<span className="sr-only"> Library</span>
+            {headerLabels[language].library}
           </Link>
           <Link href="/settings" className="hover:text-white">
-            设置<span className="sr-only"> Settings</span>
+            {headerLabels[language].settings}
           </Link>
           <LanguageMenu language={language} />
           <AppEntry />
