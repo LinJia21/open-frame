@@ -37,6 +37,15 @@ test("homepage cards keep fixture dates and do not invent heat or share one anal
   assert.match(layout?.title ?? "", /虚构/);
 });
 
+test("the app menu names home, library, subscribe, and me", async () => {
+  const dock = await readFile("src/components/layout/page-dock.tsx", "utf8");
+  assert.match(dock, /首页/);
+  assert.match(dock, /资料库/);
+  assert.match(dock, /订阅/);
+  assert.match(dock, /我的/);
+  assert.doesNotMatch(dock, /没有名称/);
+});
+
 test("the news home does not request geolocation or put fixture counts on the cards", async () => {
   const files = ["src/components/home/news-home.tsx", "src/app/page.tsx", "src/app/settings/page.tsx"];
   for (const file of files) {

@@ -258,78 +258,50 @@
   text-decoration-color: var(--of-accent);
 }
 .news-home-scroll {
-  padding-bottom: calc(13rem + env(safe-area-inset-bottom));
+  padding-bottom: calc(5.25rem + env(safe-area-inset-bottom));
 }
 .news-dock,
 .viewport-dock {
   z-index: 30;
-  background: var(--of-page);
+  background: var(--background);
   border-top: 1px solid var(--border);
-  box-shadow: 0 -8px 24px color-mix(in oklch, var(--foreground) 6%, transparent);
-  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+  padding: 0.35rem 0.5rem calc(0.35rem + env(safe-area-inset-bottom));
 }
 .news-dock {
   position: fixed;
   right: 0;
   bottom: 0;
   left: 0;
-  background: var(--background);
-  box-shadow: none;
-}
-.news-dock .dock-pill[aria-current="page"] {
-  border-color: var(--of-accent);
-  background: var(--of-accent);
-  color: var(--of-accent-foreground);
 }
 .viewport-dock {
   display: none;
 }
 .dock-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.15rem;
   max-width: 40rem;
   margin: 0 auto;
 }
-.dock-pill {
-  display: inline-flex;
-  min-height: 44px;
+.dock-tab {
+  display: flex;
+  min-height: 52px;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--card);
-  padding: 0 1.15rem;
-  color: var(--foreground);
-  font-size: 15px;
-  line-height: 1;
+  gap: 0.15rem;
+  border-radius: 0.85rem;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  line-height: 1.2;
 }
-.dock-pill[aria-current="page"] {
-  border-color: var(--of-accent);
-  background: var(--of-cream);
-  color: var(--of-cream-foreground);
+.dock-tab svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+.dock-tab[aria-current="page"] {
+  color: var(--of-accent);
   font-weight: 650;
-}
-.dock-icons {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: space-evenly;
-  color: var(--muted-foreground);
-}
-.dock-icons svg {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-.dock-note {
-  max-width: 40rem;
-  margin: 0.45rem auto 0;
-  color: var(--muted-foreground);
-  font-size: 13px;
-  line-height: 1.55;
-  text-align: center;
 }
 .scope-row {
   display: flex;
@@ -467,14 +439,26 @@
   font-size: 14px;
 }
 @media (max-width: 1099px) {
-  body:has(.news-home) {
+  /* A cached previous home can stay in the DOM with display:none. Only the visible app frame should hide the site header and the second menu. */
+  body:has(.app-shell:not([style*="display: none"]) .news-home) {
     background: var(--background);
     color: var(--foreground);
   }
-  body:has(.news-home) > footer,
-  body:has(.news-home) > .site-header,
-  body:has(.news-home) > .prototype-banner {
+  body:has(.app-shell:not([style*="display: none"]) .news-home) > footer,
+  body:has(.app-shell:not([style*="display: none"]) .news-home) > .site-header,
+  body:has(.app-shell:not([style*="display: none"]) .news-home) > .prototype-banner,
+  body:has(.app-shell:not([style*="display: none"]) .news-home) > .viewport-dock {
     display: none;
+  }
+  .viewport-dock {
+    display: block;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  body:not(:has(.app-shell:not([style*="display: none"]) .news-home)) main {
+    padding-bottom: calc(5.25rem + env(safe-area-inset-bottom));
   }
 }
 @media (min-width: 1100px) {
@@ -510,7 +494,7 @@
   .news-home-scroll {
     flex: 1;
     overflow: auto;
-    padding-bottom: 13rem;
+    padding-bottom: 5.25rem;
   }
   .news-dock {
     position: absolute;
