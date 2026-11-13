@@ -6,6 +6,19 @@ import { FICTIONAL_DEMO_PUBLISHER_LABEL } from "@/lib/openframe/openframe";
 import { formatLongDate, formatTimestamp } from "@/lib/i18n/languages";
 import { ExportBar } from "@/components/briefing/export-bar";
 
+function han(copy: Messages): "zh" | "zh-Hant" | null {
+  if (copy.nav.home === "首页") return "zh";
+  if (copy.nav.home === "首頁") return "zh-Hant";
+  return null;
+}
+
+function pick(copy: Messages, simplified: string, traditional: string, english: string) {
+  const script = han(copy);
+  if (script === "zh") return simplified;
+  if (script === "zh-Hant") return traditional;
+  return english;
+}
+
 export function BriefingIntro({
   view,
   current,
@@ -15,11 +28,13 @@ export function BriefingIntro({
   current: "perspectives" | "evidence" | "report" | null;
   copy: Messages;
 }) {
+  const script = han(copy);
   const nav =
-    copy.nav.home === "首页"
+    script === "zh"
       ? { ...copy.nav, perspectives: "观点", evidence: "证据核查", report: "研究报告", progress: "分析分页" }
-      : copy.nav;
-  const zh = copy.nav.home === "首页";
+      : script === "zh-Hant"
+        ? { ...copy.nav, perspectives: "觀點", evidence: "證據核查", report: "研究報告", progress: "分析分頁" }
+        : copy.nav;
   return (
     <header className="space-y-4">
       <p className="wordmark text-[1.85rem]">SpectraX</p>
@@ -41,16 +56,22 @@ export function BriefingIntro({
         <p className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">{copy.briefing.generatedUnretrieved}</p>
       ) : null}
       <section className="paper-card space-y-2 p-4">
-        <h2 className="text-base font-bold">{zh ? "数据模式" : "Data mode"}</h2>
+        <h2 className="text-base font-bold">{pick(copy, "数据模式", "數據模式", "Data mode")}</h2>
         <p className="text-sm">
           {view.sourceMode === "DEMO"
-            ? zh
-              ? "虚构演示。来源保持 DEMO 标记。分析是预生成的（PRECOMPUTED），不是真实新闻，也不是实时模型调用。"
-              : "Fictional demonstration. Sources stay marked DEMO. The analysis is pre-generated (PRECOMPUTED), not real news and not a live model call."
+            ? pick(
+                copy,
+                "虚构演示。来源保持 DEMO 标记。分析是预生成的（PRECOMPUTED），不是真实新闻，也不是实时模型调用。",
+                "虛構演示。來源保持 DEMO 標記。分析是預生成的（PRECOMPUTED），不是真實新聞，也不是即時模型呼叫。",
+                "Fictional demonstration. Sources stay marked DEMO. The analysis is pre-generated (PRECOMPUTED), not real news and not a live model call.",
+              )
             : view.generation === "PRECOMPUTED"
-              ? zh
-                ? "真实来源样本。报道链接是真实报道。分析是预生成的（PRECOMPUTED），不是打开这一页时的模型调用。"
-                : "Real-source sample. The reporting links are real. The analysis is pre-generated (PRECOMPUTED), not a live model call on this page."
+              ? pick(
+                  copy,
+                  "真实来源样本。报道链接是真实报道。分析是预生成的（PRECOMPUTED），不是打开这一页时的模型调用。",
+                  "真實來源樣本。報導連結是真實報導。分析是預生成的（PRECOMPUTED），不是打開這一頁時的模型呼叫。",
+                  "Real-source sample. The reporting links are real. The analysis is pre-generated (PRECOMPUTED), not a live model call on this page.",
+                )
               : view.masthead}
         </p>
         {view.notice ? <p className="text-sm">{view.notice}</p> : null}
@@ -108,9 +129,7 @@ export function PerspectivesBody({ view, copy }: { view: BriefingView; copy: Mes
       <section className="space-y-4">
         <h2 className="text-2xl font-bold">{copy.briefing.articlesTitle}</h2>
         <p className="text-sm text-muted-foreground">
-          {copy.nav.home === "首页"
-            ? "每一条描述的是这篇文章，不是这家媒体的整体。"
-            : "Each note describes that article, not the outlet as a whole."}
+          {pick(copy, "每一条描述的是这篇文章，不是这家媒体的整体。", "每一條描述的是這篇文章，不是這家媒體的整體。", "Each note describes that article, not the outlet as a whole.")}
         </p>
         <div className="grid gap-4">
           {view.analysed.map((article) => (
@@ -121,12 +140,12 @@ export function PerspectivesBody({ view, copy }: { view: BriefingView; copy: Mes
                 {article.date ? ` · ${formatLongDate(article.date, view.language)}` : ""}
                 {" · "}
                 <AccessChips chips={article.accessChips} />
-                {article.textOrigin ?? "origin not stored"}
+                {article.textOrigin ?? pick(copy, "未记录来源", "未記錄來源", "origin not stored")}
               </p>
               <h3 className="font-serif text-xl leading-snug">{article.title}</h3>
               <p className="text-sm">{article.summary}</p>
               <a href={article.url} className="text-sm text-of-accent underline-offset-2 hover:underline" target="_blank" rel="noopener noreferrer">
-                Original article
+                {copy.briefing.placeholderLink}
                 <span className="mt-1 block break-all text-xs text-muted-foreground">{article.url}</span>
               </a>
               <p className="font-mono text-[11px] text-muted-foreground">{article.id}</p>
@@ -152,7 +171,7 @@ export function PerspectivesBody({ view, copy }: { view: BriefingView; copy: Mes
       </section>
       {view.articles.some((article) => article.role === "evidence_only") ? (
         <section className="space-y-3">
-          <h2 className="font-serif text-2xl">Source records</h2>
+          <h2 className="font-serif text-2xl">{pick(copy, "来源记录", "來源記錄", "Source records")}</h2>
           <ul className="space-y-3">
             {view.articles
               .filter((article) => article.role === "evidence_only")
@@ -161,7 +180,7 @@ export function PerspectivesBody({ view, copy }: { view: BriefingView; copy: Mes
                   <p className="font-medium">{article.title}</p>
                   <p className="text-muted-foreground">
                     <PublisherName name={article.publisher} fictional={article.fictional} />
-                    {article.date ? ` · ${formatLongDate(article.date, view.language)}` : ""} · <AccessChips chips={article.accessChips} /> {article.textOrigin ?? "origin not stored"} · {article.id}
+                    {article.date ? ` · ${formatLongDate(article.date, view.language)}` : ""} · <AccessChips chips={article.accessChips} /> {article.textOrigin ?? pick(copy, "未记录来源", "未記錄來源", "origin not stored")} · {article.id}
                   </p>
                   <a href={article.url} className="break-all text-of-accent underline-offset-2 hover:underline" target="_blank" rel="noopener noreferrer">
                     {article.url}
@@ -182,9 +201,12 @@ export function EvidenceBody({ view, copy }: { view: BriefingView; copy: Message
   return (
     <div className="mt-8 space-y-6">
       <p className="paper-card p-4 text-sm">
-        {copy.nav.home === "首页"
-          ? "这些状态只核对单条主张，不是对整件事的真或假结论。状态名称保持夹具里的英文。"
-          : "These statuses check individual claims. They are not a true or false verdict for the whole story. Status names stay in the fixture’s English."}
+        {pick(
+          copy,
+          "这些状态只核对单条主张，不是对整件事的真或假结论。状态名称保持夹具里的英文。",
+          "這些狀態只核對單條主張，不是對整件事的真或假結論。狀態名稱保持夾具裡的英文。",
+          "These statuses check individual claims. They are not a true or false verdict for the whole story. Status names stay in the fixture’s English.",
+        )}
       </p>
       <section className="grid gap-2">
         {(Object.keys(copy.verificationHelp) as Array<keyof typeof copy.verificationHelp>).map((status) => (
@@ -207,9 +229,28 @@ export function EvidenceBody({ view, copy }: { view: BriefingView; copy: Message
           <p className="text-xs text-muted-foreground">
             confidence {audit.confidenceLevel}. {audit.confidenceRationale} Independent groups: {audit.independentSupporting} supporting / {audit.independentContradicting} contradicting.
           </p>
-          <EvidenceList title="Supporting evidence" items={audit.supporting} bundleId={view.bundleId} />
-          <EvidenceList title="Contradicting evidence" items={audit.contradicting} bundleId={view.bundleId} />
-          <EvidenceList title="Not counted toward Verified" items={audit.unverifiable} bundleId={view.bundleId} note="Quote not checkable" />
+          <EvidenceList
+            title={pick(copy, "支持该主张的证据", "支持該主張的證據", "Supporting evidence")}
+            items={audit.supporting}
+            bundleId={view.bundleId}
+            empty={pick(copy, "这份记录里没有", "這份記錄裡沒有", "None in this file.")}
+            originFallback={pick(copy, "未记录来源", "未記錄來源", "origin not stored")}
+          />
+          <EvidenceList
+            title={pick(copy, "与该主张相反的证据", "與該主張相反的證據", "Contradicting evidence")}
+            items={audit.contradicting}
+            bundleId={view.bundleId}
+            empty={pick(copy, "这份记录里没有", "這份記錄裡沒有", "None in this file.")}
+            originFallback={pick(copy, "未记录来源", "未記錄來源", "origin not stored")}
+          />
+          <EvidenceList
+            title={pick(copy, "不计入 Verified", "不計入 Verified", "Not counted toward Verified")}
+            items={audit.unverifiable}
+            bundleId={view.bundleId}
+            note={pick(copy, "引文无法核验", "引文無法核驗", "Quote not checkable")}
+            empty={pick(copy, "这份记录里没有", "這份記錄裡沒有", "None in this file.")}
+            originFallback={pick(copy, "未记录来源", "未記錄來源", "origin not stored")}
+          />
           <div>
             <h3 className="text-sm font-medium">{copy.briefing.limitationsTitle}</h3>
             <ul className="mt-1 list-disc pl-4 text-sm text-muted-foreground">
@@ -237,24 +278,28 @@ function EvidenceList({
   items,
   bundleId,
   note,
+  empty = "None in this file.",
+  originFallback = "origin not stored",
 }: {
   title: string;
   items: BriefingView["audits"][number]["supporting"];
   bundleId: string;
   note?: string;
+  empty?: string;
+  originFallback?: string;
 }) {
   return (
     <div>
       <h3 className="text-sm font-medium">{title}</h3>
       {note ? <p className="text-xs text-muted-foreground">{note}</p> : null}
-      {items.length === 0 ? <p className="text-sm text-muted-foreground">None in this file.</p> : null}
+      {items.length === 0 ? <p className="text-sm text-muted-foreground">{empty}</p> : null}
       <ul className="mt-2 space-y-2">
         {items.map((item) => (
           <li id={item.id} key={item.id} className="rounded-lg bg-muted/60 p-3 text-sm">
             <p className="font-medium">
               <PublisherName name={item.publisher} fictional={item.fictional} />
               <AccessChips chips={item.accessChips} />
-              <span className="ml-2 font-normal text-muted-foreground">{item.textOrigin ?? "origin not stored"}</span>
+              <span className="ml-2 font-normal text-muted-foreground">{item.textOrigin ?? originFallback}</span>
             </p>
             <p>{item.summary}</p>
             {item.excerpt ? <QuoteText item={item} /> : null}
@@ -311,14 +356,14 @@ export function ReportBody({
         filename={`openframe-demo-${view.bundleId}`}
         labels={{ md: copy.report.exportMd, json: copy.report.exportJson, print: copy.report.print, done: copy.report.downloaded }}
       />
-      <Section title={copy.nav.home === "首页" ? "底线" : "Bottom line"}>
+      <Section title={pick(copy, "底线", "底線", "Bottom line")}>
         <p className="font-medium">{view.report.bottomLine}</p>
         <BottomLineLinks view={view} />
       </Section>
-      <Section title={copy.nav.home === "首页" ? "执行摘要" : "Executive summary"}>
+      <Section title={pick(copy, "执行摘要", "執行摘要", "Executive summary")}>
         <p>{view.report.summary}</p>
       </Section>
-      <Section title={copy.nav.home === "首页" ? "主要发现" : "Key findings"}>
+      <Section title={pick(copy, "主要发现", "主要發現", "Key findings")}>
         <ul className="space-y-4">
           {view.report.findings.map((finding) => (
             <li id={`finding-${finding.id}`} key={finding.id}>
@@ -329,7 +374,7 @@ export function ReportBody({
           ))}
         </ul>
       </Section>
-      <Section title="Not linked in this schema">
+      <Section title={pick(copy, "未挂到这条 schema", "未掛到這條 schema", "Not linked in this schema")}>
         <ul className="space-y-3">
           {view.report.unlinked.map((finding) => (
             <li key={`${finding.heading}-${finding.text.slice(0, 48)}`}>

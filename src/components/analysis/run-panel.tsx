@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import type { Language } from "@/lib/i18n/languages";
+import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { providerCopy, providerErrorText } from "@/lib/i18n/provider-copy";
 import type { PublicAnalysisJob } from "@/lib/analysis/cursor-service";
 
-export function RunPanel({ jobId, language }: { jobId: string; language: Language }) {
+export function RunPanel({ jobId, language }: { jobId: string; language: UiLanguage }) {
   const router = useRouter();
   const copy = providerCopy(language);
   const [job, setJob] = useState<PublicAnalysisJob | null>(null);
@@ -89,8 +89,7 @@ export function RunPanel({ jobId, language }: { jobId: string; language: Languag
 
   return (
     <section className="mx-auto w-full max-w-3xl space-y-4">
-      <p className="text-xs tracking-[0.18em] text-of-accent uppercase">{copy.model}</p>
-      <h1 className="font-serif text-4xl">Cursor</h1>
+      <p className="text-sm font-bold text-of-accent">{copy.model}</p>
       <Alert>
         <AlertTitle>{busy ? copy.processing : job?.status === "ready" ? copy.open : copy.failed}</AlertTitle>
         <AlertDescription>

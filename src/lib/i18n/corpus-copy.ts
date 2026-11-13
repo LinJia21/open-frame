@@ -1,4 +1,4 @@
-import type { Language } from "@/lib/i18n/languages";
+import type { UiLanguage } from "@/lib/i18n/ui-language";
 
 const COPY = {
   en: {
@@ -68,6 +68,40 @@ const COPY = {
     testFixture: "测试样本，不是已保存的历史报道",
     truncated: "摘录被截断。缺的部分没有补写。",
     formatHint: "格式见 docs/CORPUS-IMPORT.md。带 example.com 的示例会故意被拒绝。",
+  },
+  "zh-Hant": {
+    title: "已保存的歷史資料",
+    intro: "這裡只檢索你已經保存的文字。它不是即時網路搜尋，資料庫一開始是空的。導入不會抓取 URL，也不會把沒拿到的正文補寫出來。每篇分析只納入前 2000 字。超出部分未納入分析，不能據此推斷完整原文缺乏證據。",
+    cutoff: "資料保存至",
+    noCutoff: "還沒有保存時間",
+    libraryOutlets: "資料庫中的媒體數",
+    hitOutlets: "本次結果中的媒體數",
+    libraryItems: "已保存條數",
+    hitItems: "結果條數",
+    listedAll: "搜尋框是空的，所以下面顯示的是整個已保存資料庫。",
+    empty: "還沒有已保存的歷史報導。請導入你已經拿到的檔案。這裡沒有為了演示而填入樣本。",
+    noHits: "沒有已保存資料命中。沒有去搜即時網頁。",
+    searchLabel: "檢索已保存文字",
+    eventLabel: "事件",
+    search: "檢索資料庫",
+    importLabel: "導入你已經有的 JSON",
+    import: "保存導入",
+    importing: "正在保存",
+    selected: "交給 Cursor 的條目",
+    analyzeSaved: "分析選中的資料",
+    openDemo: "打開一份演示簡報",
+    needSelection: "請選擇至少一條帶摘要或正文的已保存資料。",
+    demoSeparate: "演示簡報是分開的，不會使用這個資料庫。",
+    needsCursor: "分析已保存資料需要 Cursor 提供方。這個按鈕不會改成虛構簡報。",
+    fullText: "已保存全文",
+    summaryOnly: "只有摘要",
+    titleOnly: "只有標題",
+    original: "原報導",
+    reprint: "轉載，不算獨立媒體",
+    unknown: "轉載關係未知",
+    testFixture: "測試樣本，不是已保存的歷史報導",
+    truncated: "摘錄被截斷。缺的部分沒有補寫。",
+    formatHint: "格式見 docs/CORPUS-IMPORT.md。帶 example.com 的示例會故意被拒絕。",
   },
   es: {
     title: "Materiales históricos guardados",
@@ -139,6 +173,6 @@ const COPY = {
   },
 } as const;
 
-export function corpusCopy(language: Language) {
+export function corpusCopy(language: UiLanguage) {
   return COPY[language];
 }

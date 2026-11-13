@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 import { homeEventCards } from "@/lib/home/feed";
+import { isLanguage } from "@/lib/i18n/languages";
+import { parseUiLanguage, toAnalysisLanguage } from "@/lib/i18n/ui-language";
 
 test("homepage cards keep fixture dates and do not invent heat or share one analysis id", () => {
   const cards = homeEventCards();
@@ -44,6 +46,39 @@ test("the app menu names home, library, subscribe, and me", async () => {
   assert.match(dock, /订阅/);
   assert.match(dock, /我的/);
   assert.doesNotMatch(dock, /没有名称/);
+});
+
+test("interface language keeps the existing cookie and does not send traditional as an analysis language", () => {
+  assert.equal(parseUiLanguage(undefined), "zh");
+  assert.equal(parseUiLanguage("zh"), "zh");
+  assert.equal(parseUiLanguage("en"), "en");
+  assert.equal(parseUiLanguage("es"), "es");
+  assert.equal(parseUiLanguage("zh-Hant"), "zh-Hant");
+  assert.equal(parseUiLanguage("nope"), "zh");
+  assert.equal(toAnalysisLanguage("zh-Hant"), "zh");
+  assert.equal(toAnalysisLanguage("en"), "en");
+  assert.equal(isLanguage("zh-Hant"), false);
+});
+
+test("subscribe and me stay closed, and the language switch names the three scripts", async () => {
+  const subscribe = await readFile("src/app/subscribe/page.tsx", "utf8");
+  const me = await readFile("src/app/me/page.tsx", "utf8");
+  const copy = await readFile("src/lib/i18n/app-pages.ts", "utf8");
+  const switcher = await readFile("src/components/layout/language-switch.tsx", "utf8");
+  const frame = await readFile("src/components/layout/paper-frame.tsx", "utf8");
+  assert.match(subscribe, /disabled/);
+  assert.match(subscribe, /PaperFrame/);
+  assert.match(me, /href="\/settings"/);
+  assert.match(me, /disabled/);
+  assert.match(me, /PaperFrame/);
+  assert.match(copy, /尚未开通/);
+  assert.match(copy, /尚未開通/);
+  assert.doesNotMatch(copy, /¥|\$\d|checkout|stripe/i);
+  assert.match(switcher, /简体/);
+  assert.match(switcher, /繁體/);
+  assert.match(switcher, /English/);
+  assert.match(switcher, /rememberLanguage/);
+  assert.match(frame, /LanguageSwitch/);
 });
 
 test("the news home does not request geolocation or put fixture counts on the cards", async () => {

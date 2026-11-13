@@ -167,7 +167,12 @@
   }
 }
 
-/* The app is the paper frame at every width. The old wide web shell stays unused. */
+/* The app is the paper frame at every width. The old web header stays unused. */
+body > .site-header,
+body > .prototype-banner,
+body > footer {
+  display: none;
+}
 .app-shell {
   display: block;
 }
@@ -426,6 +431,67 @@ body:not(:has(.news-home)) {
   padding: 0 0.9rem;
   color: var(--foreground);
   font-size: 14px;
+}
+.search-row .search-pill {
+  max-width: none;
+  width: 100%;
+}
+.lang-switch {
+  display: inline-flex;
+  max-width: 100%;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+  padding: 0.2rem;
+}
+.lang-switch button {
+  min-height: 36px;
+  border-radius: 999px;
+  padding: 0 0.7rem;
+  color: var(--muted-foreground);
+  font-size: 13px;
+  line-height: 1.2;
+}
+.lang-switch button[aria-pressed="true"] {
+  background: #f3e6a4;
+  color: #1c1915;
+  font-weight: 650;
+}
+.closed-action {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #c8b56a;
+  border-radius: 999px;
+  background: transparent;
+  color: #6a5a28;
+  font-size: 15px;
+  cursor: not-allowed;
+}
+.closed-action:disabled {
+  opacity: 1;
+}
+.profile-mark {
+  display: inline-flex;
+  width: 3.25rem;
+  height: 3.25rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #eadcf8;
+  color: #4d3d6b;
+}
+.menu-row {
+  display: flex;
+  min-height: 4.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 @media (min-width: 1100px) {
   body:has(.spectrax-stage) {

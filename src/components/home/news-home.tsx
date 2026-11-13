@@ -3,7 +3,8 @@
 import { useMemo, useState, type FormEvent, type KeyboardEvent } from "react";
 import Link from "next/link";
 import type { HomeCardView } from "@/lib/home/feed";
-import type { Language } from "@/lib/i18n/languages";
+import type { UiLanguage } from "@/lib/i18n/ui-language";
+import { LanguageSwitch } from "@/components/layout/language-switch";
 import { PageDock } from "@/components/layout/page-dock";
 
 const TABS = [
@@ -31,7 +32,7 @@ export function NewsHome({
   cards: HomeCardView[];
   initialQuery: string;
   initialTab: TabId;
-  language: Language;
+  language: UiLanguage;
 }) {
   const copy = copyFor(language);
   const [tab, setTab] = useState<TabId>(initialTab);
@@ -67,38 +68,39 @@ export function NewsHome({
       <div className="newsroom news-home">
         <div className="news-home-scroll">
           <div className="mx-auto w-full max-w-[40rem] px-4 pb-6 pt-5">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between gap-3">
               <Link href="/" className="wordmark shrink-0 text-[1.85rem] text-foreground">
                 SpectraX
               </Link>
-              <form
-                role="search"
-                className="ml-auto min-w-0 flex-1"
-                onSubmit={(event: FormEvent<HTMLFormElement>) => {
-                  event.preventDefault();
-                  setTab("all");
-                }}
-              >
-                <label htmlFor="home-q" className="sr-only">
-                  {copy.searchLabel}
-                </label>
-                <div className="search-pill ml-auto">
-                  <input
-                    id="home-q"
-                    name="q"
-                    value={query}
-                    onChange={(event) => {
-                      setQuery(event.target.value);
-                      setTab("all");
-                    }}
-                    placeholder={copy.searchPlaceholder}
-                  />
-                  <button type="submit" aria-label={copy.searchLabel}>
-                    <SearchIcon />
-                  </button>
-                </div>
-              </form>
+              <LanguageSwitch language={language} />
             </div>
+            <form
+              role="search"
+              className="search-row mt-3"
+              onSubmit={(event: FormEvent<HTMLFormElement>) => {
+                event.preventDefault();
+                setTab("all");
+              }}
+            >
+              <label htmlFor="home-q" className="sr-only">
+                {copy.searchLabel}
+              </label>
+              <div className="search-pill">
+                <input
+                  id="home-q"
+                  name="q"
+                  value={query}
+                  onChange={(event) => {
+                    setQuery(event.target.value);
+                    setTab("all");
+                  }}
+                  placeholder={copy.searchPlaceholder}
+                />
+                <button type="submit" aria-label={copy.searchLabel}>
+                  <SearchIcon />
+                </button>
+              </div>
+            </form>
             <p className="mt-3 text-[13px] leading-[1.65] text-muted-foreground">{copy.searchHint}</p>
             <div role="tablist" aria-label={copy.tabsLabel} onKeyDown={onTabsKeyDown} className="scope-row">
               {TABS.map((item) => {
@@ -262,7 +264,38 @@ interface HomeCopy {
   asidePoints: string[];
 }
 
-function copyFor(language: Language): HomeCopy {
+function copyFor(language: UiLanguage): HomeCopy {
+  if (language === "zh-Hant") {
+    return {
+      searchLabel: "篩選本頁示例",
+      searchPlaceholder: "篩選標題",
+      searchHint: "只篩選本頁示例，不搜尋網路或資料庫。",
+      tabsLabel: "內容範圍",
+      scopeNote: "For You 和 Locate 尚未開通。點開會看到說明，不會出現推薦或地點結果。",
+      globalMark: "演示示例 · 非即時",
+      noMatch: "本頁示例裡沒有這個詞。",
+      sampleKicker: "示例",
+      demoKicker: "虛構",
+      layoutKicker: "虛構佈局樣例",
+      noSource: "無來源 · 無日期",
+      heat: "熱度",
+      heatMissing: "暫無數據",
+      verify: "核實",
+      verifyOpen: "未判斷整件事",
+      verifyLayout: "不適用",
+      evidenceLink: "具體主張",
+      forYouTitle: "For You 尚未開通",
+      forYouBody: "沒有關注推薦。這裡不展示推薦列表。",
+      locateTitle: "Locate 尚未開通",
+      locateBody: "沒有當地檢索，也不會請求定位。這裡不展示預警。",
+      asideLead: "桌面把現有首頁收在一張紙色卡片裡。窄屏則鋪滿寬度。卡片仍是倉庫裡的示例，不是新的話題。",
+      asidePoints: [
+        "字標仍是 SpectraX。介面可以在簡體、繁體和 English 之間切換。",
+        "All 展示現有卡片。For You 和 Locate 尚未開通。",
+        "底部選單是首頁、資料庫、訂閱、我的。訂閱和我的尚未開通。熱度寫「暫無數據」。",
+      ],
+    };
+  }
   if (language === "zh") {
     return {
       searchLabel: "筛选本页示例",
@@ -288,7 +321,7 @@ function copyFor(language: Language): HomeCopy {
       locateBody: "没有当地检索，也不会请求定位。这里不展示预警。",
       asideLead: "桌面把现有首页收在一张纸色卡片里。窄屏则铺满宽度。卡片仍是仓库里的示例，不是新的话题。",
       asidePoints: [
-        "字标仍是 SpectraX。搜索只筛选本页示例。",
+        "字标仍是 SpectraX。界面可以在简体、繁體和 English 之间切换。",
         "All 展示现有卡片。For You 和 Locate 尚未开通。",
         "底部菜单是首页、资料库、订阅、我的。订阅和我的尚未开通。热度写「暂无数据」。",
       ],

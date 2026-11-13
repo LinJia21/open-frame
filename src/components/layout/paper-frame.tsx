@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 import { cookies } from "next/headers";
+import { LanguageSwitch } from "@/components/layout/language-switch";
 import { PageDock } from "@/components/layout/page-dock";
-import { isLanguage, type Language } from "@/lib/i18n/languages";
+import { parseUiLanguage, type UiLanguage } from "@/lib/i18n/ui-language";
 
-export async function readUiLanguage(): Promise<Language> {
+export async function readUiLanguage(): Promise<UiLanguage> {
   const jar = await cookies();
-  const value = jar.get("openframe_lang")?.value;
-  return isLanguage(value) ? value : "zh";
+  return parseUiLanguage(jar.get("openframe_lang")?.value);
 }
 
 export function PaperFrame({
@@ -16,7 +16,7 @@ export function PaperFrame({
   points = [],
   children,
 }: {
-  language: Language;
+  language: UiLanguage;
   kicker?: string;
   lead: string;
   points?: string[];
@@ -38,7 +38,12 @@ export function PaperFrame({
       </aside>
       <div className="newsroom news-home">
         <div className="news-home-scroll">
-          <div className="mx-auto w-full max-w-[40rem] px-4 pb-6 pt-5">{children}</div>
+          <div className="mx-auto w-full max-w-[40rem] px-4 pb-6 pt-5">
+            <div className="mb-4 flex justify-end">
+              <LanguageSwitch language={language} />
+            </div>
+            {children}
+          </div>
         </div>
         <PageDock placement="frame" language={language} />
       </div>

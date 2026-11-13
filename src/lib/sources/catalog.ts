@@ -19,14 +19,14 @@ export interface NewsSource {
   logo: string;
 }
 
-export const SOURCE_CATEGORIES: readonly { id: SourceCategory; label: string; labelEn: string }[] = [
-  { id: "wire", label: "通讯社与财经", labelEn: "Wires and business" },
-  { id: "anglophone", label: "英美媒体", labelEn: "US and UK outlets" },
-  { id: "europe", label: "欧洲", labelEn: "Europe" },
-  { id: "middle_east", label: "中东", labelEn: "Middle East" },
-  { id: "asia", label: "亚太", labelEn: "Asia Pacific" },
-  { id: "investigative", label: "调查机构", labelEn: "Investigative" },
-  { id: "institution", label: "国际组织", labelEn: "International bodies" },
+export const SOURCE_CATEGORIES: readonly { id: SourceCategory; label: string; labelHant: string; labelEn: string }[] = [
+  { id: "wire", label: "通讯社与财经", labelHant: "通訊社與財經", labelEn: "Wires and business" },
+  { id: "anglophone", label: "英美媒体", labelHant: "英美媒體", labelEn: "US and UK outlets" },
+  { id: "europe", label: "欧洲", labelHant: "歐洲", labelEn: "Europe" },
+  { id: "middle_east", label: "中东", labelHant: "中東", labelEn: "Middle East" },
+  { id: "asia", label: "亚太", labelHant: "亞太", labelEn: "Asia Pacific" },
+  { id: "investigative", label: "调查机构", labelHant: "調查機構", labelEn: "Investigative" },
+  { id: "institution", label: "国际组织", labelHant: "國際組織", labelEn: "International bodies" },
 ];
 
 export const NEWS_SOURCES: readonly NewsSource[] = [
