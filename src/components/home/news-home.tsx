@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent, type KeyboardEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { HomeCardView } from "@/lib/home/feed";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { LanguageSwitch } from "@/components/layout/language-switch";
@@ -9,6 +10,10 @@ import { PageDock } from "@/components/layout/page-dock";
 import { NEWS_SOURCES, sourceTitle } from "@/lib/sources/catalog";
 import { useSourceIds } from "@/lib/sources/use-source-ids";
 import type { NewsDiscoveryResult } from "@/lib/sources/types";
+import { SearchProgressCard } from "@/components/home/search-progress-card";
+import { PREPARED_REPORT_HREF, matchPreparedTopic } from "@/lib/demo/topic-match";
+import { readDemoProgress } from "@/lib/home/demo-progress";
+import { useDemoProgress } from "@/lib/home/use-demo-progress";
 
 const TABS = [
   { id: "all", label: "All" },
@@ -38,6 +43,7 @@ export function NewsHome({
   language: UiLanguage;
 }) {
   const copy = copyFor(language);
+  const router = useRouter();
   const { ids: sourceIds } = useSourceIds();
   const [tab, setTab] = useState<TabId>(initialTab);
   const [query, setQuery] = useState(initialQuery);
@@ -45,6 +51,7 @@ export function NewsHome({
   const [searched, setSearched] = useState(false);
   const [result, setResult] = useState<NewsDiscoveryResult | null>(null);
   const [searchError, setSearchError] = useState<"none" | "failed" | null>(null);
+  const { progress, setProgress } = useDemoProgress();
 
   function onTabsKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     const index = TABS.findIndex((item) => item.id === tab);
@@ -65,12 +72,19 @@ export function NewsHome({
       setSearchError(null);
       return;
     }
+    const prepared = matchPreparedTopic(q);
+    if (prepared) {
+      router.push(PREPARED_REPORT_HREF[prepared]);
+      return;
+    }
     setSearched(true);
     setResult(null);
     if (sourceIds.length === 0) {
       setSearchError("none");
       return;
     }
+    const started = { query: q, sourceIds: [...sourceIds], startedAt: Date.now() };
+    setProgress(started);
     setPending(true);
     setSearchError(null);
     try {
@@ -82,6 +96,11 @@ export function NewsHome({
         return;
       }
       setResult(payload.data);
+      const found = [...new Set(payload.data.items.map((item) => item.sourceId))];
+      const current = readDemoProgress(window.localStorage);
+      if (found.length > 0 && current?.query === q) {
+        setProgress({ ...current, sourceIds: found });
+      }
     } catch {
       setResult(null);
       setSearchError("failed");
@@ -173,6 +192,11 @@ export function NewsHome({
             <p className="mt-1 text-[13px] leading-[1.65] text-muted-foreground">{copy.globalMark}</p>
 
             <div id="panel-all" role="tabpanel" aria-labelledby="tab-all" hidden={tab !== "all"} className="mt-4">
+              {progress ? (
+                <div className="mb-4">
+                  <SearchProgressCard progress={progress} language={language} />
+                </div>
+              ) : null}
               {tab === "all" && searched ? (
                 <SearchResults
                   copy={copy}

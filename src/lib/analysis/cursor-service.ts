@@ -108,7 +108,7 @@ export interface CursorServiceOptions {
 
 export function createCursorAnalysisService(options: CursorServiceOptions): CursorAnalysisService {
   const now = options.now ?? Date.now;
-  const timeoutMs = options.timeoutMs ?? 180_000;
+  const timeoutMs = options.timeoutMs ?? 600_000;
   const pollIntervalMs = options.pollIntervalMs ?? 5_000;
   const maxRunning = options.maxRunning ?? 2;
   let chain: Promise<void> = Promise.resolve();
