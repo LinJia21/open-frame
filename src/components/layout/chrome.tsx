@@ -5,25 +5,30 @@ export function FrameMark() {
   return (
     <svg viewBox="0 0 32 32" aria-hidden="true" className="size-8">
       <rect x="2" y="2" width="28" height="28" rx="4" fill="none" stroke="currentColor" strokeWidth="2" />
-      <rect x="10" y="10" width="12" height="12" fill="#c46a3a" />
+      <rect x="10" y="10" width="12" height="12" fill="var(--of-mark)" />
     </svg>
   );
 }
 
 export function SiteHeader() {
   return (
-    <header className="site-header no-print border-b border-[#eadfce] bg-[#f4efe6] text-[#1c1915]">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4">
-        <Link href="/" className="wordmark text-[1.85rem] text-[#1c1915]">
-          OpenFrame
+    <header className="site-header no-print sticky top-0 z-40 border-b border-white/10 bg-of-ink text-of-ink-foreground">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        <Link href="/" className="flex items-center gap-3">
+          <FrameMark />
+          <span>
+            <span className="font-serif text-xl leading-none">OpenFrame</span>
+            <span className="mt-1 hidden text-xs tracking-wide text-white/70 sm:block">See Beyond the Headlines.</span>
+          </span>
         </Link>
-        <nav aria-label="页面" className="flex items-center gap-2">
-          <Link href="/library" className="dock-pill">
+        <nav aria-label="页面" className="flex items-center gap-4 text-xs tracking-[0.14em] text-white/70">
+          <Link href="/library" className="hover:text-white">
             资料库<span className="sr-only"> Library</span>
           </Link>
-          <Link href="/settings" className="dock-pill">
+          <Link href="/settings" className="hover:text-white">
             设置<span className="sr-only"> Settings</span>
           </Link>
+          <span>AI</span>
         </nav>
       </div>
     </header>
@@ -33,10 +38,10 @@ export function SiteHeader() {
 export function PrototypeBanner({ provider }: { provider: PublicProviderStatus }) {
   const demo = provider.provider === "demo";
   return (
-    <div className="no-print border-b border-[#ddd6c8] bg-[#f7f4ee] text-[#5c564c]">
-      <p className="mx-auto max-w-[40rem] px-4 py-2 text-[0.8rem] leading-5 sm:px-6">
+    <div className="prototype-banner no-print border-b border-of-cream-border bg-of-cream text-of-cream-foreground">
+      <p className="mx-auto max-w-6xl px-4 py-2.5 text-sm leading-snug sm:px-6">
         {demo
-          ? "Provider: demonstration. This screen does not call a model. Prepared analyses are pre-generated. Source badges follow data_mode."
+          ? "This prototype does not call a model. Every analysis on screen is pre-generated. Source badges say whether the underlying articles are real or fictional."
           : provider.note}
       </p>
     </div>
@@ -46,7 +51,7 @@ export function PrototypeBanner({ provider }: { provider: PublicProviderStatus }
 export function SourceBadge({ label, mode }: { label: string; mode: string }) {
   const fictional = mode === "DEMO";
   return (
-    <span className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-semibold ${fictional ? "bg-[#8d4324] text-white" : "bg-[#eadcf8] text-[#4d3d6b]"}`}>
+    <span className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-semibold ${fictional ? "bg-of-accent text-of-accent-foreground" : "bg-sky-100 text-sky-950"}`}>
       {label}
       {fictional ? <span className="tracking-[0.12em]">DEMO DATA</span> : null}
     </span>
@@ -55,7 +60,7 @@ export function SourceBadge({ label, mode }: { label: string; mode: string }) {
 
 export function AnalysisBadge({ label, generatedAt }: { label: string; generatedAt: string | null }) {
   return (
-    <span title={generatedAt ? `Generated ${generatedAt}` : undefined} className="inline-flex rounded-full bg-[#f3eee4] px-2.5 py-1 text-xs font-semibold text-[#1c1915]">
+    <span title={generatedAt ? `Generated ${generatedAt}` : undefined} className="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-900">
       {label}
     </span>
   );
@@ -98,8 +103,8 @@ export function AnalysisNav({
           key={key}
           href={href}
           aria-current={current === key ? "page" : undefined}
-          className={`rounded-full border px-2 py-2 text-center text-sm ${
-            current === key ? "border-[#1c1915] bg-[#1c1915] text-[#fbf7f1]" : "border-[#eadfce] bg-[#fbf7f1] text-[#1c1915]"
+          className={`rounded-lg border px-2 py-2 text-center text-sm ${
+            current === key ? "border-of-accent bg-of-accent text-of-accent-foreground" : "border-border bg-card"
           }`}
         >
           <span className="block text-[10px] tracking-widest opacity-80">0{index + 1}</span>
@@ -112,7 +117,7 @@ export function AnalysisNav({
 
 export function SiteFooter({ provider }: { provider: PublicProviderStatus }) {
   const body = provider.provider === "demo"
-    ? "OpenFrame AI is a research prototype. The demonstration provider does not call a model. Prepared analyses are pre-generated. The fictional set uses reserved domains; the primary sample uses the fixture’s source links."
+    ? "OpenFrame AI is a research prototype. It does not call a model. Analyses are pre-generated. The fictional set uses reserved domains; the primary sample uses the fixture’s source links."
     : `${provider.note} Live calls are not marked verified on this screen.`;
   return (
     <footer className="no-print border-t border-border px-4 py-6 text-center text-xs text-muted-foreground sm:px-6">
