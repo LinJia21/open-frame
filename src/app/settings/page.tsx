@@ -20,13 +20,7 @@ export default async function SettingsPage() {
   const cards = homeEventCards();
   return (
     <PaperFrame language={language} lead={copy.lead} points={copy.points}>
-      <p className="text-[15px]">
-        <Link href="/" className="wordmark text-[1.7rem]">
-          SpectraX
-        </Link>
-        <span className="text-muted-foreground"> / {copy.crumb}</span>
-      </p>
-      <h1 className="mt-4 text-[1.75rem] font-bold">{copy.title}</h1>
+      <h1 className="text-[1.75rem] font-bold">{copy.title}</h1>
       <ul className="mt-6 space-y-4">
         <li className="topic-card">
           <Link href="/library" className="paper-link text-base font-medium">

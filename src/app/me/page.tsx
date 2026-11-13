@@ -7,8 +7,7 @@ export default async function MePage() {
   const copy = meCopy(language);
   return (
     <PaperFrame language={language} lead={copy.lead} points={copy.points}>
-      <p className="wordmark text-[1.85rem]">SpectraX</p>
-      <h1 className="mt-4 text-[1.75rem] font-bold">{copy.title}</h1>
+      <h1 className="text-[1.75rem] font-bold">{copy.title}</h1>
       <section className="topic-card mt-5">
         <div className="flex items-center gap-3">
           <span className="profile-mark" aria-hidden="true">

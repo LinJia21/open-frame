@@ -37,7 +37,6 @@ export function BriefingIntro({
         : copy.nav;
   return (
     <header className="space-y-4">
-      <p className="wordmark text-[1.85rem]">SpectraX</p>
       <AnalysisNav id={view.bundleId} current={current} labels={nav} />
       <p className="text-sm text-muted-foreground">{view.generic ? copy.briefing.genericMatch : copy.briefing.preparedMatch}</p>
       <h1 className="text-2xl font-bold leading-tight">{view.subject}</h1>

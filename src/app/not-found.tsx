@@ -7,10 +7,7 @@ export default async function NotFound() {
   const copy = messagesForUi(language).briefing;
   return (
     <PaperFrame language={language} lead={copy.notFoundBody}>
-      <p className="wordmark text-[1.85rem]">SpectraX</p>
-      <div className="mt-4">
-        <NotFoundPanel language={language} />
-      </div>
+      <NotFoundPanel language={language} />
     </PaperFrame>
   );
 }

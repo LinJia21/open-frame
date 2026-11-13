@@ -16,8 +16,7 @@ export default async function LibraryPage() {
   const copy = libraryFrame(language);
   return (
     <PaperFrame language={language} lead={copy.lead} points={copy.points}>
-      <p className="wordmark text-[1.85rem]">SpectraX</p>
-      <h1 className="mt-4 text-[1.75rem] font-bold">{copy.title}</h1>
+      <h1 className="text-[1.75rem] font-bold">{copy.title}</h1>
       <p className="mt-3 text-base leading-7 text-[#3a342c]">{copy.intro}</p>
       <Suspense fallback={<Skeleton className="mt-6 h-80 w-full" />}>
         <LibraryData language={language} />
