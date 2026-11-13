@@ -12,8 +12,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const copy = runFrame(language);
   return (
     <PaperFrame language={language} lead={copy.lead} points={copy.points}>
-      <p className="wordmark text-[1.85rem]">SpectraX</p>
-      <h1 className="mt-4 text-[1.75rem] font-bold">{copy.title}</h1>
+      <h1 className="text-[1.75rem] font-bold">{copy.title}</h1>
       <div className="mt-5">
         <RunPanel jobId={id} language={language} />
       </div>

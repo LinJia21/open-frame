@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { cookies } from "next/headers";
 import { LanguageSwitch } from "@/components/layout/language-switch";
 import { PageDock } from "@/components/layout/page-dock";
@@ -39,10 +40,13 @@ export function PaperFrame({
       <div className="newsroom news-home">
         <div className="news-home-scroll">
           <div className="mx-auto w-full max-w-[40rem] px-4 pb-6 pt-5">
-            <div className="mb-4 flex justify-end">
+            <div className="flex items-center justify-between gap-3">
+              <Link href="/" className="wordmark shrink-0 text-[1.85rem] text-foreground">
+                SpectraX
+              </Link>
               <LanguageSwitch language={language} />
             </div>
-            {children}
+            <div className="mt-4">{children}</div>
           </div>
         </div>
         <PageDock placement="frame" language={language} />

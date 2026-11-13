@@ -7,8 +7,7 @@ export default async function SubscribePage() {
   const copy = subscribeCopy(language);
   return (
     <PaperFrame language={language} lead={copy.lead} points={copy.points}>
-      <p className="wordmark text-[1.85rem]">SpectraX</p>
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <h1 className="text-[1.75rem] font-bold">{copy.title}</h1>
         <span className="lav-badge">{copy.badge}</span>
       </div>
