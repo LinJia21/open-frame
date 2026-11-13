@@ -38,13 +38,14 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const jar = await cookies();
   const cookie = jar.get("openframe_lang")?.value;
   const language: Language = isLanguage(cookie) ? cookie : "zh";
+  const reportLanguage: Language = isLanguage(cookie) ? cookie : "en";
   return (
     <html lang={languageOption(language).htmlLang} className={`${sourceSans.variable} ${newsreader.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <a href="#content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-card focus:px-3 focus:py-2">
           Skip to content
         </a>
-        <SiteHeader />
+        <SiteHeader language={reportLanguage} provider={provider} />
         <PrototypeBanner provider={provider} />
         <main id="content" className="flex-1">{children}</main>
         <SiteFooter provider={provider} />

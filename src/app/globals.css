@@ -89,6 +89,7 @@
   --of-live-foreground: var(--color-sky-950);
   --of-neutral: var(--color-slate-100);
   --of-neutral-foreground: var(--color-slate-900);
+  --of-page: color-mix(in srgb, var(--of-cream) 68%, var(--background));
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -184,12 +185,30 @@
 .web-shell {
   display: none;
 }
+.header-topic {
+  display: none;
+}
 @media (min-width: 1100px) {
   .app-shell {
     display: none;
   }
   .web-shell {
     display: block;
+  }
+  .header-bar:has(.header-topic) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 1.25rem;
+  }
+  .header-topic {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .header-bar:has(.header-topic) .header-tagline {
+    display: none;
   }
 }
 
@@ -202,7 +221,7 @@
 }
 .news-home {
   width: 100%;
-  background: var(--background);
+  background: var(--of-page);
   color: var(--foreground);
   font-family: "Noto Sans SC", var(--font-source), "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
   font-size: 16px;
@@ -244,7 +263,7 @@
 .news-dock,
 .viewport-dock {
   z-index: 30;
-  background: var(--background);
+  background: var(--of-page);
   border-top: 1px solid var(--border);
   box-shadow: 0 -8px 24px color-mix(in oklch, var(--foreground) 6%, transparent);
   padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
@@ -437,7 +456,7 @@
 }
 @media (max-width: 1099px) {
   body:has(.news-home) {
-    background: var(--background);
+    background: var(--of-page);
     color: var(--foreground);
   }
   body:has(.news-home) > footer,
@@ -473,7 +492,7 @@
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: 2rem;
-    background: var(--background);
+    background: var(--of-page);
     box-shadow: 0 28px 70px color-mix(in oklch, var(--foreground) 10%, transparent);
   }
   .news-home-scroll {

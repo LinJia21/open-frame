@@ -69,6 +69,7 @@ async function HomeData({ searchParams }: { searchParams: Promise<{ q?: string; 
             recentError={recentError}
             provider={getPublicProviderStatus()}
             includeCorpus={false}
+            topicInHeader
             suggestions={preparedTopics.map((topic) => ({ id: topic.id, title: topic.title, blurb: topic.blurb }))}
           />
         </div>

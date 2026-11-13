@@ -169,7 +169,7 @@ function EventCard({ card, copy }: { card: HomeCardView; copy: HomeCopy }) {
   return (
     <article className="topic-card">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <h2 className="min-w-0 flex-1 text-[1.35rem] font-bold leading-[1.35] text-foreground">
+        <h2 className="line-clamp-3 min-w-0 flex-1 text-[18px] font-bold leading-[1.25] text-foreground">
           {card.perspectivesHref ? (
             <Link href={card.perspectivesHref} className={titleClass}>
               {card.title}

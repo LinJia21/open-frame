@@ -1,5 +1,8 @@
 import Link from "next/link";
 import type { PublicProviderStatus } from "@/lib/analysis/provider-status";
+import type { Language } from "@/lib/i18n/languages";
+import { HeaderTopic } from "@/components/layout/header-topic";
+import { LanguageMenu } from "@/components/layout/language-menu";
 
 export function FrameMark() {
   return (
@@ -10,24 +13,26 @@ export function FrameMark() {
   );
 }
 
-export function SiteHeader() {
+export function SiteHeader({ language, provider }: { language: Language; provider: PublicProviderStatus }) {
   return (
     <header className="site-header no-print sticky top-0 z-40 border-b border-white/10 bg-of-ink text-of-ink-foreground">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <Link href="/" className="flex items-center gap-3">
+      <div className="header-bar mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        <Link href="/" className="header-brand flex shrink-0 items-center gap-3">
           <FrameMark />
           <span>
             <span className="font-serif text-xl leading-none">OpenFrame</span>
-            <span className="mt-1 hidden text-xs tracking-wide text-white/70 sm:block">See Beyond the Headlines.</span>
+            <span className="header-tagline mt-1 hidden text-xs tracking-wide text-white/70 sm:block">See Beyond the Headlines.</span>
           </span>
         </Link>
-        <nav aria-label="页面" className="flex items-center gap-4 text-xs tracking-[0.14em] text-white/70">
+        <HeaderTopic language={language} provider={provider} />
+        <nav aria-label="页面" className="header-nav flex shrink-0 items-center gap-3 text-xs tracking-[0.14em] whitespace-nowrap text-white/70 sm:gap-4">
           <Link href="/library" className="hover:text-white">
             资料库<span className="sr-only"> Library</span>
           </Link>
           <Link href="/settings" className="hover:text-white">
             设置<span className="sr-only"> Settings</span>
           </Link>
+          <LanguageMenu language={language} />
           <span>AI</span>
         </nav>
       </div>
