@@ -177,7 +177,7 @@ export function HomeStudio({
       {includeCorpus ? (
         <CorpusPanel language={language} provider={provider} selectedIds={selectedIds} onSelectedIds={setSelectedIds} />
       ) : null}
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)]">
+      <div className="grid gap-8">
         {topicInHeader ? (
           card
         ) : (
