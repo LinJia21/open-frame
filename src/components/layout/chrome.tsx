@@ -3,17 +3,9 @@ import type { PublicProviderStatus } from "@/lib/analysis/provider-status";
 import type { Language } from "@/lib/i18n/languages";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { AppEntry } from "@/components/layout/app-entry";
+import { ProductLockup } from "@/components/layout/brand-lockup";
 import { HeaderTopic } from "@/components/layout/header-topic";
 import { LanguageMenu } from "@/components/layout/language-menu";
-
-export function FrameMark() {
-  return (
-    <svg viewBox="0 0 32 32" aria-hidden="true" className="size-8">
-      <rect x="2" y="2" width="28" height="28" rx="4" fill="none" stroke="currentColor" strokeWidth="2" />
-      <rect x="10" y="10" width="12" height="12" fill="var(--of-mark)" />
-    </svg>
-  );
-}
 
 const headerLabels: Record<UiLanguage, { nav: string; library: string; settings: string }> = {
   en: { nav: "Pages", library: "Library", settings: "Settings" },
@@ -37,9 +29,8 @@ export function SiteHeader({
     <header className="site-header no-print sticky top-0 z-40 border-b border-white/10 bg-of-ink text-of-ink-foreground">
       <div className="header-bar mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:flex-nowrap sm:px-6">
         <Link href="/" className="header-brand flex shrink-0 items-center gap-3">
-          <FrameMark />
           <span>
-            <span className="font-serif text-xl leading-none">SpectraX</span>
+            <ProductLockup tone="dark" variant="chrome" />
             <span className="header-tagline mt-1 hidden text-xs tracking-wide text-white/70 sm:block">See Beyond the Headlines.</span>
           </span>
         </Link>

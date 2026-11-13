@@ -1,6 +1,6 @@
 import { ViewTransition, type ReactNode } from "react";
-import Link from "next/link";
 import { cookies } from "next/headers";
+import { HeaderLockup, StageLockup } from "@/components/layout/brand-lockup";
 import { LanguageSwitch } from "@/components/layout/language-switch";
 import { PageDock } from "@/components/layout/page-dock";
 import { parseUiLanguage, type UiLanguage } from "@/lib/i18n/ui-language";
@@ -26,7 +26,7 @@ export function PaperFrame({
   return (
     <div className="spectrax-stage">
       <aside className="spectrax-aside">
-        <p className="wordmark text-[3.25rem]">SpectraX</p>
+        <StageLockup />
         <ViewTransition name="spectrax-aside" share="paper-fade" enter="paper-fade" exit="paper-fade" update="none" default="none">
           <div>
             <p className="mt-3 text-[15px] leading-7 text-muted-foreground">{kicker}</p>
@@ -45,10 +45,10 @@ export function PaperFrame({
         <div className="news-home-scroll">
           <div className="mx-auto w-full max-w-[40rem] px-4 pb-6 pt-5">
             <div className="flex items-center justify-between gap-3">
-              <Link href="/" className="wordmark shrink-0 text-[1.85rem] text-foreground">
-                SpectraX
-              </Link>
-              <LanguageSwitch language={language} />
+              <HeaderLockup />
+              <div className="shrink-0">
+                <LanguageSwitch language={language} />
+              </div>
             </div>
             <ViewTransition name="paper-page" share="paper-fade" enter="paper-fade" exit="paper-fade" update="none" default="none">
               <div className="mt-4">{children}</div>

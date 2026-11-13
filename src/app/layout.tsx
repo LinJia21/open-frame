@@ -16,6 +16,14 @@ export const metadata: Metadata = {
     template: "%s · SpectraX AI",
   },
   description: "See Beyond the Headlines. Compare reporting, audit claims, and export a research briefing. Source badges follow data_mode.",
+  icons: {
+    icon: [
+      { url: "/brand/app-icon.svg", type: "image/svg+xml" },
+      { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/favicon-16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: [{ url: "/brand/app-icon-180.png", sizes: "180x180", type: "image/png" }],
+  },
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {

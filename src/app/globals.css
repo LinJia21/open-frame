@@ -206,13 +206,28 @@ body > footer {
   font-weight: 700;
   letter-spacing: -0.02em;
 }
-.news-home .wordmark,
-.spectrax-aside .wordmark {
-  font-family: var(--font-newsreader);
-  font-style: italic;
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  line-height: 1;
+.brand-lockup {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+.brand-lockup-link {
+  display: block;
+  min-width: 0;
+  width: min(14.5rem, 54%);
+}
+.brand-lockup-header {
+  width: 100%;
+  height: auto;
+}
+.brand-lockup-stage {
+  width: min(100%, 22rem);
+  height: auto;
+}
+.brand-lockup-chrome {
+  width: 11.5rem;
+  height: auto;
 }
 .app-ink-bar {
   background: var(--of-ink);
