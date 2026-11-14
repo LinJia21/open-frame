@@ -19,9 +19,9 @@ export function PageDock({
   const pathname = usePathname();
   const copy = language === "zh" ? zhCopy : language === "zh-Hant" ? hantCopy : enCopy;
   const items = [
-    { href: "/", label: copy.home, current: pathname === "/" || pathname === "/app", icon: HomeIcon },
-    { href: "/library", label: copy.library, current: pathname.startsWith("/library"), icon: LibraryIcon },
-    { href: "/subscribe", label: copy.subscribe, current: pathname.startsWith("/subscribe"), icon: SubscribeIcon },
+    { href: "/", label: copy.home, current: pathname === "/" || pathname === "/app" || pathname.startsWith("/search") || pathname.startsWith("/for-you") || pathname.startsWith("/locate") || pathname.startsWith("/stories"), icon: HomeIcon },
+    { href: "/library", label: copy.library, current: pathname.startsWith("/library") || pathname.startsWith("/briefings"), icon: LibraryIcon },
+    { href: "/subscribe", label: copy.subscribe, current: pathname.startsWith("/subscribe") || pathname.startsWith("/sources"), icon: SubscribeIcon },
     { href: "/me", label: copy.me, current: pathname.startsWith("/me"), icon: MeIcon },
   ] as const;
 

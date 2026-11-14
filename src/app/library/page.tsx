@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import { connection } from "next/server";
 import { unstable_rethrow } from "next/navigation";
 import { HomeStudio } from "@/components/home/home-studio";
@@ -6,6 +7,7 @@ import { preparedTopics } from "@/lib/demo/catalog";
 import { PaperFrame, readUiLanguage } from "@/components/layout/paper-frame";
 import type { Metadata } from "next";
 import { libraryFrame, screenTitle } from "@/lib/i18n/app-pages";
+import { subpageCopy } from "@/lib/i18n/subpages";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { listBundles } from "@/lib/store/bundle-store";
 import { toSummary } from "@/lib/adapters/to-view";
@@ -23,6 +25,14 @@ export default async function LibraryPage() {
     <PaperFrame language={language} lead={copy.lead} points={copy.points}>
       <h1 className="text-[1.75rem] font-bold">{copy.title}</h1>
       <p className="mt-3 text-base leading-7 text-[#3a342c]">{copy.intro}</p>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Link href="/library/import" className="paper-action">
+          {subpageCopy(language).importPage.title}
+        </Link>
+        <Link href="/briefings" className="paper-action-quiet">
+          {subpageCopy(language).shared.allBriefings}
+        </Link>
+      </div>
       <Suspense fallback={<Skeleton className="mt-6 h-80 w-full" />}>
         <LibraryData language={language} />
       </Suspense>

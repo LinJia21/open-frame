@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,6 +13,7 @@ import { TOPIC_MAX_LENGTH } from "@/lib/analysis/validate";
 import type { PublicProviderStatus } from "@/lib/analysis/provider-status";
 import { providerCopy, providerErrorText, providerStatusText } from "@/lib/i18n/provider-copy";
 import { corpusCopy } from "@/lib/i18n/corpus-copy";
+import { subpageCopy } from "@/lib/i18n/subpages";
 import { CorpusPanel } from "@/components/home/corpus-panel";
 import { postAnalysis } from "@/components/home/post-analysis";
 import { languageFromDocument } from "@/components/layout/language-menu";
@@ -54,6 +56,12 @@ export function HomeStudio({
   const copy = messagesForUi(language);
   const statusCopy = providerCopy(language);
   const savedCopy = corpusCopy(language);
+  const pages = subpageCopy(language);
+  const flowHrefs = [
+    "/analysis/bnd_ai_animation_2026/perspectives",
+    "/analysis/bnd_ai_animation_2026/evidence",
+    "/analysis/bnd_ai_animation_2026/report",
+  ];
   const error = topicInHeader ? headerError : localError;
   const savedMode = provider.provider === "cursor";
 
@@ -195,16 +203,26 @@ export function HomeStudio({
             <h2 className="text-[1.25rem] font-bold">{copy.home.flowTitle}</h2>
             <ol className="mt-3 space-y-3">
               {copy.home.steps.map((step, index) => (
-                <li key={step.title} className="topic-card">
-                  <span className="text-[13px] text-muted-foreground">0{index + 1}</span>
-                  <h3 className="font-medium">{step.title}</h3>
-                  <p className="text-sm leading-6 text-muted-foreground">{step.body}</p>
+                <li key={step.title}>
+                  <Link href={flowHrefs[index] ?? "/briefings"} className="topic-card block">
+                    <span className="text-[13px] text-muted-foreground">0{index + 1}</span>
+                    <h3 className="font-medium">{step.title}</h3>
+                    <p className="text-sm leading-6 text-muted-foreground">{step.body}</p>
+                  </Link>
                 </li>
               ))}
             </ol>
+            <Link href="/briefings" className="paper-action-quiet mt-3 inline-flex">
+              {pages.shared.allBriefings}
+            </Link>
           </section>
           <section>
-            <h2 className="text-[1.25rem] font-bold">{copy.home.recentTitle}</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-[1.25rem] font-bold">{copy.home.recentTitle}</h2>
+              <Link href="/briefings" className="paper-link text-sm">
+                {pages.shared.allBriefings}
+              </Link>
+            </div>
             {recentError ? (
               <div className="paper-note mt-3" role="alert">
                 <h3 className="font-medium">{copy.home.recentErrorTitle}</h3>
@@ -214,6 +232,9 @@ export function HomeStudio({
               <div className="paper-note mt-3">
                 <h3 className="font-medium">{copy.home.recentEmptyTitle}</h3>
                 <p className="text-sm leading-6 text-muted-foreground">{copy.home.recentEmptyBody}</p>
+                <Link href="/briefings" className="paper-action-quiet mt-3 inline-flex">
+                  {pages.briefings.fixturesTitle}
+                </Link>
               </div>
             ) : (
               <ul className="mt-3 space-y-2">

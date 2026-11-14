@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
+import { redirect } from "next/navigation";
 import { NewsHome } from "@/components/home/news-home";
 import { homeCardViews } from "@/lib/home/feed";
 import { readUiLanguage } from "@/components/layout/paper-frame";
@@ -20,11 +21,12 @@ export default function AppPage({
 async function AppData({ searchParams }: { searchParams: Promise<{ q?: string; tab?: string }> }) {
   await connection();
   const params = await searchParams;
+  if (params.tab === "foryou") redirect("/for-you");
+  if (params.tab === "locate") redirect("/locate");
   const language = await readUiLanguage();
-  const tab = params.tab === "foryou" || params.tab === "locate" ? params.tab : "all";
   return (
     <div className="app-frame">
-      <NewsHome cards={homeCardViews()} initialQuery={params.q ?? ""} initialTab={tab} language={language} />
+      <NewsHome cards={homeCardViews()} initialQuery={params.q ?? ""} language={language} />
     </div>
   );
 }

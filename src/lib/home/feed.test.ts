@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 import { homeEventCards } from "@/lib/home/feed";
+import { storyById } from "@/lib/home/stories";
 import { isLanguage } from "@/lib/i18n/languages";
 import { parseUiLanguage, toAnalysisLanguage } from "@/lib/i18n/ui-language";
 
@@ -37,6 +38,10 @@ test("homepage cards keep fixture dates and do not invent heat or share one anal
   assert.match(demo?.title ?? "", /Employment Bulletin/);
   assert.doesNotMatch(demo?.title ?? "", /\[DEMO — fictional\]/);
   assert.match(layout?.title ?? "", /虚构/);
+  assert.equal(sample?.storyHref, "/stories/art_variety_cannes_20260515");
+  assert.equal(demo?.storyHref, "/stories/art_demo_ev_01");
+  assert.equal(layout?.storyHref, "/stories/layout-ferry");
+  assert.equal(storyById(layout?.storyHref.split("/").pop() ?? "")?.perspectivesHref, null);
 });
 
 test("the app menu names home, library, subscribe, and me", async () => {
@@ -94,16 +99,39 @@ test("subscribe and me stay unpaid demos, and the language switch names the thre
 });
 
 test("the news home does not request geolocation or put fixture counts on the cards", async () => {
-  const files = ["src/components/home/news-home.tsx", "src/app/page.tsx", "src/app/settings/page.tsx"];
+  const files = [
+    "src/components/home/news-home.tsx",
+    "src/components/home/for-you-feed.tsx",
+    "src/components/home/locate-view.tsx",
+    "src/components/home/search-screen.tsx",
+    "src/app/page.tsx",
+    "src/app/for-you/page.tsx",
+    "src/app/locate/page.tsx",
+    "src/app/settings/page.tsx",
+  ];
   for (const file of files) {
     const text = await readFile(file, "utf8");
     assert.equal(/geolocation|navigator\.geolocation/i.test(text), false, file);
   }
   const home = await readFile("src/components/home/news-home.tsx", "utf8");
+  const scope = await readFile("src/components/home/scope-nav.tsx", "utf8");
   assert.match(home, /暂无数据/);
   assert.match(home, /演示示例 · 非实时/);
-  assert.match(home, /For You 尚未开通/);
+  assert.match(home, /ScopeNav/);
+  assert.match(scope, /href: "\/for-you"/);
+  assert.match(scope, /href: "\/locate"/);
+  assert.match(home, /action="\/search"/);
   assert.match(home, /不会扣款/);
+  assert.match(home, /不是实时推荐/);
+  assert.match(home, /不请求定位/);
   assert.doesNotMatch(home, /方案和登录尚未开通/);
+  assert.doesNotMatch(home, /For You 尚未开通/);
   assert.doesNotMatch(home, /Partially Supported|statusCounts|generatedAt/);
+  const pages = await readFile("src/lib/i18n/subpages.ts", "utf8");
+  assert.match(pages, /预生成/);
+  assert.match(pages, /不是实时个性化/);
+  assert.match(pages, /不是模型推荐/);
+  assert.match(pages, /不请求定位/);
+  assert.match(pages, /这份样本没有分析页/);
+  assert.doesNotMatch(pages, /geolocation|navigator\.geolocation/i);
 });

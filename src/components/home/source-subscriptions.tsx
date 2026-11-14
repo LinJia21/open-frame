@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { NEWS_SOURCES, SOURCE_CATEGORIES, sourceTitle, type SourceCategory } from "@/lib/sources/catalog";
 import { defaultSourceIds } from "@/lib/sources/subscriptions";
 import { useSourceIds } from "@/lib/sources/use-source-ids";
@@ -136,15 +137,13 @@ export function SourceSubscriptions({ language }: { language: UiLanguage }) {
                 {sources.map((source) => {
                   const active = selectedIds.includes(source.id);
                   return (
-                    <li key={source.id}>
-                      <button
-                        type="button"
-                        aria-pressed={active}
-                        onClick={() => toggle(source.id)}
-                        className={`flex min-h-14 w-full items-center gap-3 rounded-[1.15rem] border p-3 text-left transition-[border-color,background-color] ${focusClass} ${
-                          active ? "border-[#e4d48a] bg-card" : "border-border bg-transparent text-[#5c564c]"
-                        }`}
-                      >
+                    <li
+                      key={source.id}
+                      className={`flex min-h-14 items-center gap-2 rounded-[1.15rem] border p-2 transition-[border-color,background-color] ${
+                        active ? "border-[#e4d48a] bg-card" : "border-border bg-transparent text-[#5c564c]"
+                      }`}
+                    >
+                      <Link href={`/sources/${source.id}`} className={`flex min-w-0 flex-1 items-center gap-3 rounded-[1rem] p-1 ${focusClass}`}>
                         <span className={`grid size-11 shrink-0 place-items-center overflow-hidden rounded-lg border ${active ? "border-[#eadfce] bg-white" : "border-border bg-white grayscale"}`}>
                           <Image src={source.logo} alt="" width={32} height={32} className="size-8 object-contain" />
                         </span>
@@ -152,9 +151,15 @@ export function SourceSubscriptions({ language }: { language: UiLanguage }) {
                           <span className={`block text-[15px] font-medium leading-6 ${active ? "" : "text-muted-foreground"}`}>{sourceTitle(source, language)}</span>
                           <span className="mt-0.5 block truncate text-xs text-muted-foreground">{source.domain} · {source.access === "official_rss" ? copy.officialRss : copy.googleRss}</span>
                         </span>
-                        <span aria-hidden="true" className={`grid size-6 shrink-0 place-items-center rounded-full border text-xs ${active ? "border-[#e4d48a] bg-[#f3e6a4] text-[#1c1915]" : "border-border text-transparent"}`}>
-                          ✓
-                        </span>
+                      </Link>
+                      <button
+                        type="button"
+                        aria-pressed={active}
+                        aria-label={sourceTitle(source, language)}
+                        onClick={() => toggle(source.id)}
+                        className={`grid size-11 shrink-0 place-items-center rounded-full border text-xs ${focusClass} ${active ? "border-[#e4d48a] bg-[#f3e6a4] text-[#1c1915]" : "border-border text-transparent"}`}
+                      >
+                        ✓
                       </button>
                     </li>
                   );

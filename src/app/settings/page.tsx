@@ -48,7 +48,11 @@ export default async function SettingsPage() {
           <ul className="mt-4 space-y-4">
             {cards.map((card) => (
               <li key={card.sampleKind + (card.bundleId ?? "layout")} className="text-base leading-7">
-                <p className="font-medium">{card.title}</p>
+                <p className="font-medium">
+                  <Link href={card.storyHref} className="paper-link">
+                    {card.title}
+                  </Link>
+                </p>
                 <p className="text-sm text-muted-foreground">{describeHomeSample(language, card)}</p>
               </li>
             ))}
