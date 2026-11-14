@@ -1,4 +1,5 @@
 import { fixtureById } from "@/lib/demo/catalog";
+import { LAYOUT_STORY_ID, LAYOUT_TITLE } from "@/lib/home/stories";
 import type { AnalysisBundle } from "@/lib/openframe/openframe";
 
 /**
@@ -13,6 +14,7 @@ export interface HomeEventCard {
   sourceName: string | null;
   sourceDate: string | null;
   sampleKind: "saved-fixture-links" | "fictional-demo" | "layout-sample";
+  storyHref: string;
   generatedAt: string | null;
   articleCount: number | null;
   outletCount: number | null;
@@ -29,10 +31,11 @@ const LAYOUT_SAMPLE: HomeEventCard = {
   bundleId: null,
   perspectivesHref: null,
   evidenceHref: null,
-  title: "夜航渡轮延误后的港口广播：这是一条虚构的中文长标题，只用来看混排和换行，不是报道。",
+  title: LAYOUT_TITLE,
   sourceName: null,
   sourceDate: null,
   sampleKind: "layout-sample",
+  storyHref: `/stories/${LAYOUT_STORY_ID}`,
   generatedAt: null,
   articleCount: null,
   outletCount: null,
@@ -50,6 +53,7 @@ export interface HomeCardView {
   sourceName: string | null;
   sourceDate: string | null;
   sampleKind: HomeEventCard["sampleKind"];
+  storyHref: string;
 }
 
 export function homeCardViews(): HomeCardView[] {
@@ -61,6 +65,7 @@ export function homeCardViews(): HomeCardView[] {
     sourceName: card.sourceName,
     sourceDate: card.sourceDate,
     sampleKind: card.sampleKind,
+    storyHref: card.storyHref,
   }));
 }
 
@@ -94,6 +99,7 @@ function toCard(bundle: AnalysisBundle, sampleKind: HomeEventCard["sampleKind"],
     sourceName: lead?.publisher.name ?? null,
     sourceDate: lead?.publication_date?.slice(0, 10) ?? null,
     sampleKind,
+    storyHref: lead ? `/stories/${lead.id}` : `/stories/${LAYOUT_STORY_ID}`,
     generatedAt: bundle.generated_at,
     articleCount: bundle.articles.length,
     outletCount: new Set(bundle.articles.map((article) => article.publisher.name)).size,

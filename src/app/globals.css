@@ -340,7 +340,8 @@ body:not(:has(.news-home)) {
   color: var(--foreground);
   font-size: 15px;
 }
-.scope-pill[aria-selected="true"] {
+.scope-pill[aria-selected="true"],
+.scope-pill[aria-current="page"] {
   border-color: #e4d48a;
   background: #f3e6a4;
   color: #1c1915;

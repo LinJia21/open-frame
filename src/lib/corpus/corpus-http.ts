@@ -17,6 +17,8 @@ export async function handleCorpusGet(request: Request, deps: CorpusHttpDeps): P
     return apiError({ code: "RATE_LIMITED", message: "rate_limited", field: null, recoverable: true }, 429);
   }
   const url = new URL(request.url);
+  const id = (url.searchParams.get("id") ?? "").trim();
+  if (id) return readOne(id, deps);
   const query = (url.searchParams.get("q") ?? "").trim();
   const event = (url.searchParams.get("event") ?? "").trim();
   if (query.length > 200 || event.length > 200) {
@@ -77,6 +79,40 @@ export async function handleCorpusImport(request: Request, deps: CorpusHttpDeps)
   } catch (error) {
     return corpusFailure(error);
   }
+}
+
+async function readOne(id: string, deps: CorpusHttpDeps): Promise<Response> {
+  if (!/^art_[a-z0-9]{12}$/.test(id)) {
+    return apiError({ code: "UNKNOWN_REFERENCE", message: "not_found", field: "id", recoverable: false }, 404);
+  }
+  try {
+    const result = await deps.store.search("", "");
+    const item = result.items.find((entry) => entry.id === id);
+    if (!item) {
+      return apiError({ code: "UNKNOWN_REFERENCE", message: "not_found", field: "id", recoverable: false }, 404);
+    }
+    return Response.json({
+      ok: true,
+      data: {
+        mode: "saved_history",
+        liveInternetSearch: false,
+        library: result.library,
+        item: publicDetail(item),
+      },
+      warnings: ["Saved-history read only. This did not fetch the article URL."],
+    });
+  } catch (error) {
+    return corpusFailure(error);
+  }
+}
+
+export function publicDetail(item: CorpusItem) {
+  return {
+    ...publicItem(item),
+    body: item.body,
+    summary: item.summary,
+    language: item.language,
+  };
 }
 
 export function publicItem(item: CorpusItem) {

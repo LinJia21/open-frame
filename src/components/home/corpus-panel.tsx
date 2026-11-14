@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { corpusCopy } from "@/lib/i18n/corpus-copy";
+import { subpageCopy } from "@/lib/i18n/subpages";
 import { providerErrorText } from "@/lib/i18n/provider-copy";
 import { StoryFigure } from "@/components/media/story-figure";
 import type { PublicProviderStatus } from "@/lib/analysis/provider-status";
@@ -58,6 +60,7 @@ export function CorpusPanel({
   showHeading?: boolean;
 }) {
   const copy = corpusCopy(language);
+  const pages = subpageCopy(language);
   const [query, setQuery] = useState("");
   const [event, setEvent] = useState("");
   const [rows, setRows] = useState<SavedRow[]>([]);
@@ -232,7 +235,9 @@ export function CorpusPanel({
                   <label className="flex min-h-11 cursor-pointer gap-3">
                     <input type="checkbox" checked={selectedIds.includes(row.id)} onChange={() => toggle(row.id)} className="mt-1 size-5 shrink-0" />
                     <span className="min-w-0">
-                      <span className="block font-medium">{row.title}</span>
+                      <Link href={`/library/${row.id}`} className="block font-medium text-foreground">
+                        {row.title}
+                      </Link>
                       <span className="mt-1 block text-xs leading-5 text-muted-foreground">
                         {row.outlet} · {row.event} · {completeness[row.completeness]} · {syndication[row.syndication]}
                         {row.fixture === "test" ? ` · ${copy.testFixture}` : ""}
@@ -251,7 +256,12 @@ export function CorpusPanel({
       ) : null}
       {provider.provider === "cursor" ? <p className="mt-2 text-sm text-muted-foreground">{copy.demoSeparate}</p> : <p className="mt-2 text-sm text-muted-foreground">{copy.needsCursor}</p>}
       <div className="mt-4 space-y-2">
-        <Label htmlFor="corpus-import">{copy.importLabel}</Label>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <Label htmlFor="corpus-import">{copy.importLabel}</Label>
+          <Link href="/library/import" className="paper-link text-sm">
+            {pages.importPage.title}
+          </Link>
+        </div>
         <Textarea id="corpus-import" value={importText} onChange={(change) => setImportText(change.target.value)} rows={6} placeholder='{"items":[]}' className="paper-field min-h-32" />
         <p className="text-xs leading-5 text-muted-foreground">{copy.formatHint}</p>
         <button type="button" className="paper-action w-full" disabled={pending || importText.trim().length === 0} onClick={() => void onImport()}>

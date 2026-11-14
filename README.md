@@ -56,7 +56,7 @@ npm run validate:demo
 
 ### 首页、设置、资料库
 
-- `/` 首页。顺序是 Logo、搜索、All / For You / Locate。搜索提交后只查询订阅里选中的来源标题，不搜资料库，也不抓正文。没提交时仍显示本页示例卡。
+- `/` 首页。顺序是 Logo、搜索、All / For You / Locate。搜索提交后打开 `/search?q=`，只查询订阅里选中的来源标题，不搜资料库，也不抓正文。没提交时仍显示本页示例卡。For You 打开 `/for-you`，Locate 打开 `/locate`。
 - `/settings` 设置。这里有「已保存的历史资料」入口、提供方说明，以及首页没写在卡片上的夹具范围。
 - `/library` 资料库。只保留已存资料的导入、检索和分析。
 - `/subscribe` 订阅。方案尚未开通。页面下方是「来源关注」：按 7 个分类列出同样的 20 个固定来源，显示各自的 logo 和名称；点击卡片选中或取消，未选中的来源整体变灰。选择只写入当前浏览器的 `localStorage`（键 `openframe_source_subscriptions`），不上传，也不会与来源建立正式订阅。首页搜索默认读取这份选择；没有保存过选择时默认全选。
@@ -139,7 +139,10 @@ CURSOR_ANALYSIS_ALLOW_NETWORK=
 
 - 仓库里的历史资料库是空的。首页卡片是标注过的示例或虚构布局，不是新入库的报道。
 - 真实 Cursor 调用没有在这个仓库里验证。`liveCallVerified` 固定为 false。测试通过不等于接口已接通。
-- For You 和 Locate 没有开通。没有关注推荐，没有当地检索，页面也不请求定位。
+- `/for-you` 按这台浏览器里已关注的来源整理预生成示例。它不是实时个性化，也不是模型推荐。没有关注来源时是空的，并链到订阅页。
+- `/locate` 按订阅页的七个地区浏览来源和夹具标题。不请求定位，也不编造附近新闻。
+- `/stories/[id]` 打开首页卡片和夹具文章。没有简报的样本会写明没有分析页。`/sources/[id]` 打开一个来源。`/library/import` 和 `/library/[id]` 处理已保存文字。`/briefings` 列出预生成简报和本机运行。
+- For You 没有关注推荐。Locate 没有当地检索，页面也不请求定位。
 - 订阅和我的没有开通。页面上的方案和登录是停用的，不会扣款，也不会出现登录成功。
 - 界面语言记住在 `openframe_lang`。可选简体 `zh`、繁体 `zh-Hant`、英文 `en`。默认简体。繁体只改界面文字，分析请求仍用 `zh`。
 - 热度没有数字，界面写「暂无数据」。核实不对整件事下真或假的结论。
@@ -204,7 +207,7 @@ Copy `.env.example` to `.env.local` for local settings. The app runs with no key
 
 ## What you can do
 
-1. **Home.** Logo, then a search box that only filters the cards on this page, then All, For You, and Locate. Cards are labeled samples. One uses fixture source links, one is a fictional demonstration, and one is a fictional layout sample with no source, date, or analysis page. Heat says there is no data. Verification does not judge the whole event. Fixture counts and the provider note are on Settings. For You and Locate are not enabled. Three bottom icons have no name and cannot be used. Home and Settings are real controls. The note under them links to the library. Import, search, and Analyze stay on `/library`.
+1. **Home.** Logo, then a search box. Submitting opens `/search` and compares titles from followed sources. It does not search the library or fetch articles. All stays on the home feed. For You (`/for-you`) is a pre-generated grouping of those samples beside locally followed sources, not a live recommendation. Locate (`/locate`) browses the subscribe regions and does not ask for a device location. Cards open story pages. One sample uses fixture source links, one is fictional, and one layout sample has no analysis page. Heat says there is no data. Verification does not judge the whole event. The bottom menu is Home, Library, Subscribe, and Me. Import stays on `/library` and `/library/import`. Briefings are listed at `/briefings`.
 2. **Perspectives.** Article cards and a side-by-side reading of how those articles frame the topic. Each analysed article is read on six dimensions. There is no outlet-leaning tag on an article.
 3. **Evidence audit.** Claims with one of five labels: Verified, Partially Supported, Disputed, Unverified, Contradicted. Each claim points at an article id. Each evidence item points at a claim id and an article id.
 4. **Research report.** Summary, perspectives, claim table, methodology, limitations, and sources. Download Markdown or JSON, or use Print / Save as PDF.
