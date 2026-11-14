@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" fill="none">
+  <defs>
+    <linearGradient id="tone-split" x1="0" y1="0" x2="180" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#231971"/>
+      <stop offset="0.489" stop-color="#231971"/>
+      <stop offset="0.489" stop-color="#48B8B8"/>
+      <stop offset="1" stop-color="#48B8B8"/>
+    </linearGradient>
+  </defs>
+  <path d="M156 58 L156 42 A30 30 0 0 0 126 12 L42 12 A30 30 0 0 0 12 42 L12 138 A30 30 0 0 0 42 168 L126 168 A30 30 0 0 0 156 138 L156 122" stroke="url(#tone-split)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

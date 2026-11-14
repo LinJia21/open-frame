@@ -4,6 +4,7 @@ import type { Messages } from "@/lib/i18n/messages";
 import { AnalysisBadge, AnalysisNav, SourceBadge, StatusBadge } from "@/components/layout/chrome";
 import { formatLongDate, formatTimestamp } from "@/lib/i18n/languages";
 import { ExportBar } from "@/components/briefing/export-bar";
+import { AuxiliaryIcon, type AuxiliaryIconName } from "@/components/brand/auxiliary-icon";
 import { StoryFigure } from "@/components/media/story-figure";
 import { CardFold } from "@/components/ui/card-fold";
 
@@ -272,18 +273,21 @@ export function PerspectivesBody({ view, copy }: { view: BriefingView; copy: Mes
 
 export function EvidenceBody({ view, copy }: { view: BriefingView; copy: Messages }) {
   if (view.audits.length === 0) {
-    return <Empty title={copy.briefing.emptyClaimsTitle} body={copy.briefing.emptyClaimsBody} />;
+    return <Empty title={copy.briefing.emptyClaimsTitle} body={copy.briefing.emptyClaimsBody} mark="clipping" />;
   }
   return (
     <div className="mt-8 space-y-6">
-      <p className="paper-card p-4 text-sm">
+      <div className="flex items-start gap-3">
+        <AuxiliaryIcon name="clipping" size={40} className="mt-1" />
+        <p className="paper-card min-w-0 flex-1 p-4 text-sm">
         {pick(
           copy,
           "这些状态只核对单条主张，不是对整件事的真或假结论。状态名称保持夹具里的英文。",
           "這些狀態只核對單條主張，不是對整件事的真或假結論。狀態名稱保持夾具裡的英文。",
           "These statuses check individual claims. They are not a true or false verdict for the whole story. Status names stay in the fixture’s English.",
         )}
-      </p>
+        </p>
+      </div>
       <section className="grid gap-2">
         {(Object.keys(copy.verificationHelp) as Array<keyof typeof copy.verificationHelp>).map((status) => (
           <article key={status} className="rounded-xl border border-border bg-card p-3">
@@ -416,7 +420,7 @@ export function ReportBody({
   json: string;
 }) {
   if (!view.report.summary) {
-    return <Empty title={copy.briefing.emptyReportTitle} body={copy.briefing.emptyReportBody} />;
+    return <Empty title={copy.briefing.emptyReportTitle} body={copy.briefing.emptyReportBody} mark="focus-text" />;
   }
   return (
     <article className="print-sheet topic-card mt-8 space-y-8">
@@ -427,7 +431,10 @@ export function ReportBody({
         </div>
         <p className="text-sm">{view.masthead}</p>
         <p className="text-sm leading-relaxed text-muted-foreground">{copy.report.excerptLimit}</p>
-        <h2 className="font-serif text-3xl">{view.subject}</h2>
+        <div className="flex items-start gap-3">
+          <AuxiliaryIcon name="focus-text" size={40} className="mt-1" />
+          <h2 className="min-w-0 font-serif text-3xl">{view.subject}</h2>
+        </div>
         <p className="text-sm text-muted-foreground">
           {view.sourceLabel} · data_mode {view.sourceMode} · {view.analysisLabel}
         </p>
@@ -702,9 +709,10 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
-function Empty({ title, body }: { title: string; body: string }) {
+function Empty({ title, body, mark = "viewfinder" }: { title: string; body: string; mark?: AuxiliaryIconName }) {
   return (
     <div className="topic-card mt-8">
+      <AuxiliaryIcon name={mark} size={40} className="mb-3 opacity-80" />
       <h2 className="text-[1.35rem] font-bold">{title}</h2>
       <p className="mt-2 text-sm text-muted-foreground">{body}</p>
     </div>

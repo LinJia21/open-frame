@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AuxiliaryIcon } from "@/components/brand/auxiliary-icon";
 import { Skeleton } from "@/components/ui/skeleton";
 import { messagesForUi } from "@/lib/i18n/messages";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
@@ -23,6 +24,7 @@ export function NotFoundPanel({ language = "zh" }: { language?: UiLanguage }) {
   const copy = messagesForUi(language).briefing;
   return (
     <div className="paper-card space-y-3 p-6">
+      <AuxiliaryIcon name="viewfinder" size={44} className="opacity-80" />
       <h1 className="text-2xl font-bold">{copy.notFoundTitle}</h1>
       <p className="text-sm text-muted-foreground">{copy.notFoundBody}</p>
       <Link href="/" className="paper-action mt-2 inline-flex">

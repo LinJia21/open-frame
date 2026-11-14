@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
 import { corpusCopy } from "@/lib/i18n/corpus-copy";
 import { providerErrorText } from "@/lib/i18n/provider-copy";
+import { AuxiliaryIcon } from "@/components/brand/auxiliary-icon";
 import { StoryFigure } from "@/components/media/story-figure";
 import type { PublicProviderStatus } from "@/lib/analysis/provider-status";
 
@@ -200,7 +201,10 @@ export function CorpusPanel({
         </button>
       </form>
       {phase === "loading" ? (
-        <p className="topic-card mt-4 text-[15px] leading-7" role="status">{copy.searching}</p>
+        <p className="topic-card mt-4 flex items-center gap-3 text-[15px] leading-7" role="status">
+          <AuxiliaryIcon name="framed-volume" size={32} />
+          <span>{copy.searching}</span>
+        </p>
       ) : null}
       {phase === "error" ? (
         <div className="topic-card mt-4" role="alert">
@@ -223,7 +227,10 @@ export function CorpusPanel({
           </p>
           {listedAll ? <p className="mt-2 text-[13px] leading-6 text-muted-foreground">{copy.listedAll}</p> : null}
           {rows.length === 0 ? (
-            <p className="topic-card mt-3 text-[15px] leading-7" role="status">{library.itemCount === 0 ? copy.empty : copy.noHits}</p>
+            <p className="topic-card mt-3 flex items-start gap-3 text-[15px] leading-7" role="status">
+              <AuxiliaryIcon name={library.itemCount === 0 ? "framed-volume" : "viewfinder"} size={36} />
+              <span>{library.itemCount === 0 ? copy.empty : copy.noHits}</span>
+            </p>
           ) : (
             <ul className="mt-3 space-y-2">
               {rows.map((row) => (

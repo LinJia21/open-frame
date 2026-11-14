@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" fill="none">
+  <defs>
+    <mask id="clip-frame" maskUnits="userSpaceOnUse">
+      <rect width="180" height="180" fill="black"/>
+      <path d="M156 58 L156 42 A30 30 0 0 0 126 12 L42 12 A30 30 0 0 0 12 42 L12 138 A30 30 0 0 0 42 168 L126 168 A30 30 0 0 0 156 138 L156 122" fill="none" stroke="white" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+      <path fill="black" d="M84 0 H112 L102 9 L122 18 L98 26 L116 34 H84 L94 22 L82 12 Z"/>
+      <path fill="black" d="M84 146 L96 156 L82 166 H116 L98 174 L122 180 H84 Z"/>
+    </mask>
+  </defs>
+  <rect width="102" height="180" fill="#5E4CE6" mask="url(#clip-frame)"/>
+  <rect x="102" width="78" height="180" fill="#231971" mask="url(#clip-frame)"/>
+  <path fill="#231971" d="M38 42 H94 L110 56 L90 70 L112 84 L90 98 L112 112 L92 126 L108 144 H38 Z"/>
+</svg>

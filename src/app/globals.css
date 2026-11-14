@@ -548,8 +548,21 @@ body:not(:has(.news-home)) {
   background: transparent;
   padding: 1rem 1.15rem;
 }
+.aux-mark {
+  display: block;
+  flex: none;
+  max-width: 100%;
+  pointer-events: none;
+}
+.aux-mark-aside {
+  margin-top: 0.85rem;
+  opacity: 0.9;
+}
 .story-figure {
   margin: 0 0 0.85rem;
+}
+.story-photo {
+  position: relative;
 }
 .story-figure img {
   display: block;
@@ -557,6 +570,14 @@ body:not(:has(.news-home)) {
   height: 10.5rem;
   border-radius: 1.05rem;
   object-fit: cover;
+}
+.story-corners {
+  position: absolute;
+  inset: 0.7rem;
+  width: calc(100% - 1.4rem);
+  height: calc(100% - 1.4rem);
+  pointer-events: none;
+  opacity: 0.28;
 }
 .story-figure figcaption {
   margin-top: 0.35rem;

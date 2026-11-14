@@ -1,5 +1,6 @@
 import { ViewTransition, type ReactNode } from "react";
 import { cookies } from "next/headers";
+import { AsideMark } from "@/components/brand/auxiliary-icon";
 import { HeaderLockup, StageLockup } from "@/components/layout/brand-lockup";
 import { LanguageSwitch } from "@/components/layout/language-switch";
 import { PageDock } from "@/components/layout/page-dock";
@@ -32,7 +33,8 @@ export function PaperFrame({
         <ViewTransition name="spectrax-aside" share="paper-fade" enter="paper-fade" exit="paper-fade" update="none" default="none">
           <div>
             <p className="mt-3 text-[15px] leading-7 text-muted-foreground">{slogan}</p>
-            <p className="mt-6 text-[16px] leading-7 text-[#3a342c]">{lead}</p>
+            <AsideMark />
+            <p className="mt-4 text-[16px] leading-7 text-[#3a342c]">{lead}</p>
             {points.length > 0 ? (
               <ol className="mt-5 list-decimal space-y-3 pl-5 text-[15px] leading-7 text-[#3a342c]">
                 {points.map((point) => (

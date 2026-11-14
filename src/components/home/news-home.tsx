@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { HomeCardView } from "@/lib/home/feed";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
+import { AsideMark, AuxiliaryIcon } from "@/components/brand/auxiliary-icon";
 import { HeaderLockup, StageLockup } from "@/components/layout/brand-lockup";
 import { LanguageSwitch } from "@/components/layout/language-switch";
 import { messagesForUi } from "@/lib/i18n/messages";
@@ -135,7 +136,8 @@ export function NewsHome({
         <ViewTransition name="spectrax-aside" share="paper-fade" enter="paper-fade" exit="paper-fade" update="none" default="none">
           <div>
             <p className="mt-3 text-[15px] leading-7 text-muted-foreground">{messagesForUi(language).home.sloganTranslated}</p>
-            <p className="mt-6 text-[16px] leading-7">{copy.asideLead}</p>
+            <AsideMark />
+            <p className="mt-4 text-[16px] leading-7">{copy.asideLead}</p>
             <ol className="mt-5 list-decimal space-y-3 pl-5 text-[15px] leading-7 text-foreground">
               {copy.asidePoints.map((point) => (
                 <li key={point}>{point}</li>
@@ -354,6 +356,7 @@ function SourceMark({ name }: { name: string | null }) {
 function Unavailable({ title, body }: { title: string; body: string }) {
   return (
     <section className="topic-card">
+      <AuxiliaryIcon name="viewfinder" size={40} className="mb-3 opacity-80" />
       <h2 className="text-[1.35rem] font-bold leading-[1.35] text-foreground">{title}</h2>
       <p className="mt-3 text-[16px] leading-[1.65] text-foreground">{body}</p>
     </section>
@@ -386,6 +389,7 @@ function SearchResults({
   if (error === "none") {
     return (
       <section className="topic-card" role="status">
+        <AuxiliaryIcon name="viewfinder" size={40} className="mb-3 opacity-80" />
         <h2 className="text-[1.25rem] font-bold">{copy.noSourcesTitle}</h2>
         <p className="mt-2 text-[15px] leading-7 text-[#3a342c]">{copy.noSources}</p>
         <Link href="/subscribe#source-subscriptions" className="paper-action mt-4 w-full">
@@ -408,6 +412,7 @@ function SearchResults({
   if (!result || result.items.length === 0) {
     return (
       <section className="topic-card" role="status">
+        <AuxiliaryIcon name="viewfinder" size={40} className="mb-3 opacity-80" />
         <h2 className="text-[1.25rem] font-bold">{copy.noLeadsTitle}</h2>
         <p className="mt-2 text-[15px] leading-7 text-[#3a342c]">{copy.noLeads}</p>
       </section>

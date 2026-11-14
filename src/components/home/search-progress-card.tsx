@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { AuxiliaryIcon } from "@/components/brand/auxiliary-icon";
 import { CardFold } from "@/components/ui/card-fold";
 import { NEWS_SOURCES, sourceTitle } from "@/lib/sources/catalog";
 import type { UiLanguage } from "@/lib/i18n/ui-language";
@@ -128,7 +129,12 @@ export function SearchProgressCard({ progress, language }: { progress: DemoProgr
         <h2 className="min-w-0 flex-1 text-[1.35rem] font-bold leading-[1.35] text-foreground">{done ? copy.completed : copy.title(progress.query)}</h2>
         <span className="lav-badge">{copy.badge}</span>
       </div>
-      {done ? null : <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">{copy.estimate}</p>}
+      {done ? null : (
+        <p className="mt-2 flex items-center gap-2 text-[14px] leading-[1.6] text-muted-foreground">
+          <AuxiliaryIcon name="aperture" size={22} />
+          <span>{copy.estimate}</span>
+        </p>
+      )}
 
       <div className="mt-3 rounded-xl border border-of-cream-border bg-of-cream/30 p-2.5">
         <p className="text-xs text-muted-foreground">

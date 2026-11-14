@@ -3,6 +3,7 @@ import { connection } from "next/server";
 import { unstable_rethrow } from "next/navigation";
 import { HomeStudio } from "@/components/home/home-studio";
 import { preparedTopics } from "@/lib/demo/catalog";
+import { AuxiliaryIcon } from "@/components/brand/auxiliary-icon";
 import { PaperFrame, readUiLanguage } from "@/components/layout/paper-frame";
 import type { Metadata } from "next";
 import { libraryFrame, screenTitle } from "@/lib/i18n/app-pages";
@@ -21,7 +22,10 @@ export default async function LibraryPage() {
   const copy = libraryFrame(language);
   return (
     <PaperFrame language={language} lead={copy.lead} points={copy.points}>
-      <h1 className="text-[1.75rem] font-bold">{copy.title}</h1>
+      <div className="flex items-center gap-3">
+        <AuxiliaryIcon name="newspaper" size={44} />
+        <h1 className="min-w-0 text-[1.75rem] font-bold leading-tight">{copy.title}</h1>
+      </div>
       <p className="mt-3 text-base leading-7 text-[#3a342c]">{copy.intro}</p>
       <Suspense fallback={<Skeleton className="mt-6 h-80 w-full" />}>
         <LibraryData language={language} />
